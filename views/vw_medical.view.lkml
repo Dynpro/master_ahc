@@ -1,6 +1,6 @@
 view: vw_medical {
   label: "Medical records"
-  sql_table_name: "SCH_KAIROS_ARKANSAS_MUNICIPAL_LEAGUE"."VW_MEDICAL"
+  sql_table_name: "SCH_AHC_CRISP_REGIONAL"."VW_MEDICAL"
     ;;
 
   dimension: 2012_chronic {

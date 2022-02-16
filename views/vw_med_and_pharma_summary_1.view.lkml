@@ -52,7 +52,7 @@ view: vw_med_and_pharma_summary_1 {
                 ELSE 'FALSE'
                 END) as Diabetes_Flag
 
-            From "SCH_KAIROS_ARKANSAS_MUNICIPAL_LEAGUE"."VW_MEDICAL" as M
+            From "SCH_AHC_CRISP_REGIONAL"."VW_MEDICAL" as M
             WHERE                                   /* Dynamic Filter condition*/
             {% condition DISEASE_CATEGORY %} "ICD_DISEASE_CATEGORY" {% endcondition %} AND
             {% condition DESCRIPTION %} "ICD_DESCRIPTION" {% endcondition %} AND
@@ -98,7 +98,7 @@ view: vw_med_and_pharma_summary_1 {
                 ELSE 'FALSE'
                 END) as STATIN_DRUGS_List
 
-            From "SCH_KAIROS_ARKANSAS_MUNICIPAL_LEAGUE"."VW_PHARMACY" as P
+            From "SCH_AHC_CRISP_REGIONAL"."VW_PHARMACY" as P
             WHERE                                   /* Dynamic Filter condition*/
             {% condition DRUG %} "NON_PROPRIETARY_NAME" {% endcondition %} AND
             {% condition DRUG_CODE %} "DRUG_CODE" {% endcondition %} AND

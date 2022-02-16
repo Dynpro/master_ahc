@@ -1,5 +1,5 @@
 view: ebr_measures {
-  sql_table_name: "SCH_KAIROS_ARKANSAS_MUNICIPAL_LEAGUE"."EBR_MEASURES"
+  sql_table_name: "SCH_AHC_CRISP_REGIONAL"."EBR_MEASURES"
     ;;
 
   dimension: individual_gets_diabetic_test_strips {

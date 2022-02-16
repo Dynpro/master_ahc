@@ -40,7 +40,7 @@ view: vw_cohort_analysis_summary_1 {
               substring("PAID_DATE", 1, 4) as PAID_YEAR,
               "PATIENT_GENDER" as PATIENT_GENDER,
               "RELATIONSHIP_TO_EMPLOYEE" as RELATIONSHIP_TO_EMPLOYEE
-              from "SCH_KAIROS_ARKANSAS_MUNICIPAL_LEAGUE"."VW_MEDICAL"
+              from "SCH_AHC_CRISP_REGIONAL"."VW_MEDICAL"
               GROUP BY PATIENT_ID, PAID_YEAR, PATIENT_GENDER, RELATIONSHIP_TO_EMPLOYEE) MEDICAL
 
       LEFT JOIN
@@ -75,7 +75,7 @@ view: vw_cohort_analysis_summary_1 {
               LISTAGG(DISTINCT "ICD_CHRONIC_CAT", '| ') within group (order by "ICD_CHRONIC_CAT" ASC) as CHRONIC_CATEGORY_G1,
               LISTAGG(DISTINCT "ICD_DESCRIPTION", '| ') within group (order by "ICD_DESCRIPTION" ASC) as Diagnosis_Desc_List_G1,
               LISTAGG(DISTINCT "ICD_DISEASE_CATEGORY", '| ') within group (order by "ICD_DISEASE_CATEGORY" ASC) as Diagnosis_Category_List_G1
-            From "SCH_KAIROS_ARKANSAS_MUNICIPAL_LEAGUE"."VW_MEDICAL" as M1
+            From "SCH_AHC_CRISP_REGIONAL"."VW_MEDICAL" as M1
             WHERE                             /*All Filters on Grp1_Medical*/
               {% condition DISEASE_CATEGORY_G1 %} M1."ICD_DISEASE_CATEGORY" {% endcondition %} AND
               {% condition DESCRIPTION_G1 %} M1."ICD_DESCRIPTION" {% endcondition %} AND
@@ -119,7 +119,7 @@ view: vw_cohort_analysis_summary_1 {
               AVG("TOTAL_EMPLOYER_PAID_AMT") as PHARMA_Average_Paid_Amt_G1,
               LISTAGG(DISTINCT "NON_PROPRIETARY_NAME", '| ') within group (order by "NON_PROPRIETARY_NAME" ASC) as Drug_List_G1,
               LISTAGG(DISTINCT "TEA_CATEGORY", '| ') within group (order by "TEA_CATEGORY" ASC) as TEA_Cat_List_G1
-            From "SCH_KAIROS_ARKANSAS_MUNICIPAL_LEAGUE"."VW_PHARMACY" as P1
+            From "SCH_AHC_CRISP_REGIONAL"."VW_PHARMACY" as P1
             WHERE                             /*All Filters on Grp1_Pharmacy*/
               {% condition DRUG_G1 %} P1."NON_PROPRIETARY_NAME" {% endcondition %} AND
               {% condition TEA_CATEGORY_G1 %} P1."TEA_CATEGORY" {% endcondition %} AND
@@ -179,7 +179,7 @@ view: vw_cohort_analysis_summary_1 {
               LISTAGG(DISTINCT "ICD_CHRONIC_CAT", '|') within group (order by "ICD_CHRONIC_CAT" ASC) as CHRONIC_CATEGORY_G2,
               LISTAGG(DISTINCT "ICD_DESCRIPTION", '|') within group (order by "ICD_DESCRIPTION" ASC) as Diagnosis_Desc_List_G2,
               LISTAGG(DISTINCT "ICD_DISEASE_CATEGORY", '|') within group (order by "ICD_DISEASE_CATEGORY" ASC) as Diagnosis_Category_List_G2
-            From "SCH_KAIROS_ARKANSAS_MUNICIPAL_LEAGUE"."VW_MEDICAL" as M2
+            From "SCH_AHC_CRISP_REGIONAL"."VW_MEDICAL" as M2
             WHERE                                       /*All Filters on Grp2_Medical */
               {% condition DISEASE_CATEGORY_G2 %} M2."ICD_DISEASE_CATEGORY" {% endcondition %} AND
               {% condition DESCRIPTION_G2 %} M2."ICD_DESCRIPTION" {% endcondition %} AND
@@ -222,7 +222,7 @@ view: vw_cohort_analysis_summary_1 {
               AVG("TOTAL_EMPLOYER_PAID_AMT") as PHARMA_Average_Paid_Amt_G2,
               LISTAGG(DISTINCT "NON_PROPRIETARY_NAME", '| ') within group (order by "NON_PROPRIETARY_NAME" ASC) as Drug_List_G2,
               LISTAGG(DISTINCT "TEA_CATEGORY", '| ') within group (order by "TEA_CATEGORY" ASC) as TEA_Cat_List_G2
-            From "SCH_KAIROS_ARKANSAS_MUNICIPAL_LEAGUE"."VW_PHARMACY" as P2
+            From "SCH_AHC_CRISP_REGIONAL"."VW_PHARMACY" as P2
             WHERE                                       /*All Filters on Grp2_Pharmacy*/
               {% condition DRUG_G2 %} P2."NON_PROPRIETARY_NAME" {% endcondition %} AND
               {% condition TEA_CATEGORY_G2 %} P2."TEA_CATEGORY" {% endcondition %} AND

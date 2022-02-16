@@ -1,5 +1,5 @@
 view: vw_preventive_screening {
-  sql_table_name: "SCH_KAIROS_ARKANSAS_MUNICIPAL_LEAGUE"."VW_PREVENTIVE_SCREENING"
+  sql_table_name: "SCH_AHC_CRISP_REGIONAL"."VW_PREVENTIVE_SCREENING"
     ;;
 
   dimension: cancer_diagnosis {

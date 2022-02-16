@@ -1,9 +1,9 @@
 view: vw_risk_group_med_pharma_summary {
   label: "Risk Group Summary - MED & PHARMA Unique population"
   derived_table: {
-    sql: select * from "SCH_KAIROS_ARKANSAS_MUNICIPAL_LEAGUE"."VW_RISK_GROUP_MIGRATION"
+    sql: select * from "SCH_AHC_CRISP_REGIONAL"."VW_RISK_GROUP_MIGRATION"
           WHERE
-            UNIQUE_ID IN (select DISTINCT UNIQUE_ID from "SCH_KAIROS_ARKANSAS_MUNICIPAL_LEAGUE"."VW_MEDICAL"
+            UNIQUE_ID IN (select DISTINCT UNIQUE_ID from "SCH_AHC_CRISP_REGIONAL"."VW_MEDICAL"
             WHERE
                 {% condition DISEASE_CATEGORY %} "ICD_DISEASE_CATEGORY" {% endcondition %} AND
                 {% condition DISEASE_DESCRIPTION %} "ICD_DESCRIPTION" {% endcondition %} AND
@@ -21,7 +21,7 @@ view: vw_risk_group_med_pharma_summary {
                 {% condition DIGESTIVE_DISEASE_OR_NOT %} "ICD_DIGESTIVE_DISEASE" {% endcondition %})
 
          AND
-            UNIQUE_ID IN (select DISTINCT UNIQUE_ID from "SCH_KAIROS_ARKANSAS_MUNICIPAL_LEAGUE"."VW_PHARMACY"
+            UNIQUE_ID IN (select DISTINCT UNIQUE_ID from "SCH_AHC_CRISP_REGIONAL"."VW_PHARMACY"
             WHERE
                 {% condition ACE_INHIBITOR_DRUGS %} "ACE_INHIBITOR" {% endcondition %} AND
                 {% condition STATIN_DRUGS %} "STATIN" {% endcondition %} AND

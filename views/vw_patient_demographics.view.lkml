@@ -1,5 +1,5 @@
 view: vw_patient_demographics {
-  sql_table_name: "SCH_KAIROS_ARKANSAS_MUNICIPAL_LEAGUE"."VW_PATIENT_DEMOGRAPHICS"
+  sql_table_name: "SCH_AHC_CRISP_REGIONAL"."VW_PATIENT_DEMOGRAPHICS"
     ;;
 
   dimension: dependent_f_name {
