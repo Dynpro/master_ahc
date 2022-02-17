@@ -59,7 +59,7 @@ explore: vw_medication_possession_ratio {
     sql_on: ${vw_medication_possession_ratio.unique_id} = ${vw_patient_demographics.unique_id} ;;
   }
   label: "Medication Possession Ratio"
-  sql_always_where: ${year} IN ('2018', '2019', '2020') ;;
+  sql_always_where: ${year} IN ('2018', '2019', '2020','2021', '2022') ;;
 }
 
 explore: vw_preventive_screening {
@@ -70,7 +70,7 @@ explore: vw_preventive_screening {
     sql_on: ${vw_preventive_screening.unique_id} = ${vw_patient_demographics.unique_id} ;;
   }
   label: "Preventive Screening"
-  sql_always_having: ${year} IN ('2018', '2019', '2020') ;;
+  sql_always_having: ${year} IN ('2018', '2019', '2020', '2021', '2022') ;;
 }
 
 explore: hedis_measure {
