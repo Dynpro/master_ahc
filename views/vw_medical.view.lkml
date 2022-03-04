@@ -512,7 +512,7 @@ view: vw_medical {
     label: "TOTAL LOST DAYS SPEND"
     sql_distinct_key: ${Lost_Days_Unique_Id} ;;
     sql: ${icd_lt_all_absences_midrange}*8*19 ;;
-    #Lost days expense logic as per PHM report: Lost_Days*8*10 (hours - 8, Cost/perhour - $10)
+    #Lost days expense logic as per PHM report: Lost_Days*8*19 (hours - 8, Cost/perhour - $19)
     value_format: "$#,##0"
   }
 
