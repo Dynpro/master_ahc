@@ -42,6 +42,12 @@ explore: vw_cohort_analysis_summary_1 {
 }
 
 explore: vw_risk_group_migration {
+  join: vw_patient_demographics {
+    view_label: "Patient Demographics"
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${vw_risk_group_migration.Unique_id} = ${vw_patient_demographics.unique_id} ;;
+  }
   label: "Risk Group Migration"
   sql_always_where: ${File_year} IN ('2018', '2019', '2020', '2021', '2022') ;;
 }
