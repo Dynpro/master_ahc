@@ -71,7 +71,7 @@ view: ad_hoc_query_tool_medical {
     type: string
     label: "DIAGNOSTIC CATEGORY"
     suggest_explore: vw_medical
-    suggest_dimension: vw_medical.DISEASE_CATEGORY
+    suggest_dimension: vw_medical.icd_disease_category
   }
 
   filter: DISEASE_SUBCATEGORY {
