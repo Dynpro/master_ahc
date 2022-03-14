@@ -3,12 +3,12 @@ connection: "snowflake_prod"
 # include all the views
 include: "/views/**/*.view"
 
-datagroup: master_dashboards_default_datagroup {
+datagroup: crisp_regional_dashboards_default_datagroup {
   # sql_trigger: SELECT MAX(id) FROM etl_log;;
   max_cache_age: "1 hour"
 }
 
-persist_with: master_dashboards_default_datagroup
+persist_with: crisp_regional_dashboards_default_datagroup
 
 
 explore: vw_medical {
