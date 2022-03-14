@@ -183,7 +183,7 @@ view: vw_medication_possession_ratio {
   }
 
   dimension: year {
-    type: string
+    type: number
     label: "YEAR"
     sql: ${TABLE}."YEAR" ;;
   }
