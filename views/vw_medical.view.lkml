@@ -917,13 +917,9 @@ view: vw_medical {
     html: {{ rendered_value | date: "%m / %d / %Y" }} ;;
   }
 
-  dimension: PARTICIPANT_FLAG {
+  dimension: PARTICIPANT_Flag {
     type: string
-    label: "Participant flag"
-    sql: CASE WHEN ${TABLE}."PARTICIPANT_FLAG" = 'true' THEN 'PARTICIPANT'
-    WHEN ${TABLE}."PARTICIPANT_FLAG" = 'false' THEN 'NON-PARTICIPANT'
-    ELSE 'OTHERS'
-    END ;;
+    sql: ${TABLE}."PARTICIPANT_FLAG" ;;
   }
 
   dimension: year_and_patient_id {
