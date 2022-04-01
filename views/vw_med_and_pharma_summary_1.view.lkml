@@ -71,7 +71,9 @@ view: vw_med_and_pharma_summary_1 {
             {% condition CHRONIC_OR_NOT %} "2012_CHRONIC" {% endcondition %} AND
             {% condition AVOIDABLE_ER_OR_NOT %} "ICD_AVOIDABLE_ER" {% endcondition %} AND
             {% condition DIGESTIVE_DISEASE_OR_NOT %} "ICD_DIGESTIVE_DISEASE" {% endcondition %} AND
-            {% condition PARTICIPANT_FLAG_M %} "PARTICIPANT_FLAG" {% endcondition %}
+            {% condition PARTICIPANT_FLAG_M %} "PARTICIPANT_FLAG" {% endcondition %} AND
+            {% condition PARTICIPANT_PROGRAM_NAME_M %} "PARTICIPANT_PROGRAM_NAME" {% endcondition %}
+
 
             GROUP BY PATIENT_ID_M, PATIENT_GENDER, RELATIONSHIP_TO_EMPLOYEE, substring("PAID_DATE", 1, 4), Diabetes_Flag) as MED
 
@@ -112,7 +114,8 @@ view: vw_med_and_pharma_summary_1 {
             {% condition MAINTENANCE_DRUGS %} "MAINTENANCE" {% endcondition %} AND
             {% condition DIGESTIVE_DISEASE_DRUGS %} "DIGESTIVE_DISEASE" {% endcondition %} AND
             {% condition BRAND_OR_GENERIC %} "BRAND_OR_GENERIC" {% endcondition %} AND
-            {% condition PARTICIPANT_FLAG_P %} "PARTICIPANT_FLAG" {% endcondition %}
+            {% condition PARTICIPANT_FLAG_P %} "PARTICIPANT_FLAG" {% endcondition %} AND
+            {% condition PARTICIPANT_PROGRAM_NAME_P %} "PARTICIPANT_PROGRAM_NAME" {% endcondition %}
 
             GROUP BY PATIENT_ID_P, substring("DATE_FILLED", 1, 4), ACE_INHIBITOR_List, ARB_DRUGS_List, DRI_DRUGS_List, STATIN_DRUGS_List) as PHARMA
 
@@ -581,4 +584,17 @@ view: vw_med_and_pharma_summary_1 {
     sql: ${PATIENT_ID} ;;
   }
 
+filter:PARTICIPANT_PROGRAM_NAME_M {
+  type: string
+  label: "PARTICIPANT PROGRAM NAME M"
+  suggest_explore: vw_medical
+  suggest_dimension: vw_medical.PARTICIPANT_PROGRAM_NAME
+}
+
+filter:PARTICIPANT_PROGRAM_NAME_P {
+  type: string
+  label: "PARTICIPANT PROGRAM NAME P"
+  suggest_explore: vw_pharmacy
+  suggest_dimension: vw_pharmacy.PARTICIPANT_PROGRAM_NAME
+}
 }

@@ -11,7 +11,8 @@ view: ad_hoc_query_tool_pharmacy {
           "NON_PROPRIETARY_NAME" as Drug_List,
           "TEA_CATEGORY" as TEA_Cat_List,
           "PARTICIPANT_FLAG" as PARTICIPANT_FLAG,
-          "MEMBER_AGE" as MEMBER_AGE
+          "MEMBER_AGE" as MEMBER_AGE,
+          "PARTICIPANT_PROGRAM_NAME" as PARTICIPANT_PROGRAM_NAME
         from
         "SCH_AHC_CRISP_REGIONAL"."VW_PHARMACY"
         WHERE                                 /* Dynamic Filter condition*/
@@ -397,4 +398,9 @@ view: ad_hoc_query_tool_pharmacy {
     sql:  ${TABLE}."MEMBER_AGE";;
   }
 
+  dimension: PARTICIPANT_PROGRAM_NAME{
+    type: string
+    label: "PARTICIPANT PROGRAM NAME"
+    sql: ${TABLE}."PARTICIPANT_PROGRAM_NAME";;
+  }
 }

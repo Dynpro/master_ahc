@@ -476,4 +476,10 @@ view: vw_pharmacy {
     type: string
     sql: ${TABLE}."PARTICIPANT_FLAG" ;;
   }
+
+  dimension: PARTICIPANT_PROGRAM_NAME{
+    type: string
+    label: "PARTICIPANT PROGRAM NAME"
+    sql: ${TABLE}."PARTICIPANT_PROGRAM_NAME";;
+  }
 }
