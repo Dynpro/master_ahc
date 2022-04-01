@@ -21,6 +21,7 @@ view: ad_hoc_query_tool_medical {
           "PRIMARY_PROCEDURE_CODE" as PRIMARY_PROCEDURE_CODE,
           "PLACE_OF_SERVICE_DESCRIPTION" as PLACE_OF_SERVICE_DESCRIPTION,
           "SERVICE_PROVIDER_SPECIALITY_CODE_DESC" as SERVICE_PROVIDER_SPECIALITY_CODE_DESC,
+          "PARTICIPANT_FLAG" as PARTICIPANT_FLAG,
           "PARTICIPANT_PROGRAM_NAME" as PARTICIPANT_PROGRAM_NAME
          from
         "SCH_AHC_CRISP_REGIONAL"."VW_MEDICAL"
@@ -472,6 +473,11 @@ view: ad_hoc_query_tool_medical {
     label: "ACE INHIBITOR OR ARB DRUG"
     suggest_explore: vw_pharmacy
     suggest_dimension: vw_pharmacy.ace_inhibitor
+  }
+
+  dimension: PARTICIPANT_Flag {
+    type: string
+    sql: ${TABLE}."PARTICIPANT_FLAG" ;;
   }
 
   dimension: PARTICIPANT_PROGRAM_NAME{
