@@ -72,7 +72,7 @@ view: vw_cohort_analysis_summary_1 {
               SUM("TOTAL_BILLED_AMT") as MED_Total_Billed_Amt_G1,
               SUM("TOTAL_EMPLOYER_PAID_AMT") as MED_Total_Paid_Amt_G1,
               AVG("TOTAL_EMPLOYER_PAID_AMT") as MED_Average_Paid_Amt_G1,
-              LISTAGG(DISTINCT "ICD_CHRONIC_CAT", '| ') within group (order by "ICD_CHRONIC_CAT" ASC) as CHRONIC_CATEGORY_G1,
+              LISTAGG(DISTINCT "CCW_CHRONIC_CAT", '| ') within group (order by "CCW_CHRONIC_CAT" ASC) as CHRONIC_CATEGORY_G1,
               LISTAGG(DISTINCT "ICD_DESCRIPTION", '| ') within group (order by "ICD_DESCRIPTION" ASC) as Diagnosis_Desc_List_G1,
               LISTAGG(DISTINCT "ICD_DISEASE_CATEGORY", '| ') within group (order by "ICD_DISEASE_CATEGORY" ASC) as Diagnosis_Category_List_G1
             From "SCH_AHC_CRISP_REGIONAL"."VW_MEDICAL" as M1
@@ -80,7 +80,7 @@ view: vw_cohort_analysis_summary_1 {
               {% condition DISEASE_CATEGORY_G1 %} M1."ICD_DISEASE_CATEGORY" {% endcondition %} AND
               {% condition DESCRIPTION_G1 %} M1."ICD_DESCRIPTION" {% endcondition %} AND
               {% condition RECONCILED_DIAGNOSIS_CODE_ICD10_G1 %} M1."RECONCILED_DIAGNOSIS_CODE_ICD10" {% endcondition %} AND
-              {% condition CHRONIC_CATEGORY_G1 %} M1."ICD_CHRONIC_CAT" {% endcondition %} AND
+              {% condition CHRONIC_CATEGORY_G1 %} M1."CCW_CHRONIC_CAT" {% endcondition %} AND
               {% condition PATIENT_GENDER_G1 %} M1."PATIENT_GENDER" {% endcondition %} AND
               {% condition RELATIONSHIP_TO_EMPLOYEE_G1 %} M1."RELATIONSHIP_TO_EMPLOYEE" {% endcondition %} AND
 
@@ -98,9 +98,9 @@ view: vw_cohort_analysis_summary_1 {
               {% condition PROCEDURE_DESCRIPTION_G1 %} M1."PROCEDURE_DESCRIPTION" {% endcondition %} AND
               {% condition PRIMARY_PROCEDURE_CODE_G1 %} M1."PRIMARY_PROCEDURE_CODE" {% endcondition %} AND
               {% condition ICD_LS_MODIFY_G1 %} M1."ICD_LS_MODIFY" {% endcondition %} AND
-              {% condition ICD_ACUTE_G1 %} M1."ICD_ACUTE" {% endcondition %} AND
+              {% condition CHRONICITY_IDENTIFIER_G1 %} M1."CHRONICITY_IDENTIFIER" {% endcondition %} AND
               {% condition ICD_PREVENTATIVE_G1 %} M1."ICD_PREVENTATIVE" {% endcondition %} AND
-              {% condition 2012_CHRONIC_G1 %} M1."2012_CHRONIC" {% endcondition %} AND
+              {% condition ICD_ACUTE_G1 %} M1."CHRONICITY_IDENTIFIER" {% endcondition %} AND
               {% condition ICD_AVOIDABLE_ER_G1 %} M1."ICD_AVOIDABLE_ER" {% endcondition %} AND
               {% condition ICD_DIGESTIVE_DISEASE_G1 %} M1."ICD_DIGESTIVE_DISEASE" {% endcondition %} AND
               {% condition RISK_GROUP_G1 %} M1."RISK_GROUP" {% endcondition %} AND
@@ -178,7 +178,7 @@ view: vw_cohort_analysis_summary_1 {
               SUM("TOTAL_BILLED_AMT") as MED_Total_Billed_Amt_G2,
               SUM("TOTAL_EMPLOYER_PAID_AMT") as MED_Total_Paid_Amt_G2,
               AVG("TOTAL_EMPLOYER_PAID_AMT") as MED_Average_Paid_Amt_G2,
-              LISTAGG(DISTINCT "ICD_CHRONIC_CAT", '|') within group (order by "ICD_CHRONIC_CAT" ASC) as CHRONIC_CATEGORY_G2,
+              LISTAGG(DISTINCT "CCW_CHRONIC_CAT", '|') within group (order by "CCW_CHRONIC_CAT" ASC) as CHRONIC_CATEGORY_G2,
               LISTAGG(DISTINCT "ICD_DESCRIPTION", '|') within group (order by "ICD_DESCRIPTION" ASC) as Diagnosis_Desc_List_G2,
               LISTAGG(DISTINCT "ICD_DISEASE_CATEGORY", '|') within group (order by "ICD_DISEASE_CATEGORY" ASC) as Diagnosis_Category_List_G2
             From "SCH_AHC_CRISP_REGIONAL"."VW_MEDICAL" as M2
@@ -195,7 +195,7 @@ view: vw_cohort_analysis_summary_1 {
               {% condition ADDRESS_CITY_G2 %} M2."ADDRESS_CITY" {% endcondition %} AND
               {% condition ADDRESS_STATE_G2 %} M2."ADDRESS_STATE" {% endcondition %} AND
 
-              {% condition CHRONIC_CATEGORY_G2 %} M2."ICD_CHRONIC_CAT" {% endcondition %} AND
+              {% condition CHRONIC_CATEGORY_G2 %} M2."CCW_CHRONIC_CAT" {% endcondition %} AND
               {% condition PATIENT_GENDER_G2 %} M2."PATIENT_GENDER" {% endcondition %} AND
               {% condition RELATIONSHIP_TO_EMPLOYEE_G2 %} M2."RELATIONSHIP_TO_EMPLOYEE" {% endcondition %} AND
               {% condition PLACE_OF_SERVICE_DESCRIPTION_G2 %} M2."PLACE_OF_SERVICE_DESCRIPTION" {% endcondition %} AND
@@ -204,9 +204,9 @@ view: vw_cohort_analysis_summary_1 {
               {% condition PROCEDURE_DESCRIPTION_G2 %} M2."PROCEDURE_DESCRIPTION" {% endcondition %} AND
               {% condition PRIMARY_PROCEDURE_CODE_G2 %} M2."PRIMARY_PROCEDURE_CODE" {% endcondition %} AND
               {% condition ICD_LS_MODIFY_G2 %} M2."ICD_LS_MODIFY" {% endcondition %} AND
-              {% condition ICD_ACUTE_G2 %} M2."ICD_ACUTE" {% endcondition %} AND
+              {% condition ICD_ACUTE_G2 %} M2."CHRONICITY_IDENTIFIER" {% endcondition %} AND
               {% condition ICD_PREVENTATIVE_G2 %} M2."ICD_PREVENTATIVE" {% endcondition %} AND
-              {% condition 2012_CHRONIC_G2 %} M2."2012_CHRONIC" {% endcondition %} AND
+              {% condition CHRONICITY_IDENTIFIER_G2 %} M2."CHRONICITY_IDENTIFIER" {% endcondition %} AND
               {% condition ICD_AVOIDABLE_ER_G2 %} M2."ICD_AVOIDABLE_ER" {% endcondition %} AND
               {% condition ICD_DIGESTIVE_DISEASE_G2 %} M2."ICD_DIGESTIVE_DISEASE" {% endcondition %} AND
               {% condition RISK_GROUP_G2 %} M2."RISK_GROUP" {% endcondition %} AND
@@ -432,7 +432,7 @@ view: vw_cohort_analysis_summary_1 {
     suggest_dimension: vw_medical.icd_preventative
   }
 
-  filter: 2012_CHRONIC_G1 {
+  filter: CHRONICITY_IDENTIFIER_G1 {
     type: string
     label: "G1 - CHRONIC DISEASE"
     suggest_explore: vw_medical
@@ -806,7 +806,7 @@ view: vw_cohort_analysis_summary_1 {
     suggest_dimension: vw_medical.icd_preventative
   }
 
-  filter: 2012_CHRONIC_G2 {
+  filter: CHRONICITY_IDENTIFIER_G2 {
     type: string
     label: "G2 - CHRONIC DISEASE"
     suggest_explore: vw_medical

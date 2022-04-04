@@ -42,13 +42,13 @@ view: vw_med_and_pharma_summary_1 {
               LISTAGG(DISTINCT "ICD_DESCRIPTION", '| ') within group (order by "ICD_DESCRIPTION" ASC) as Diagnosis_Desc_List,
               LISTAGG(DISTINCT "ICD_DISEASE_CATEGORY", '| ') within group (order by "ICD_DISEASE_CATEGORY" ASC) as Diagnosis_Category_List,
               LISTAGG(DISTINCT "RECONCILED_DIAGNOSIS_CODE_ICD10", '| ') within group (order by "RECONCILED_DIAGNOSIS_CODE_ICD10" ASC) as DIAGNOSIS_CODE_List,
-              LISTAGG(DISTINCT "ICD_CHRONIC_CAT", '| ') within group (order by "ICD_CHRONIC_CAT" ASC) as Chronic_Category_List,
+              LISTAGG(DISTINCT "CCW_CHRONIC_CAT", '| ') within group (order by "CCW_CHRONIC_CAT" ASC) as Chronic_Category_List,
 
               LISTAGG(DISTINCT "PROCEDURE_DESCRIPTION", '| ') within group (order by "PROCEDURE_DESCRIPTION" ASC) as PROCEDURE_DESCRIPTION_List,
               LISTAGG(DISTINCT "PRIMARY_PROCEDURE_CODE", '| ') within group (order by "PRIMARY_PROCEDURE_CODE" ASC) as PROCEDURE_CODE_List,
               LISTAGG(DISTINCT "PLACE_OF_SERVICE_DESCRIPTION", '| ') within group (order by "PLACE_OF_SERVICE_DESCRIPTION" ASC) as PLACE_OF_SERVICE_DESCRIPTION,
               LISTAGG(DISTINCT "SERVICE_PROVIDER_SPECIALITY_CODE_DESC", '| ') within group (order by "SERVICE_PROVIDER_SPECIALITY_CODE_DESC" ASC) as SPECIALITY_CODE_DESCRIPTION,
-              (CASE WHEN "ICD_CHRONIC_CAT" = 'DIABETES' THEN 'TRUE'
+              (CASE WHEN "CCW_CHRONIC_CAT" = 'DIABETES' THEN 'TRUE'
                 ELSE 'FALSE'
                 END) as Diabetes_Flag
 
@@ -57,7 +57,7 @@ view: vw_med_and_pharma_summary_1 {
             {% condition DISEASE_CATEGORY %} "ICD_DISEASE_CATEGORY" {% endcondition %} AND
             {% condition DESCRIPTION %} "ICD_DESCRIPTION" {% endcondition %} AND
             {% condition DIAGNOSIS_CODE %} "RECONCILED_DIAGNOSIS_CODE_ICD10" {% endcondition %} AND
-            {% condition CHRONIC_CATEGORY %} "ICD_CHRONIC_CAT" {% endcondition %} AND
+            {% condition CHRONIC_CATEGORY %} "CCW_CHRONIC_CAT" {% endcondition %} AND
             {% condition GENDER %} "PATIENT_GENDER" {% endcondition %} AND
             {% condition EMPLOYEE_RELATIONSHIP %} "RELATIONSHIP_TO_EMPLOYEE" {% endcondition %} AND
             {% condition PLACE_OF_SERVICE_DESC %} "PLACE_OF_SERVICE_DESCRIPTION" {% endcondition %} AND
@@ -66,9 +66,9 @@ view: vw_med_and_pharma_summary_1 {
             {% condition PROCEDURE_CODE_DESC %} "PROCEDURE_DESCRIPTION" {% endcondition %} AND
             {% condition PROCEDURE_CODE %} "PRIMARY_PROCEDURE_CODE" {% endcondition %} AND
             {% condition LS_MODIFY_OR_NOT %} "ICD_LS_MODIFY" {% endcondition %} AND
-            {% condition ACUTE_OR_NOT %} "ICD_ACUTE" {% endcondition %} AND
+            {% condition ACUTE_OR_NOT %} "CHRONICITY_IDENTIFIER" {% endcondition %} AND
             {% condition PREVENTATIVE_OR_NOT %} "ICD_PREVENTATIVE" {% endcondition %} AND
-            {% condition CHRONIC_OR_NOT %} "2012_CHRONIC" {% endcondition %} AND
+            {% condition CHRONIC_OR_NOT %} "CHRONICITY_IDENTIFIER" {% endcondition %} AND
             {% condition AVOIDABLE_ER_OR_NOT %} "ICD_AVOIDABLE_ER" {% endcondition %} AND
             {% condition DIGESTIVE_DISEASE_OR_NOT %} "ICD_DIGESTIVE_DISEASE" {% endcondition %} AND
             {% condition PARTICIPANT_FLAG_M %} "PARTICIPANT_FLAG" {% endcondition %} AND

@@ -14,7 +14,7 @@ view: ad_hoc_query_tool_medical {
           "ICD_DISEASE_CATEGORY" as ICD_DISEASE_CATEGORY,
           "DISEASE_SUB_CATEGORY" as DISEASE_SUB_CATEGORY,
           "RECONCILED_DIAGNOSIS_CODE_ICD10" as RECONCILED_DIAGNOSIS_CODE_ICD10,
-          "ICD_CHRONIC_CAT" as ICD_CHRONIC_CAT,
+          "CCW_CHRONIC_CAT" as CCW_CHRONIC_CAT,
           "PROCEDURE_DESCRIPTION" as PROCEDURE_DESCRIPTION,
           "PROCEDURE_CATEGORY" as PROCEDURE_CATEGORY,
           "PROCEDURE_SUBCATEGORY" as PROCEDURE_SUB_CATEGORY,
@@ -32,7 +32,7 @@ view: ad_hoc_query_tool_medical {
             {% condition DISEASE_SUBCATEGORY %} "DISEASE_SUB_CATEGORY" {% endcondition %} AND
             {% condition DISEASE_DESCRIPTION %} "ICD_DESCRIPTION" {% endcondition %} AND
             {% condition DIAGNOSIS_CODE %} "RECONCILED_DIAGNOSIS_CODE_ICD10" {% endcondition %} AND
-            {% condition CHRONIC_CATEGORY %} "ICD_CHRONIC_CAT" {% endcondition %} AND
+            {% condition CHRONIC_CATEGORY %} "CCW_CHRONIC_CAT" {% endcondition %} AND
             {% condition GENDER %} "PATIENT_GENDER" {% endcondition %} AND
             {% condition EMPLOYEE_RELATIONSHIP %} "RELATIONSHIP_TO_EMPLOYEE" {% endcondition %} AND
             {% condition PLACE_OF_SERVICE_DESC %} "PLACE_OF_SERVICE_DESCRIPTION" {% endcondition %} AND
@@ -41,9 +41,9 @@ view: ad_hoc_query_tool_medical {
             {% condition PROCEDURE_CODE_DESC %} "PROCEDURE_DESCRIPTION" {% endcondition %} AND
             {% condition PROCEDURE_CODE %} "PRIMARY_PROCEDURE_CODE" {% endcondition %} AND
             {% condition LS_MODIFY_OR_NOT %} "ICD_LS_MODIFY" {% endcondition %} AND
-            {% condition ACUTE_OR_NOT %} "ICD_ACUTE" {% endcondition %} AND
+            {% condition ACUTE_OR_NOT %} "CHRONICITY_IDENTIFIER" {% endcondition %} AND
             {% condition PREVENTATIVE_OR_NOT %} "ICD_PREVENTATIVE" {% endcondition %} AND
-            {% condition CHRONIC_OR_NOT %} "2012_CHRONIC" {% endcondition %} AND
+            {% condition CHRONIC_OR_NOT %} "CHRONICITY_IDENTIFIER" {% endcondition %} AND
             {% condition AVOIDABLE_ER_OR_NOT %} "ICD_AVOIDABLE_ER" {% endcondition %} AND
             {% condition DIGESTIVE_DISEASE_OR_NOT %} "ICD_DIGESTIVE_DISEASE" {% endcondition %} AND
 
@@ -276,7 +276,7 @@ view: ad_hoc_query_tool_medical {
     type: string
     label: "CHRONIC CATEGORY"
     drill_fields: [PATIENT_GENDER, CHRONIC_CATEGORY, DISEASE_CATEGORY, DISEASE_DESCRIPTION, RECONCILED_DIAGNOSIS_CODE_ICD10, PROCEDURE_DESCRIPTION, PRIMARY_PROCEDURE_CODE, PLACE_OF_SERVICE_DESCRIPTION]
-    sql: ${TABLE}.ICD_CHRONIC_CAT ;;
+    sql: ${TABLE}.CCW_CHRONIC_CAT ;;
   }
 
   dimension: PROCEDURE_DESCRIPTION {
