@@ -427,7 +427,7 @@ view: vw_medical {
   dimension: unique_id {
     type: string
     primary_key: yes
-    hidden: yes
+    hidden: no
     sql: ${TABLE}."UNIQUE_ID" ;;
   }
 
@@ -955,5 +955,22 @@ view: vw_medical {
     label: "PARTICIPANT PROGRAM NAME"
     sql: ${TABLE}."PARTICIPANT_PROGRAM_NAME";;
   }
-
+dimension: 2021_ {
+  type: string
+  sql: case when ${Paid_year} = 2021 and ${PARTICIPANT_Flag} = 'PARTICIPANT' then 'True'
+  else 'False'
+  END;;
+}
+  dimension: 2020_ {
+    type: string
+    sql: case when ${Paid_year} = 2020 and ${PARTICIPANT_Flag} = 'PARTICIPANT' then 'True'
+  else 'False'
+  END;;
+}
+  dimension: 2019_ {
+    type: string
+    sql: case when ${Paid_year} = 2019 and ${PARTICIPANT_Flag} = 'PARTICIPANT' then 'True'
+  else 'False'
+  END;;
+}
 }
