@@ -103,4 +103,14 @@ view: vw_patient_demographics {
     label: "PARTICIPANT PROGRAM NAME"
     sql: ${TABLE}."PARTICIPANT_PROGRAM_NAME";;
   }
+
+  dimension: abc_x {
+    type: string
+    sql: case when ${patient_dob_year} = 2021 and ${PARTICIPANT_Flag} = 'PARTICIPANT' then '2021_P'
+          when ${patient_dob_year} = 2020 and ${PARTICIPANT_Flag} = 'PARTICIPANT' then '2020_P'
+          when ${patient_dob_year} = 2019 and ${PARTICIPANT_Flag} = 'PARTICIPANT' then '2019_P'
+          else 'False'
+          END;;
+
+    }
 }
