@@ -955,22 +955,4 @@ view: vw_medical {
     label: "PARTICIPANT PROGRAM NAME"
     sql: ${TABLE}."PARTICIPANT_PROGRAM_NAME";;
   }
-dimension: abc {
-  type: string
-  sql: case when ${Paid_year} = 2021 and ${PARTICIPANT_Flag} = 'PARTICIPANT' then 'True'
-  else 'False'
-  END;;
-}
-  dimension: 2020_ {
-    type: string
-    sql: case when ${Paid_year} = 2020 and ${PARTICIPANT_Flag} = 'PARTICIPANT' then 'True'
-  else 'False'
-  END;;
-}
-  dimension: 2019_ {
-    type: string
-    sql: case when ${Paid_year} = 2019 and ${PARTICIPANT_Flag} = 'PARTICIPANT' then 'True'
-  else 'False'
-  END;;
-}
 }
