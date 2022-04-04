@@ -362,4 +362,19 @@ view: ebr_measures {
     type: string
     sql: ${TABLE}."PARTICIPANT_FLAG" ;;
   }
+  dimension: abc_x {
+    type: string
+    sql: case when ${year} = 2021 and ${PARTICIPANT_Flag} = 'PARTICIPANT' then '2021_P'
+          when ${year} = 2020 and ${PARTICIPANT_Flag} = 'PARTICIPANT' then '2020_P'
+          when ${year} = 2019 and ${PARTICIPANT_Flag} = 'PARTICIPANT' then '2019_P'
+          else 'False'
+          END;;
+
+    }
+  dimension: abc_2021 {
+    type: string
+    sql: case when ${year} = 2021 and ${PARTICIPANT_Flag} = 'PARTICIPANT' then '2021_P'
+     else 'False'
+       END;;
+}
 }
