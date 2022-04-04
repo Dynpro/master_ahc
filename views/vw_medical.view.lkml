@@ -955,7 +955,7 @@ view: vw_medical {
     label: "PARTICIPANT PROGRAM NAME"
     sql: ${TABLE}."PARTICIPANT_PROGRAM_NAME";;
   }
-dimension: 2021_ {
+dimension: abc {
   type: string
   sql: case when ${Paid_year} = 2021 and ${PARTICIPANT_Flag} = 'PARTICIPANT' then 'True'
   else 'False'
