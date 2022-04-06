@@ -581,6 +581,12 @@ view: vw_medical {
         END;;
   }
 
+  dimension: CCW_CHRONIC_CAT_SOURCE {
+    type: string
+    label: "CCW CHRONIC CAT SOURCE"
+    sql: ${TABLE}."CCW_CHRONIC_CAT_SOURCE" ;;
+  }
+
   dimension: LSModify_or_Preventive_disease {
     type: string
     label: "LIFESTYLE MODIFIABLE OR PREVENTIVE DISEASE"
