@@ -253,7 +253,7 @@ view: vw_med_and_pharma_summary_1 {
   }
   filter: PARTICIPANT_FLAG_M {
     type: string
-    label: "PARTICIPANT Flag"
+    label: "PARTICIPANT Flag M"
     suggest_explore: vw_medical
     suggest_dimension: vw_medical.PARTICIPANT_Flag
   }
@@ -472,7 +472,7 @@ view: vw_med_and_pharma_summary_1 {
 
   filter: PARTICIPANT_FLAG_P {
     type: string
-    label: "PARTICIPANT Flag"
+    label: "PARTICIPANT Flag P"
     suggest_explore: vw_pharmacy
     suggest_dimension: vw_pharmacy.PARTICIPANT_Flag
   }
