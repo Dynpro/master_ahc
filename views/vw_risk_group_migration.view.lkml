@@ -58,6 +58,7 @@ view: vw_risk_group_migration {
   dimension: Risk_group {
     type: string
     sql: ${TABLE}."RISK_GROUP" ;;
+    value_format: "0"
   }
 
   measure: Total_paid_amt {
