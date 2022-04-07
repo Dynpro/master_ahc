@@ -344,6 +344,7 @@ view: ebr_measures {
     type: number
     label: "Year"
     sql: ${TABLE}."YEAR" ;;
+    value_format: "0"
   }
 
   measure: total_patients {
