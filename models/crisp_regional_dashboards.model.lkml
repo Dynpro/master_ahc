@@ -112,3 +112,4 @@ explore: ebr_measures {
 }
 
 explore: vw_patient_demographics {}
+explore: vw_predictive_healthscore_index {}
