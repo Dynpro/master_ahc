@@ -186,6 +186,7 @@ view: vw_medication_possession_ratio {
     type: number
     label: "YEAR"
     sql: ${TABLE}."YEAR" ;;
+    value_format: "0"
   }
 
   measure: Total_Patients {
