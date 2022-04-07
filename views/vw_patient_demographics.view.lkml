@@ -36,11 +36,6 @@ view: vw_patient_demographics {
     sql: ${TABLE}."EMPLOYEE_ID" ;;
   }
 
-  dimension: member_id {
-    type: string
-    sql: ${TABLE}."MEMBER_ID" ;;
-  }
-
   dimension_group: patient_dob {
     type: time
     timeframes: [
@@ -113,4 +108,10 @@ view: vw_patient_demographics {
           END;;
 
     }
+
+  dimension: member_id{
+    type: string
+    label: "MEMBER ID"
+    sql: ${TABLE}."MEMBER_ID" ;;
+  }
 }
