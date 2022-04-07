@@ -78,7 +78,7 @@ view: vw_patient_demographics {
 
   dimension: unique_id {
     type: string
-    hidden: yes
+    hidden: no
     sql: ${TABLE}."UNIQUE_ID" ;;
   }
 
