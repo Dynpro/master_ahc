@@ -399,7 +399,7 @@ view: vw_predictive_healthscore_index {
   }
 
   measure: dcci_24_com {
-    type: sum
+    type: average
     label: "Charlson Deyo Comorbidity Index"
     sql: ${TABLE}."DCCI_24COM" ;;
   }
