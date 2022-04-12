@@ -378,11 +378,7 @@ view: ad_hoc_query_tool_pharmacy {
     value_format: "$#,##0"
   }
 
-  dimension: PARTICIPANT_FLAG{
-    type: string
-    label: "PARTICIPANT Flag"
-    sql: ${TABLE}."PARTICIPANT_FLAG" ;;
-  }
+
 
   dimension: member_age {
     type: number
