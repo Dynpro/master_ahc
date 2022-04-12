@@ -183,7 +183,7 @@ view: vw_predictive_healthscore_index {
   }
 
   dimension: age_group {
-    type: string
+    type: number
     sql: ${TABLE}."AGE_GROUP" ;;
   }
 
