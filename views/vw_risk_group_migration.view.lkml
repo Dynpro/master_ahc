@@ -10,13 +10,13 @@ view: vw_risk_group_migration {
           {% condition DIAGNOSIS_CODE %} "RECONCILED_DIAGNOSIS_CODE_ICD10" {% endcondition %} AND
           {% condition PROCEDURE_CODE_DESC %} "PROCEDURE_DESCRIPTION" {% endcondition %} AND
           {% condition PROCEDURE_CODE %} "PRIMARY_PROCEDURE_CODE" {% endcondition %} AND
-          {% condition CHRONIC_CATEGORY %} "ICD_CHRONIC_CAT" {% endcondition %} AND
+          {% condition CHRONIC_CATEGORY %} "CCW_CHRONIC_CAT" {% endcondition %} AND
           {% condition GENDER %} "PATIENT_GENDER" {% endcondition %} AND
           {% condition EMPLOYEE_RELATIONSHIP %} "RELATIONSHIP_TO_EMPLOYEE" {% endcondition %} AND
           {% condition MAJOR_DISEASE_DIABETES %} "ICD_MAJOR_DISEASE" {% endcondition %} AND
-          {% condition ACUTE_OR_NOT %} "ICD_ACUTE" {% endcondition %} AND
+          {% condition ACUTE_OR_NOT %} "CHRONICITY_IDENTIFIER" {% endcondition %} AND
           {% condition PREVENTATIVE_OR_NOT %} "ICD_PREVENTATIVE" {% endcondition %} AND
-          {% condition CHRONIC_OR_NOT %} "2012_CHRONIC" {% endcondition %} AND
+          {% condition CHRONIC_OR_NOT %} "CHRONICITY_IDENTIFIER" {% endcondition %} AND
           {% condition AVOIDABLE_ER_OR_NOT %} "ICD_AVOIDABLE_ER" {% endcondition %} AND
           {% condition DIGESTIVE_DISEASE_OR_NOT %} "ICD_DIGESTIVE_DISEASE" {% endcondition %}
           ) ;;
@@ -51,13 +51,15 @@ view: vw_risk_group_migration {
   }
 
   dimension: File_year {
-    type: string
+    type: number
     sql: ${TABLE}."FILE_YEAR" ;;
+    value_format: "0"
   }
 
   dimension: Risk_group {
     type: string
     sql: ${TABLE}."RISK_GROUP" ;;
+
   }
 
   measure: Total_paid_amt {

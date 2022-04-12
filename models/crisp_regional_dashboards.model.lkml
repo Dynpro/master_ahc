@@ -3,20 +3,32 @@ connection: "snowflake_prod"
 # include all the views
 include: "/views/**/*.view"
 
-datagroup: master_dashboards_default_datagroup {
+datagroup: crisp_regional_dashboards_default_datagroup {
   # sql_trigger: SELECT MAX(id) FROM etl_log;;
   max_cache_age: "1 hour"
 }
 
-persist_with: master_dashboards_default_datagroup
+persist_with: crisp_regional_dashboards_default_datagroup
 
 
 explore: vw_medical {
+  join: vw_patient_demographics {
+    view_label: "Patient Demographics"
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${vw_medical.unique_id} = ${vw_patient_demographics.unique_id} ;;
+  }
    label: "Medical records"
   sql_always_where: ${Paid_year} IN ('2018', '2019', '2020', '2021', '2022') ;;
 }
 
 explore: vw_pharmacy {
+  join: vw_patient_demographics {
+    view_label: "Patient Demographics"
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${vw_pharmacy.unique_id} = ${vw_patient_demographics.unique_id} ;;
+  }
    label: "Pharmacy records"
   sql_always_where: ${date_filled_year} IN ('2019', '2020', '2021', '2022') ;;
 }
@@ -42,6 +54,12 @@ explore: vw_cohort_analysis_summary_1 {
 }
 
 explore: vw_risk_group_migration {
+  join: vw_patient_demographics {
+    view_label: "Patient Demographics"
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${vw_risk_group_migration.Unique_id} = ${vw_patient_demographics.unique_id} ;;
+  }
   label: "Risk Group Migration"
   sql_always_where: ${File_year} IN ('2018', '2019', '2020', '2021', '2022') ;;
 }
@@ -59,7 +77,7 @@ explore: vw_medication_possession_ratio {
     sql_on: ${vw_medication_possession_ratio.unique_id} = ${vw_patient_demographics.unique_id} ;;
   }
   label: "Medication Possession Ratio"
-  sql_always_where: ${year} IN ('2018', '2019', '2020') ;;
+  sql_always_where: ${year} IN ('2018', '2019', '2020','2021', '2022') ;;
 }
 
 explore: vw_preventive_screening {
@@ -70,7 +88,7 @@ explore: vw_preventive_screening {
     sql_on: ${vw_preventive_screening.unique_id} = ${vw_patient_demographics.unique_id} ;;
   }
   label: "Preventive Screening"
-  sql_always_having: ${year} IN ('2018', '2019', '2020') ;;
+  sql_always_having: ${year} IN ('2018', '2019', '2020', '2021', '2022') ;;
 }
 
 explore: hedis_measure {
@@ -94,3 +112,4 @@ explore: ebr_measures {
 }
 
 explore: vw_patient_demographics {}
+explore: vw_predictive_healthscore_index {}

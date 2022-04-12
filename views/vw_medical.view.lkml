@@ -10,7 +10,7 @@ view: vw_medical {
   dimension: 2012_chronic {
     type: string
     label: "CHRONIC ?"
-    sql: ${TABLE}."2012_CHRONIC" ;;
+    sql: ${TABLE}."CHRONICITY_IDENTIFIER" ;;
   }
 
   dimension: address_city {
@@ -151,7 +151,7 @@ view: vw_medical {
   dimension: icd_acute {
     type: string
     label: "ACUTE ?"
-    sql: ${TABLE}."ICD_ACUTE" ;;
+    sql: ${TABLE}."CHRONICITY_IDENTIFIER" ;;
   }
 
   dimension: avoidable_er {
@@ -174,7 +174,7 @@ view: vw_medical {
     type: string
     label: "CHRONIC CATEGORY"
     drill_fields: [icd_disease_category, DIAGNOSIS_SUB_CATEGORY, icd_description, PROCEDURE_CATEGORY, PROCEDURE_SUBCATEGORY, procedure_description]
-    sql: ${TABLE}."ICD_CHRONIC_CAT" ;;
+    sql: ${TABLE}."CCW_CHRONIC_CAT" ;;
   }
 
   dimension: icd_chronic_cat_new {
@@ -431,7 +431,7 @@ view: vw_medical {
   dimension: unique_id {
     type: string
     primary_key: yes
-    hidden: yes
+    hidden: no
     sql: ${TABLE}."UNIQUE_ID" ;;
   }
 
@@ -516,7 +516,7 @@ view: vw_medical {
     label: "TOTAL LOST DAYS SPEND"
     sql_distinct_key: ${Lost_Days_Unique_Id} ;;
     sql: ${icd_lt_all_absences_midrange}*8*19 ;;
-    #Lost days expense logic as per PHM report: Lost_Days*8*10 (hours - 8, Cost/perhour - $10)
+    #Lost days expense logic as per PHM report: Lost_Days*8*19 (hours - 8, Cost/perhour - $19)
     value_format: "$#,##0"
   }
 
@@ -578,10 +578,17 @@ view: vw_medical {
     type: string
     label: "CHRONIC vs ACUTE"
     drill_fields: [icd_disease_category, DIAGNOSIS_SUB_CATEGORY, icd_description, PROCEDURE_CATEGORY, PROCEDURE_SUBCATEGORY, procedure_description]
-    sql: CASE WHEN ${2012_chronic} = '1' THEN 'CHRONIC'
-        WHEN ${icd_acute} = 'TRUE' THEN 'ACUTE'
+    sql: CASE WHEN ${2012_chronic} = 'B' THEN 'CHRONIC'
+              WHEN ${2012_chronic} = 'C' THEN 'CHRONIC'
+              WHEN ${icd_acute} = 'A' THEN 'ACUTE'
         ELSE 'NON-CHRONIC_&_NON-Acute'
         END;;
+  }
+
+  dimension: CCW_CHRONIC_CAT_SOURCE {
+    type: string
+    label: "CCW CHRONIC CAT SOURCE"
+    sql: ${TABLE}."CCW_CHRONIC_CAT_SOURCE" ;;
   }
 
   dimension: LSModify_or_Preventive_disease {
@@ -922,6 +929,7 @@ view: vw_medical {
   }
 
 
+
   dimension: year_and_patient_id {
     type: string
     hidden: yes
@@ -933,6 +941,22 @@ view: vw_medical {
     sql_distinct_key: ${year_and_patient_id} ;;
     sql: ${total_employer_paid_amt}  ;;
   }
+  dimension: patient_gender1 {
+    type: string
+    sql: case when ${TABLE}."PATIENT_GENDER"= 'M' then 'Male'
+              when ${TABLE}."PATIENT_GENDER"= 'F' then 'Female'
+              else '0'
+          end;;
+  }
+  dimension: relationship_to_employee1 {
+    type: string
+    label: "RELATIONSHIP TO EMPLOYEE1"
+    sql: case when ${TABLE}."RELATIONSHIP_TO_EMPLOYEE" = 'EMPLOYEE' then 'Employee'
+              when ${TABLE}."RELATIONSHIP_TO_EMPLOYEE" = 'SPOUSE' then 'Spouse'
+              else 'Dependent'
+        end;;
+  }
+
 
   dimension: PARTICIPANT_NONPARTICIPANT_Flag {
     type: string
@@ -958,6 +982,13 @@ view: vw_medical {
     group_label: "PARTICIPANT FILTER"
     suggest_explore: vw_medical
     suggest_dimension: vw_medical.PARTICIPANT_NONPARTICIPANT_Flag
+  }
+
+
+  dimension: PARTICIPANT_PROGRAM_NAME{
+    type: string
+    label: "PARTICIPANT PROGRAM NAME"
+    sql: ${TABLE}."PARTICIPANT_PROGRAM_NAME";;
   }
 
 }

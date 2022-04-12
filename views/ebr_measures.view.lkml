@@ -341,9 +341,10 @@ view: ebr_measures {
   }
 
   dimension: year {
-    type: string
+    type: number
     label: "Year"
     sql: ${TABLE}."YEAR" ;;
+    value_format: "0"
   }
 
   measure: total_patients {
@@ -361,5 +362,5 @@ view: ebr_measures {
   dimension: PARTICIPANT_Flag {
     type: string
     sql: ${TABLE}."PARTICIPANT_FLAG" ;;
-  }
+}
 }

@@ -36,11 +36,6 @@ view: vw_patient_demographics {
     sql: ${TABLE}."EMPLOYEE_ID" ;;
   }
 
-  dimension: member_id {
-    type: string
-    sql: ${TABLE}."MEMBER_ID" ;;
-  }
-
   dimension_group: patient_dob {
     type: time
     timeframes: [
@@ -83,7 +78,7 @@ view: vw_patient_demographics {
 
   dimension: unique_id {
     type: string
-    hidden: yes
+    hidden: no
     sql: ${TABLE}."UNIQUE_ID" ;;
   }
 
@@ -96,5 +91,27 @@ view: vw_patient_demographics {
     type: count
     hidden: yes
     drill_fields: [dependent_f_name, dependent_l_name, dependent_m_name]
+  }
+
+  dimension: PARTICIPANT_PROGRAM_NAME{
+    type: string
+    label: "PARTICIPANT PROGRAM NAME"
+    sql: ${TABLE}."PARTICIPANT_PROGRAM_NAME";;
+  }
+
+  dimension: abc_x {
+    type: string
+    sql: case when ${patient_dob_year} = 2021 and ${PARTICIPANT_Flag} = 'PARTICIPANT' then '2021_P'
+          when ${patient_dob_year} = 2020 and ${PARTICIPANT_Flag} = 'PARTICIPANT' then '2020_P'
+          when ${patient_dob_year} = 2019 and ${PARTICIPANT_Flag} = 'PARTICIPANT' then '2019_P'
+          else 'False'
+          END;;
+
+    }
+
+  dimension: member_id{
+    type: string
+    label: "MEMBER ID"
+    sql: ${TABLE}."MEMBER_ID" ;;
   }
 }

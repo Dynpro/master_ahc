@@ -483,6 +483,7 @@ view: vw_pharmacy {
     sql: ${TABLE}."PARTICIPANT_FLAG" ;;
   }
 
+
   dimension: participant_paid_year {
     type: string
     hidden: yes
@@ -501,5 +502,11 @@ view: vw_pharmacy {
     group_label: "PARTICIPANT FILTER"
     suggest_explore: vw_pharmacy
     suggest_dimension:vw_pharmacy.PARTICIPANT_NONPARTICIPANT_Flag
+}
+  dimension: PARTICIPANT_PROGRAM_NAME{
+    type: string
+    label: "PARTICIPANT PROGRAM NAME"
+    sql: ${TABLE}."PARTICIPANT_PROGRAM_NAME";;
+
   }
 }

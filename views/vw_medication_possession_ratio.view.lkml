@@ -19,7 +19,7 @@ view: vw_medication_possession_ratio {
               {% condition DISEASE_SUB_CATEGORY %} "DISEASE_SUB_CATEGORY" {% endcondition %} AND
               {% condition PROCEDURE_CATEGORY %} "PROCEDURE_CATEGORY" {% endcondition %} AND
               {% condition PROCEDURE_SUBCATEGORY %} "PROCEDURE_SUBCATEGORY" {% endcondition %} AND
-              {% condition CHRONIC_CATEGORY %} "ICD_CHRONIC_CAT" {% endcondition %})
+              {% condition CHRONIC_CATEGORY %} "CCW_CHRONIC_CAT" {% endcondition %})
     ;;
   }
 
@@ -183,9 +183,10 @@ view: vw_medication_possession_ratio {
   }
 
   dimension: year {
-    type: string
+    type: number
     label: "YEAR"
     sql: ${TABLE}."YEAR" ;;
+    value_format: "0"
   }
 
   measure: Total_Patients {
