@@ -1,6 +1,11 @@
 view: ebr_measures {
-  sql_table_name: "SCH_AHC_CRISP_REGIONAL"."EBR_MEASURES"
+  derived_table: {
+  sql:select * from "SCH_AHC_CRISP_REGIONAL"."EBR_MEASURES"
+      WHERE "UNIQUE_ID" IN (select DISTINCT "UNIQUE_ID" from "SCH_AHC_CRISP_REGIONAL"."VW_MEDICAL"
+        WHERE {% condition PARTICIPANT_YEAR %} LEFT("PAID_DATE", 4) {% endcondition %} AND
+        {% condition PARTICIPANT_Flag %} "PARTICIPANT_FLAG" {% endcondition %})
     ;;
+  }
 
   dimension: individual_gets_diabetic_test_strips {
     type: string
@@ -359,8 +364,17 @@ view: ebr_measures {
     drill_fields: []
   }
 
-  dimension: PARTICIPANT_Flag {
+  filter: PARTICIPANT_YEAR {
     type: string
-    sql: ${TABLE}."PARTICIPANT_FLAG" ;;
-}
+    group_label: "PARTICIPANT FILTER"
+    suggest_explore: vw_medical
+    suggest_dimension: vw_medical.participant_paid_year
+  }
+
+  filter: PARTICIPANT_Flag {
+    type: string
+    group_label: "PARTICIPANT FILTER"
+    suggest_explore: vw_medical
+    suggest_dimension: vw_medical.PARTICIPANT_NONPARTICIPANT_Flag
+  }
 }

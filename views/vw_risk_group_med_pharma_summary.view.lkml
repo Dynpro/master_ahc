@@ -18,9 +18,12 @@ view: vw_risk_group_med_pharma_summary {
                 {% condition PREVENTATIVE_OR_NOT %} "ICD_PREVENTATIVE" {% endcondition %} AND
                 {% condition CHRONIC_OR_NOT %} "CHRONICITY_IDENTIFIER" {% endcondition %} AND
                 {% condition AVOIDABLE_ER_OR_NOT %} "ICD_AVOIDABLE_ER" {% endcondition %} AND
-                {% condition DIGESTIVE_DISEASE_OR_NOT %} "ICD_DIGESTIVE_DISEASE" {% endcondition %})
+                {% condition DIGESTIVE_DISEASE_OR_NOT %} "ICD_DIGESTIVE_DISEASE" {% endcondition %} AND
+                {% condition PARTICIPANT_YEAR %} LEFT("PAID_DATE", 4) {% endcondition %} AND
+                {% condition PARTICIPANT_Flag %} "PARTICIPANT_FLAG" {% endcondition %})
+          AND
 
-         AND
+
             UNIQUE_ID IN (select DISTINCT UNIQUE_ID from "SCH_AHC_CRISP_REGIONAL"."VW_PHARMACY"
             WHERE
                 {% condition ACE_INHIBITOR_DRUGS %} "ACE_INHIBITOR" {% endcondition %} AND
@@ -285,10 +288,18 @@ view: vw_risk_group_med_pharma_summary {
     suggest_dimension: vw_pharmacy.black_label_drug
   }
 
-  dimension: PARTICIPANT_FLAG {
+  filter: PARTICIPANT_YEAR {
     type: string
-    label: "PARTICIPANT Flag"
-    sql: ${TABLE}."PARTICIPANT_FLAG" ;;
+    group_label: "PARTICIPANT FILTER"
+    suggest_explore: vw_medical
+    suggest_dimension: vw_medical.participant_paid_year
+  }
+
+  filter: PARTICIPANT_Flag {
+    type: string
+    group_label: "PARTICIPANT FILTER"
+    suggest_explore: vw_medical
+    suggest_dimension: vw_medical.PARTICIPANT_NONPARTICIPANT_Flag
   }
 
 }
