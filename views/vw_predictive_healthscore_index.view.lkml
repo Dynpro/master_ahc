@@ -1,5 +1,5 @@
 view: vw_predictive_healthscore_index {
-  sql_table_name:"DB_KAIROS_PROD"."MRS_CALCULATOR_SPACE"."ML_FINAL_TRAIN_TEST_CRISP"
+  sql_table_name:"DB_KAIROS_PROD"."MRS_CALCULATOR_SPACE"."ML_FINAL_TRAIN_TEST_CRISP_NEW"
     ;;
 
   measure: 24_com_acute_cat_count {
@@ -20,6 +20,7 @@ view: vw_predictive_healthscore_index {
 
   measure: 24_com_avg_paid_amount {
     type: sum
+    label: "24Com Avg Paid Amount"
     sql: ${TABLE}."24COM_AVG_PAID_AMOUNT" ;;
     value_format: "$0.00,\" K\""
   }
