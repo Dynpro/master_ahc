@@ -228,7 +228,7 @@ view: hedis_measure {
   dimension: cdc_bp_control_14090_mm_hg {
     type: string
     label: "CDC: BP control (<140/90 mm Hg)"
-    sql: ${TABLE}."CDC_BP_Control_Less_Than_140mm_OR_90hg" ;;
+    sql: ${TABLE}."CDC_BP_CONTROL_LESS_THAN_140MM_OR_90HG" ;;
   }
 
   measure: cdc_bp_control_14090_mm_hg_patients {
@@ -241,7 +241,7 @@ view: hedis_measure {
   dimension: cdc_hb_a1c_control_7_0 {
     type: string
     label: "CDC: HbA1c control (<7.0%)"
-    sql: ${TABLE}."CDC_HBA1C_Control_Less_Than_7_Percentage" ;;
+    sql: ${TABLE}."CDC_HBA1C_CONTROL_LESS_THAN_7_PERCENTAGE" ;;
   }
 
   measure: cdc_hb_a1c_control_7_0_patients {
@@ -254,7 +254,7 @@ view: hedis_measure {
   dimension: cdc_hemoglobin_a1c_hb_a1c_testing {
     type: string
     label: "CDC: Hemoglobin A1c (HbA1c) testing"
-    sql: ${TABLE}."CDC_Hemoglobin_HBA1C_Testing" ;;
+    sql: ${TABLE}."CDC_HEMOGLOBIN_HBA1C_TESTING" ;;
   }
 
   measure: cdc_hemoglobin_a1c_hb_a1c_testing_patients {
@@ -267,7 +267,7 @@ view: hedis_measure {
   dimension: cdc_hg_a1c_poor_control_9_0 {
     type: string
     label: "CDC: HgA1c poor control (>9.0%)"
-    sql: ${TABLE}."CDC_HGA1C_Poor_Control_Greater_Than_9_Percentage" ;;
+    sql: ${TABLE}."CDC_HGA1C_POOR_CONTROL_GREATER_THAN_9_PERCENTAGE" ;;
   }
 
   measure: cdc_hg_a1c_poor_control_9_0_patients {
@@ -280,7 +280,7 @@ view: hedis_measure {
   dimension: cdc_hgb_a1c_control_8_0 {
     type: string
     label: "CDC: HgbA1c control (<8.0%)"
-    sql: ${TABLE}."CDC_HGBA1C_Control_Less_Than_8_Percentage" ;;
+    sql: ${TABLE}."CDC_HGBA1C_CONTROL_LESS_THAN_8_PERCENTAGE" ;;
   }
 
   measure: cdc_hgb_a1c_control_8_0_patients {
@@ -293,7 +293,7 @@ view: hedis_measure {
   dimension: cdc_medical_attention_for_nephropathy {
     type: string
     label: "CDC: Medical attention for nephropathy"
-    sql: ${TABLE}."CDC_Medical_Attention_For_Nephropathy" ;;
+    sql: ${TABLE}."CDC_MEDICAL_ATTENTION_FOR_NEPHROPATHY" ;;
   }
 
   measure: cdc_medical_attention_for_nephropathy_patients {
@@ -306,7 +306,7 @@ view: hedis_measure {
   dimension: cdc_testing_eye_exam_retinal_performed {
     type: string
     label: "CDC: testing Eye exam (retinal) performed"
-    sql: ${TABLE}."CDC_Testing_EYE_Exam_Performed" ;;
+    sql: ${TABLE}."CDC_TESTING_EYE_EXAM_PERFORMED" ;;
   }
 
   measure: cdc_testing_eye_exam_retinal_performed_patients {
