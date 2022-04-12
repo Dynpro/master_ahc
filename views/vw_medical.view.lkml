@@ -1,8 +1,12 @@
 view: vw_medical {
   label: "Medical records"
-  sql_table_name: "SCH_AHC_CRISP_REGIONAL"."VW_MEDICAL"
-    ;;
-
+  derived_table: {
+    sql: select * from "SCH_AHC_CRISP_REGIONAL"."VW_MEDICAL"
+      WHERE "UNIQUE_ID" IN (select DISTINCT "UNIQUE_ID" from "SCH_AHC_CRISP_REGIONAL"."VW_MEDICAL"
+        WHERE {% condition PARTICIPANT_YEAR %} LEFT("PAID_DATE", 4) {% endcondition %} AND
+        {% condition PARTICIPANT_Flag %} "PARTICIPANT_FLAG" {% endcondition %})
+      ;;
+  }
   dimension: 2012_chronic {
     type: string
     label: "CHRONIC ?"
@@ -917,14 +921,6 @@ view: vw_medical {
     html: {{ rendered_value | date: "%m / %d / %Y" }} ;;
   }
 
-  dimension: PARTICIPANT_FLAG {
-    type: string
-    label: "Participant flag"
-    sql: CASE WHEN ${TABLE}."PARTICIPANT_FLAG" = 'true' THEN 'PARTICIPANT'
-    WHEN ${TABLE}."PARTICIPANT_FLAG" = 'false' THEN 'NON-PARTICIPANT'
-    ELSE 'OTHERS'
-    END ;;
-  }
 
   dimension: year_and_patient_id {
     type: string
@@ -936,6 +932,32 @@ view: vw_medical {
     type: sum
     sql_distinct_key: ${year_and_patient_id} ;;
     sql: ${total_employer_paid_amt}  ;;
+  }
+
+  dimension: PARTICIPANT_NONPARTICIPANT_Flag {
+    type: string
+    hidden:  yes
+    sql: ${TABLE}."PARTICIPANT_FLAG" ;;
+  }
+
+  dimension: participant_paid_year {
+    type: string
+    hidden: yes
+    sql: ${Paid_year} ;;
+  }
+
+  filter: PARTICIPANT_YEAR {
+    type: string
+    group_label: "PARTICIPANT FILTER"
+    suggest_explore: vw_medical
+    suggest_dimension: vw_medical.participant_paid_year
+  }
+
+  filter: PARTICIPANT_Flag {
+    type: string
+    group_label: "PARTICIPANT FILTER"
+    suggest_explore: vw_medical
+    suggest_dimension: vw_medical.PARTICIPANT_NONPARTICIPANT_Flag
   }
 
 }

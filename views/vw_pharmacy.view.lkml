@@ -1,7 +1,12 @@
 view: vw_pharmacy {
   label: "Pharmacy records"
-  sql_table_name: "SCH_AHC_CRISP_REGIONAL"."VW_PHARMACY"
-    ;;
+  derived_table: {
+    sql: select * from "SCH_AHC_CRISP_REGIONAL"."VW_PHARMACY"
+      WHERE "UNIQUE_ID" IN (select DISTINCT "UNIQUE_ID" from "SCH_AHC_CRISP_REGIONAL"."VW_PHARMACY"
+        WHERE {% condition PARTICIPANT_YEAR %} LEFT("DATE_FILLED", 4) {% endcondition %} AND
+        {% condition PARTICIPANT_Flag %} "PARTICIPANT_FLAG" {% endcondition %})
+      ;;
+  }
 
   dimension: ace_inhibitor {
     type: string
@@ -472,8 +477,29 @@ view: vw_pharmacy {
     html: {{ rendered_value | date: "%m / %d / %Y" }} ;;
   }
 
-  dimension: PARTICIPANT_Flag {
+  dimension: PARTICIPANT_NONPARTICIPANT_Flag {
     type: string
+    hidden:  yes
     sql: ${TABLE}."PARTICIPANT_FLAG" ;;
+  }
+
+  dimension: participant_paid_year {
+    type: string
+    hidden: yes
+    sql: ${date_filled_year} ;;
+  }
+
+  filter: PARTICIPANT_YEAR {
+    type: string
+    group_label: "PARTICIPANT FILTER"
+    suggest_explore: vw_pharmacy
+    suggest_dimension: vw_pharmacy.participant_paid_year
+  }
+
+  filter: PARTICIPANT_Flag {
+    type: string
+    group_label: "PARTICIPANT FILTER"
+    suggest_explore: vw_pharmacy
+    suggest_dimension:vw_pharmacy.PARTICIPANT_NONPARTICIPANT_Flag
   }
 }
