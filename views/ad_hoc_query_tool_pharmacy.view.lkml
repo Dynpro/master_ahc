@@ -400,11 +400,7 @@ view: ad_hoc_query_tool_pharmacy {
     label: "PARTICIPANT PROGRAM NAME"
     sql: ${TABLE}."PARTICIPANT_PROGRAM_NAME";;
   }
-  dimension: PARTICIPANT_NONPARTICIPANT_Flag {
-    type: string
-    hidden:  yes
-    sql: ${TABLE}."PARTICIPANT_FLAG" ;;
-  }
+
   filter: PARTICIPANT_YEAR {
     type: string
     group_label: "PARTICIPANT FILTER"
