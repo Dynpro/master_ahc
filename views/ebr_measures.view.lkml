@@ -61,7 +61,7 @@ view: ebr_measures {
   dimension: individual_is_in_disease_group_three {
     type: string
     label: "Disease Grp-3"
-    description: "INDIVIDUAL IS IN DISEASE GROUP-3"
+    description: "ONE CHRONIC DISEASE"
     sql: CASE WHEN ${individual_is_in_disease_group} = 'GROUP-3' THEN '1'
       ELSE '0'
       END ;;
@@ -71,14 +71,14 @@ view: ebr_measures {
     type: count_distinct
     filters: [individual_is_in_disease_group_three: "1"]
     label: "Disease Grp3 - N"
-    description: "INDIVIDUAL IS IN DISEASE GROUP3"
+    description: "ONE CHRONIC DISEASE"
     sql: ${unique_id} ;;
   }
 
   dimension: individual_is_in_disease_group_four {
     type: string
     label: "Disease Grp-4"
-    description: "INDIVIDUAL IS IN DISEASE GROUP-4"
+    description: "TWO CHRONIC DISEASE"
     sql: CASE WHEN ${individual_is_in_disease_group} = 'GROUP-4' THEN '1'
       ELSE '0'
       END ;;
@@ -88,14 +88,14 @@ view: ebr_measures {
     type: count_distinct
     filters: [individual_is_in_disease_group_four: "1"]
     label: "Disease Grp4 - N"
-    description: "INDIVIDUAL IS IN DISEASE GROUP4"
+    description: "TWO CHRONIC DISEASE"
     sql: ${unique_id} ;;
   }
 
   dimension: individual_is_in_disease_group_five {
     type: string
     label: "Disease Grp-5"
-    description: "INDIVIDUAL IS IN DISEASE GROUP-5"
+    description: "THREE CHRONIC DISEASE"
     sql: CASE WHEN ${individual_is_in_disease_group} = 'GROUP-5' THEN '1'
       ELSE '0'
       END ;;
@@ -105,14 +105,14 @@ view: ebr_measures {
     type: count_distinct
     filters: [individual_is_in_disease_group_five: "1"]
     label: "Disease Grp5 - N"
-    description: "INDIVIDUAL IS IN DISEASE GROUP5"
+    description: "THREE CHRONIC DISEASE"
     sql: ${unique_id} ;;
   }
 
   dimension: individual_is_in_disease_group_six {
     type: string
     label: "Disease Grp-6"
-    description: "INDIVIDUAL IS IN DISEASE GROUP-6"
+    description: "FOUR CHRONIC DISEASE"
     sql: CASE WHEN ${individual_is_in_disease_group} = 'GROUP-6' THEN '1'
       ELSE '0'
       END ;;
@@ -122,14 +122,14 @@ view: ebr_measures {
     type: count_distinct
     filters: [individual_is_in_disease_group_six: "1"]
     label: "Disease Grp6 - N"
-    description: "INDIVIDUAL IS IN DISEASE GROUP6"
+    description: "FOUR CHRONIC DISEASE"
     sql: ${unique_id} ;;
   }
 
   dimension: individual_is_in_disease_group_seven {
     type: string
     label: "Disease Grp-7"
-    description: "INDIVIDUAL IS IN DISEASE GROUP-7"
+    description: "FIVE OR MORE CHRONIC DISEASES"
     sql: CASE WHEN ${individual_is_in_disease_group} = 'GROUP-7' THEN '1'
       ELSE '0'
       END ;;
@@ -139,7 +139,7 @@ view: ebr_measures {
     type: count_distinct
     filters: [individual_is_in_disease_group_seven: "1"]
     label: "Disease Grp7 - N"
-    description: "INDIVIDUAL IS IN DISEASE GROUP7"
+    description: "FIVE OR MORE CHRONIC DISEASES"
     sql: ${unique_id} ;;
   }
 
