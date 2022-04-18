@@ -10,7 +10,6 @@ view: ad_hoc_query_tool_pharmacy {
           "TOTAL_EMPLOYER_PAID_AMT" as Total_Paid_Amt_P,
           "NON_PROPRIETARY_NAME" as Drug_List,
           "TEA_CATEGORY" as TEA_Cat_List,
-          "PARTICIPANT_FLAG" as PARTICIPANT_FLAG,
           "MEMBER_AGE" as MEMBER_AGE,
           "PARTICIPANT_PROGRAM_NAME" as PARTICIPANT_PROGRAM_NAME
         from
@@ -52,8 +51,10 @@ view: ad_hoc_query_tool_pharmacy {
               {% condition PREVENTATIVE_OR_NOT %} "ICD_PREVENTATIVE" {% endcondition %} AND
               {% condition CHRONIC_OR_NOT %} "CHRONICITY_IDENTIFIER" {% endcondition %} AND
               {% condition AVOIDABLE_ER_OR_NOT %} "ICD_AVOIDABLE_ER" {% endcondition %} AND
-              {% condition DIGESTIVE_DISEASE_OR_NOT %} "ICD_DIGESTIVE_DISEASE" {% endcondition %}
-            ) ;;
+              {% condition DIGESTIVE_DISEASE_OR_NOT %} "ICD_DIGESTIVE_DISEASE" {% endcondition %} AND
+              {% condition PARTICIPANT_YEAR %} LEFT("PAID_DATE", 4) {% endcondition %} AND
+              {% condition PARTICIPANT_Flag %} "PARTICIPANT_FLAG" {% endcondition %})
+             ;;
   }
 
   #All the MEDICAL table Filter, Dimension & Measures.
@@ -377,11 +378,7 @@ view: ad_hoc_query_tool_pharmacy {
     value_format: "$#,##0"
   }
 
-  dimension: PARTICIPANT_FLAG{
-    type: string
-    label: "PARTICIPANT Flag"
-    sql: ${TABLE}."PARTICIPANT_FLAG" ;;
-  }
+
 
   dimension: member_age {
     type: number
@@ -402,5 +399,19 @@ view: ad_hoc_query_tool_pharmacy {
     type: string
     label: "PARTICIPANT PROGRAM NAME"
     sql: ${TABLE}."PARTICIPANT_PROGRAM_NAME";;
+  }
+
+  filter: PARTICIPANT_YEAR {
+    type: string
+    group_label: "PARTICIPANT FILTER"
+    suggest_explore: vw_pharmacy
+    suggest_dimension: vw_pharmacy.participant_paid_year
+  }
+
+  filter: PARTICIPANT_Flag {
+    type: string
+    group_label: "PARTICIPANT FILTER"
+    suggest_explore: vw_pharmacy
+    suggest_dimension:vw_pharmacy.PARTICIPANT_NONPARTICIPANT_Flag
   }
 }

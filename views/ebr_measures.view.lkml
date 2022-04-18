@@ -1,6 +1,11 @@
 view: ebr_measures {
-  sql_table_name: "SCH_AHC_CRISP_REGIONAL"."EBR_MEASURES"
+  derived_table: {
+  sql:select * from "SCH_AHC_CRISP_REGIONAL"."EBR_MEASURES"
+      WHERE "UNIQUE_ID" IN (select DISTINCT "UNIQUE_ID" from "SCH_AHC_CRISP_REGIONAL"."VW_MEDICAL"
+        WHERE {% condition PARTICIPANT_YEAR %} LEFT("PAID_DATE", 4) {% endcondition %} AND
+        {% condition PARTICIPANT_Flag %} "PARTICIPANT_FLAG" {% endcondition %})
     ;;
+  }
 
   dimension: individual_gets_diabetic_test_strips {
     type: string
@@ -56,7 +61,7 @@ view: ebr_measures {
   dimension: individual_is_in_disease_group_three {
     type: string
     label: "Disease Grp-3"
-    description: "INDIVIDUAL IS IN DISEASE GROUP-3"
+    description: "ONE CHRONIC DISEASE"
     sql: CASE WHEN ${individual_is_in_disease_group} = 'GROUP-3' THEN '1'
       ELSE '0'
       END ;;
@@ -66,14 +71,14 @@ view: ebr_measures {
     type: count_distinct
     filters: [individual_is_in_disease_group_three: "1"]
     label: "Disease Grp3 - N"
-    description: "INDIVIDUAL IS IN DISEASE GROUP3"
+    description: "ONE CHRONIC DISEASE"
     sql: ${unique_id} ;;
   }
 
   dimension: individual_is_in_disease_group_four {
     type: string
     label: "Disease Grp-4"
-    description: "INDIVIDUAL IS IN DISEASE GROUP-4"
+    description: "TWO CHRONIC DISEASE"
     sql: CASE WHEN ${individual_is_in_disease_group} = 'GROUP-4' THEN '1'
       ELSE '0'
       END ;;
@@ -83,14 +88,14 @@ view: ebr_measures {
     type: count_distinct
     filters: [individual_is_in_disease_group_four: "1"]
     label: "Disease Grp4 - N"
-    description: "INDIVIDUAL IS IN DISEASE GROUP4"
+    description: "TWO CHRONIC DISEASE"
     sql: ${unique_id} ;;
   }
 
   dimension: individual_is_in_disease_group_five {
     type: string
     label: "Disease Grp-5"
-    description: "INDIVIDUAL IS IN DISEASE GROUP-5"
+    description: "THREE CHRONIC DISEASE"
     sql: CASE WHEN ${individual_is_in_disease_group} = 'GROUP-5' THEN '1'
       ELSE '0'
       END ;;
@@ -100,14 +105,14 @@ view: ebr_measures {
     type: count_distinct
     filters: [individual_is_in_disease_group_five: "1"]
     label: "Disease Grp5 - N"
-    description: "INDIVIDUAL IS IN DISEASE GROUP5"
+    description: "THREE CHRONIC DISEASE"
     sql: ${unique_id} ;;
   }
 
   dimension: individual_is_in_disease_group_six {
     type: string
     label: "Disease Grp-6"
-    description: "INDIVIDUAL IS IN DISEASE GROUP-6"
+    description: "FOUR CHRONIC DISEASE"
     sql: CASE WHEN ${individual_is_in_disease_group} = 'GROUP-6' THEN '1'
       ELSE '0'
       END ;;
@@ -117,14 +122,14 @@ view: ebr_measures {
     type: count_distinct
     filters: [individual_is_in_disease_group_six: "1"]
     label: "Disease Grp6 - N"
-    description: "INDIVIDUAL IS IN DISEASE GROUP6"
+    description: "FOUR CHRONIC DISEASE"
     sql: ${unique_id} ;;
   }
 
   dimension: individual_is_in_disease_group_seven {
     type: string
     label: "Disease Grp-7"
-    description: "INDIVIDUAL IS IN DISEASE GROUP-7"
+    description: "FIVE OR MORE CHRONIC DISEASES"
     sql: CASE WHEN ${individual_is_in_disease_group} = 'GROUP-7' THEN '1'
       ELSE '0'
       END ;;
@@ -134,7 +139,7 @@ view: ebr_measures {
     type: count_distinct
     filters: [individual_is_in_disease_group_seven: "1"]
     label: "Disease Grp7 - N"
-    description: "INDIVIDUAL IS IN DISEASE GROUP7"
+    description: "FIVE OR MORE CHRONIC DISEASES"
     sql: ${unique_id} ;;
   }
 
@@ -359,8 +364,17 @@ view: ebr_measures {
     drill_fields: []
   }
 
-  dimension: PARTICIPANT_Flag {
+  filter: PARTICIPANT_YEAR {
     type: string
-    sql: ${TABLE}."PARTICIPANT_FLAG" ;;
-}
+    group_label: "PARTICIPANT FILTER"
+    suggest_explore: vw_medical
+    suggest_dimension: vw_medical.participant_paid_year
+  }
+
+  filter: PARTICIPANT_Flag {
+    type: string
+    group_label: "PARTICIPANT FILTER"
+    suggest_explore: vw_medical
+    suggest_dimension: vw_medical.PARTICIPANT_NONPARTICIPANT_Flag
+  }
 }

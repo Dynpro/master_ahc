@@ -19,7 +19,9 @@ view: vw_medication_possession_ratio {
               {% condition DISEASE_SUB_CATEGORY %} "DISEASE_SUB_CATEGORY" {% endcondition %} AND
               {% condition PROCEDURE_CATEGORY %} "PROCEDURE_CATEGORY" {% endcondition %} AND
               {% condition PROCEDURE_SUBCATEGORY %} "PROCEDURE_SUBCATEGORY" {% endcondition %} AND
-              {% condition CHRONIC_CATEGORY %} "CCW_CHRONIC_CAT" {% endcondition %})
+              {% condition CHRONIC_CATEGORY %} "CCW_CHRONIC_CAT" {% endcondition %} AND
+              {% condition PARTICIPANT_YEAR %} LEFT("PAID_DATE", 4) {% endcondition %} AND
+              {% condition PARTICIPANT_Flag %} "PARTICIPANT_FLAG" {% endcondition %})
     ;;
   }
 
@@ -194,9 +196,17 @@ view: vw_medication_possession_ratio {
     sql: ${unique_id} ;;
   }
 
-  dimension: PARTICIPANT_FLAG {
+  filter: PARTICIPANT_YEAR {
     type: string
-    label: "PARTICIPANT Flag"
-    sql: ${TABLE}."PARTICIPANT_FLAG" ;;
+    group_label: "PARTICIPANT FILTER"
+    suggest_explore: vw_medical
+    suggest_dimension: vw_medical.participant_paid_year
+  }
+
+  filter: PARTICIPANT_Flag {
+    type: string
+    group_label: "PARTICIPANT FILTER"
+    suggest_explore: vw_medical
+    suggest_dimension: vw_medical.PARTICIPANT_NONPARTICIPANT_Flag
   }
 }

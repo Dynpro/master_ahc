@@ -82,10 +82,6 @@ view: vw_patient_demographics {
     sql: ${TABLE}."UNIQUE_ID" ;;
   }
 
-  dimension: PARTICIPANT_Flag {
-    type: string
-    sql: ${TABLE}."PARTICIPANT_FLAG" ;;
-  }
 
   measure: count {
     type: count
@@ -98,20 +94,24 @@ view: vw_patient_demographics {
     label: "PARTICIPANT PROGRAM NAME"
     sql: ${TABLE}."PARTICIPANT_PROGRAM_NAME";;
   }
-
-  dimension: abc_x {
+  filter: PARTICIPANT_YEAR {
     type: string
-    sql: case when ${patient_dob_year} = 2021 and ${PARTICIPANT_Flag} = 'PARTICIPANT' then '2021_P'
-          when ${patient_dob_year} = 2020 and ${PARTICIPANT_Flag} = 'PARTICIPANT' then '2020_P'
-          when ${patient_dob_year} = 2019 and ${PARTICIPANT_Flag} = 'PARTICIPANT' then '2019_P'
-          else 'False'
-          END;;
+    group_label: "PARTICIPANT FILTER"
+    suggest_explore: vw_medical
+    suggest_dimension: vw_medical.participant_paid_year
+  }
 
-    }
-
+  filter: PARTICIPANT_Flag {
+    type: string
+    group_label: "PARTICIPANT FILTER"
+    suggest_explore: vw_medical
+    suggest_dimension: vw_medical.PARTICIPANT_NONPARTICIPANT_Flag
+  }
   dimension: member_id{
     type: string
     label: "MEMBER ID"
     sql: ${TABLE}."MEMBER_ID" ;;
   }
+
+
 }

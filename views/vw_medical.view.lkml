@@ -1,8 +1,12 @@
 view: vw_medical {
   label: "Medical records"
-  sql_table_name: "SCH_AHC_CRISP_REGIONAL"."VW_MEDICAL"
-    ;;
-
+  derived_table: {
+    sql: select * from "SCH_AHC_CRISP_REGIONAL"."VW_MEDICAL"
+      WHERE "UNIQUE_ID" IN (select DISTINCT "UNIQUE_ID" from "SCH_AHC_CRISP_REGIONAL"."VW_MEDICAL"
+        WHERE {% condition PARTICIPANT_YEAR %} LEFT("PAID_DATE", 4) {% endcondition %} AND
+        {% condition PARTICIPANT_Flag %} "PARTICIPANT_FLAG" {% endcondition %})
+      ;;
+  }
   dimension: 2012_chronic {
     type: string
     label: "CHRONIC ?"
@@ -581,11 +585,12 @@ view: vw_medical {
         END;;
   }
 
-  dimension: CCW_CHRONIC_CAT_SOURCE {
+  dimension: CHRONIC_CAT_TYPE {
     type: string
-    label: "CCW CHRONIC CAT SOURCE"
-    sql: ${TABLE}."CCW_CHRONIC_CAT_SOURCE" ;;
+    label: "CHRONIC_CAT_TYPE"
+    sql: ${TABLE}."CHRONIC_CAT_TYPE" ;;
   }
+
 
   dimension: LSModify_or_Preventive_disease {
     type: string
@@ -924,10 +929,7 @@ view: vw_medical {
     html: {{ rendered_value | date: "%m / %d / %Y" }} ;;
   }
 
-  dimension: PARTICIPANT_Flag {
-    type: string
-    sql: ${TABLE}."PARTICIPANT_FLAG" ;;
-  }
+
 
   dimension: year_and_patient_id {
     type: string
@@ -956,9 +958,38 @@ view: vw_medical {
         end;;
   }
 
+
+  dimension: PARTICIPANT_NONPARTICIPANT_Flag {
+    type: string
+    hidden:  yes
+    sql: ${TABLE}."PARTICIPANT_FLAG" ;;
+  }
+
+  dimension: participant_paid_year {
+    type: string
+    hidden: yes
+    sql: ${Paid_year} ;;
+  }
+
+  filter: PARTICIPANT_YEAR {
+    type: string
+    group_label: "PARTICIPANT FILTER"
+    suggest_explore: vw_medical
+    suggest_dimension: vw_medical.participant_paid_year
+  }
+
+  filter: PARTICIPANT_Flag {
+    type: string
+    group_label: "PARTICIPANT FILTER"
+    suggest_explore: vw_medical
+    suggest_dimension: vw_medical.PARTICIPANT_NONPARTICIPANT_Flag
+  }
+
+
   dimension: PARTICIPANT_PROGRAM_NAME{
     type: string
     label: "PARTICIPANT PROGRAM NAME"
     sql: ${TABLE}."PARTICIPANT_PROGRAM_NAME";;
   }
+
 }

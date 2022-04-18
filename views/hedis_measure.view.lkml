@@ -1,6 +1,11 @@
 view: hedis_measure {
-  sql_table_name: "SCH_AHC_CRISP_REGIONAL"."HEDIS_MEASURES"
-    ;;
+  derived_table: {
+    sql: select * from "SCH_AHC_CRISP_REGIONAL"."HEDIS_MEASURES"
+        WHERE "UNIQUE_ID" IN (select DISTINCT "UNIQUE_ID" from "SCH_AHC_CRISP_REGIONAL"."VW_MEDICAL"
+          WHERE {% condition PARTICIPANT_YEAR %} LEFT("PAID_DATE", 4) {% endcondition %} AND
+          {% condition PARTICIPANT_Flag %} "PARTICIPANT_FLAG" {% endcondition %})
+      ;;
+  }
 
 ##ADULT'S ACCESS TO PREVENTIVE/AMBULATORY HEALTH SERVICES
   dimension: aap_compliant {
@@ -471,8 +476,17 @@ view: hedis_measure {
     sql: ${unique_id} ;;
   }
 
-  dimension: PARTICIPANT_Flag {
+  filter: PARTICIPANT_YEAR {
     type: string
-    sql: ${TABLE}."PARTICIPANT_FLAG" ;;
+    group_label: "PARTICIPANT FILTER"
+    suggest_explore: vw_medical
+    suggest_dimension: vw_medical.participant_paid_year
+  }
+
+  filter: PARTICIPANT_Flag {
+    type: string
+    group_label: "PARTICIPANT FILTER"
+    suggest_explore: vw_medical
+    suggest_dimension: vw_medical.PARTICIPANT_NONPARTICIPANT_Flag
   }
 }

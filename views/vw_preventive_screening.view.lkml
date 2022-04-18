@@ -1,6 +1,11 @@
 view: vw_preventive_screening {
-  sql_table_name: "SCH_AHC_CRISP_REGIONAL"."VW_PREVENTIVE_SCREENING"
+  derived_table: {
+    sql: select * from "SCH_AHC_CRISP_REGIONAL"."VW_PREVENTIVE_SCREENING"
+      WHERE "UNIQUE_ID" IN (select DISTINCT "UNIQUE_ID" from "SCH_AHC_CRISP_REGIONAL"."VW_MEDICAL"
+        WHERE {% condition PARTICIPANT_YEAR %} LEFT("PAID_DATE", 4) {% endcondition %} AND
+          {% condition PARTICIPANT_Flag %} "PARTICIPANT_FLAG" {% endcondition %})
     ;;
+  }
 
   dimension: cancer_diagnosis {
     type: string
@@ -84,9 +89,18 @@ view: vw_preventive_screening {
     filters: [cancer_diagnosis: "COLON CANCER"]
     sql: ${unique_id} ;;
   }
-
-  dimension: PARTICIPANT_Flag {
+  filter: PARTICIPANT_YEAR {
     type: string
-    sql: ${TABLE}."PARTICIPANT_FLAG" ;;
+    group_label: "PARTICIPANT FILTER"
+    suggest_explore: vw_medical
+    suggest_dimension: vw_medical.participant_paid_year
   }
+
+  filter: PARTICIPANT_Flag {
+    type: string
+    group_label: "PARTICIPANT FILTER"
+    suggest_explore: vw_medical
+    suggest_dimension: vw_medical.PARTICIPANT_NONPARTICIPANT_Flag
+  }
+
 }
