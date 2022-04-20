@@ -210,6 +210,7 @@ view: vw_predictive_healthscore_index {
 
   dimension: age_group_description {
     type: string
+    label: "Age Group Description"
     sql: ${TABLE}."AGE_GROUP_DESCRIPTION"
       ;;
   }
