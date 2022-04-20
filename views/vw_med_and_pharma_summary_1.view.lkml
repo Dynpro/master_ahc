@@ -72,7 +72,10 @@ view: vw_med_and_pharma_summary_1 {
             {% condition AVOIDABLE_ER_OR_NOT %} "ICD_AVOIDABLE_ER" {% endcondition %} AND
             {% condition DIGESTIVE_DISEASE_OR_NOT %} "ICD_DIGESTIVE_DISEASE" {% endcondition %} AND
             {% condition PARTICIPANT_FLAG_M %} "PARTICIPANT_FLAG" {% endcondition %} AND
-            {% condition PARTICIPANT_PROGRAM_NAME_M %} "PARTICIPANT_PROGRAM_NAME" {% endcondition %}
+            {% condition PARTICIPANT_PROGRAM_NAME_M %} "PARTICIPANT_PROGRAM_NAME" {% endcondition %} AND
+            "UNIQUE_ID" IN (select DISTINCT "UNIQUE_ID" from "SCH_AHC_CRISP_REGIONAL"."VW_MEDICAL"
+              WHERE {% condition PARTICIPANT_YEAR %} LEFT("PAID_DATE", 4) {% endcondition %} AND
+                {% condition PARTICIPANT_Flag %} "PARTICIPANT_FLAG" {% endcondition %})
 
 
             GROUP BY PATIENT_ID_M, PATIENT_GENDER, RELATIONSHIP_TO_EMPLOYEE, substring("PAID_DATE", 1, 4), Diabetes_Flag) as MED
@@ -253,6 +256,7 @@ view: vw_med_and_pharma_summary_1 {
   }
   filter: PARTICIPANT_FLAG_M {
     type: string
+    hidden: yes
     label: "PARTICIPANT Flag M"
     suggest_explore: vw_medical
     suggest_dimension: vw_medical.PARTICIPANT_Flag
@@ -472,6 +476,7 @@ view: vw_med_and_pharma_summary_1 {
 
   filter: PARTICIPANT_FLAG_P {
     type: string
+    hidden: yes
     label: "PARTICIPANT Flag P"
     suggest_explore: vw_pharmacy
     suggest_dimension: vw_pharmacy.PARTICIPANT_Flag
@@ -597,4 +602,16 @@ filter:PARTICIPANT_PROGRAM_NAME_P {
   suggest_explore: vw_pharmacy
   suggest_dimension: vw_pharmacy.PARTICIPANT_PROGRAM_NAME
 }
+  filter: PARTICIPANT_YEAR {
+    type: string
+    group_label: "PARTICIPANT FILTER"
+    suggest_explore: vw_medical
+    suggest_dimension: vw_medical.participant_paid_year
+  }
+  filter: PARTICIPANT_Flag {
+    type: string
+    group_label: "PARTICIPANT FILTER"
+    suggest_explore: vw_medical
+    suggest_dimension: vw_medical.PARTICIPANT_NONPARTICIPANT_Flag
+  }
 }
