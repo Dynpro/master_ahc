@@ -113,3 +113,5 @@ explore: ebr_measures {
 
 explore: vw_patient_demographics {}
 explore: vw_predictive_healthscore_index {}
+explore: icd_infographics {}
+explore: cpt_infographics {}
