@@ -58,6 +58,40 @@ view: ebr_measures {
     sql: ${TABLE}."INDIVIDUAL_IS_IN_DISEASE_GROUP" ;;
   }
 
+  dimension: individual_is_in_disease_group_one {
+    type: string
+    label: "Disease Grp-1 (NO CHRONIC DISEASE AND LESS THAN $1500 MEDICAL EXPENDITURES PER 12 MONTHS)"
+    description: "NO CHRONIC DISEASE AND LESS THAN $1500 MEDICAL EXPENDITURES PER 12 MONTHS"
+    sql: CASE WHEN ${individual_is_in_disease_group} = 'GROUP-1' THEN '1'
+      ELSE '0'
+      END ;;
+  }
+
+  measure: individual_is_in_disease_group_one_patients {
+    type: count_distinct
+    filters: [individual_is_in_disease_group_one: "1"]
+    label: "Disease Grp1 - N"
+    description: "NO CHRONIC DISEASE AND LESS THAN $1500 MEDICAL EXPENDITURES PER 12 MONTHS"
+    sql: ${unique_id} ;;
+  }
+
+  dimension: individual_is_in_disease_group_two {
+    type: string
+    label: "Disease Grp-2 (NO CHRONIC DISEASE AND $1500 OR MORE MEDICAL EXPENDITURES PER 12 MONTHS)"
+    description: "NO CHRONIC DISEASE AND $1500 OR MORE MEDICAL EXPENDITURES PER 12 MONTHS"
+    sql: CASE WHEN ${individual_is_in_disease_group} = 'GROUP-2' THEN '1'
+      ELSE '0'
+      END ;;
+  }
+
+  measure: individual_is_in_disease_group_two_patients {
+    type: count_distinct
+    filters: [individual_is_in_disease_group_two: "1"]
+    label: "Disease Grp2 - N"
+    description: "NO CHRONIC DISEASE AND $1500 OR MORE MEDICAL EXPENDITURES PER 12 MONTHS"
+    sql: ${unique_id} ;;
+  }
+
   dimension: individual_is_in_disease_group_three {
     type: string
     label: "Disease Grp-3"
