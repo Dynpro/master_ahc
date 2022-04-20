@@ -1,5 +1,5 @@
 view: cpt_infographics {
-  sql_table_name: "SCH_ALL_HEALTH_CHOICE"."CPT_INFOGRAPHICS_UPDATED"
+  sql_table_name: "SCH_AHC_CRISP_REGIONAL"."CPT_INFOGRAPHICS_UPDATED"
     ;;
 
   dimension: chronic_flag {

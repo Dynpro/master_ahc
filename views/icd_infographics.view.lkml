@@ -1,5 +1,5 @@
 view: icd_infographics {
-  sql_table_name: "SCH_ALL_HEALTH_CHOICE"."ICD_INFOGRAPHICS_UPDATED" ;;
+  sql_table_name: "SCH_AHC_CRISP_REGIONAL"."ICD_INFOGRAPHICS_UPDATED" ;;
 
   dimension: chronic_flag {
     type: number
