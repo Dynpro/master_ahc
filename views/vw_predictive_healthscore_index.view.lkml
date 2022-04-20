@@ -1870,7 +1870,7 @@ view: vw_predictive_healthscore_index {
     drill_fields: [patient_id_l, year_file_date_l, avg_24com_paid_amount, avg_predicted_paid_amount, age, gender,mbn_flag, neo_flag, dcs_flag ,risk_flag, dcci_24_com, scale_score]
     link: {
       label: "Patient Analysis"
-      url: "/dashboards-next/1829?Health Index Decile={{ _filters['vw_predictive_healthscore_index.decile_grouping'] | url_encode }}&Health Index Quartile={{ _filters['vw_predictive_healthscore_index.quartile_grouping'] | url_encode }}&Gender={{ _filters['vw_predictive_healthscore_index.gender'] | url_encode }}&Age Group Description={{ _filters['vw_predictive_healthscore_index.age_group_description'] | url_encode }}&Musculoskeletal Flag={{ _filters['vw_predictive_healthscore_index.musculoskeletal_flag'] | url_encode }}&Performance Flag={{ _filters['vw_predictive_healthscore_index.performance_flag'] | url_encode }}"
+      url: "/dashboards-next/655?Health Index Decile={{ _filters['vw_predictive_healthscore_index.decile_grouping'] | url_encode }}&Health Index Quartile={{ _filters['vw_predictive_healthscore_index.quartile_grouping'] | url_encode }}&Gender={{ _filters['vw_predictive_healthscore_index.gender'] | url_encode }}&Age Group Description={{ _filters['vw_predictive_healthscore_index.age_group_description'] | url_encode }}&Musculoskeletal Flag={{ _filters['vw_predictive_healthscore_index.musculoskeletal_flag'] | url_encode }}&Performance Flag={{ _filters['vw_predictive_healthscore_index.performance_flag'] | url_encode }}"
     }
     sql:  CONCAT(${patient_id_l}, ${year_file_date_l}) ;;
   }
