@@ -40,7 +40,7 @@ view: vw_cohort_analysis_summary_1 {
               substring("PAID_DATE", 1, 4) as PAID_YEAR,
               "PATIENT_GENDER" as PATIENT_GENDER,
               "RELATIONSHIP_TO_EMPLOYEE" as RELATIONSHIP_TO_EMPLOYEE
-              from "SCH_ALL_HEALTH_CHOICE"."LKR_TAB_MEDICAL"
+              from "SCH_AHC_CRISP_REGIONAL"."VW_MEDICAL"
               GROUP BY "UNIQUE_ID", substring("PAID_DATE", 1, 4), PATIENT_GENDER, RELATIONSHIP_TO_EMPLOYEE) MEDICAL
 
       LEFT JOIN
