@@ -1719,12 +1719,12 @@ view: vw_predictive_healthscore_index {
     sql: ${TABLE}."P_RISK_FLAG" ;;
   }
 
-  dimension: p_sur {
-    type: number
-    label: "Surgery Count"
-    value_format: "0"
-    sql: ${TABLE}."P_SUR" ;;
-  }
+  #dimension: p_sur {
+    #type: number
+  #   label: "Surgery Count"
+  #   value_format: "0"
+  #   sql: ${TABLE}."P_SUR" ;;
+  # }
 
   dimension: patient_birth_year {
     type: string
