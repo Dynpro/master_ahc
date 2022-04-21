@@ -70,7 +70,7 @@ view: ebr_measures {
   measure: individual_is_in_disease_group_one_patients {
     type: count_distinct
     filters: [individual_is_in_disease_group_one: "1"]
-    label: "Disease Grp1 - N"
+    label: "Disease Grp1 - N (NO CHRONIC DISEASE AND LESS THAN $1500 MEDICAL EXPENDITURES PER 12 MONTHS)"
     description: "NO CHRONIC DISEASE AND LESS THAN $1500 MEDICAL EXPENDITURES PER 12 MONTHS"
     sql: ${unique_id} ;;
   }
@@ -87,14 +87,14 @@ view: ebr_measures {
   measure: individual_is_in_disease_group_two_patients {
     type: count_distinct
     filters: [individual_is_in_disease_group_two: "1"]
-    label: "Disease Grp2 - N"
+    label: "Disease Grp2 - N (NO CHRONIC DISEASE AND $1500 OR MORE MEDICAL EXPENDITURES PER 12 MONTHS)"
     description: "NO CHRONIC DISEASE AND $1500 OR MORE MEDICAL EXPENDITURES PER 12 MONTHS"
     sql: ${unique_id} ;;
   }
 
   dimension: individual_is_in_disease_group_three {
     type: string
-    label: "Disease Grp-3"
+    label: "Disease Grp-3 (ONE CHRONIC DISEASE)"
     description: "ONE CHRONIC DISEASE"
     sql: CASE WHEN ${individual_is_in_disease_group} = 'GROUP-3' THEN '1'
       ELSE '0'
@@ -104,14 +104,14 @@ view: ebr_measures {
   measure: individual_is_in_disease_group_three_patients {
     type: count_distinct
     filters: [individual_is_in_disease_group_three: "1"]
-    label: "Disease Grp3 - N"
+    label: "Disease Grp3 - N (ONE CHRONIC DISEASE)"
     description: "ONE CHRONIC DISEASE"
     sql: ${unique_id} ;;
   }
 
   dimension: individual_is_in_disease_group_four {
     type: string
-    label: "Disease Grp-4"
+    label: "Disease Grp-4 (TWO CHRONIC DISEASE)"
     description: "TWO CHRONIC DISEASE"
     sql: CASE WHEN ${individual_is_in_disease_group} = 'GROUP-4' THEN '1'
       ELSE '0'
@@ -121,14 +121,14 @@ view: ebr_measures {
   measure: individual_is_in_disease_group_four_patients {
     type: count_distinct
     filters: [individual_is_in_disease_group_four: "1"]
-    label: "Disease Grp4 - N"
+    label: "Disease Grp4 - N (TWO CHRONIC DISEASE)"
     description: "TWO CHRONIC DISEASE"
     sql: ${unique_id} ;;
   }
 
   dimension: individual_is_in_disease_group_five {
     type: string
-    label: "Disease Grp-5"
+    label: "Disease Grp-5 (THREE CHRONIC DISEASE)"
     description: "THREE CHRONIC DISEASE"
     sql: CASE WHEN ${individual_is_in_disease_group} = 'GROUP-5' THEN '1'
       ELSE '0'
@@ -138,14 +138,14 @@ view: ebr_measures {
   measure: individual_is_in_disease_group_five_patients {
     type: count_distinct
     filters: [individual_is_in_disease_group_five: "1"]
-    label: "Disease Grp5 - N"
+    label: "Disease Grp5 - N (THREE CHRONIC DISEASE)"
     description: "THREE CHRONIC DISEASE"
     sql: ${unique_id} ;;
   }
 
   dimension: individual_is_in_disease_group_six {
     type: string
-    label: "Disease Grp-6"
+    label: "Disease Grp-6 (FOUR CHRONIC DISEASE)"
     description: "FOUR CHRONIC DISEASE"
     sql: CASE WHEN ${individual_is_in_disease_group} = 'GROUP-6' THEN '1'
       ELSE '0'
@@ -155,14 +155,14 @@ view: ebr_measures {
   measure: individual_is_in_disease_group_six_patients {
     type: count_distinct
     filters: [individual_is_in_disease_group_six: "1"]
-    label: "Disease Grp6 - N"
+    label: "Disease Grp6 - N (FOUR CHRONIC DISEASE)"
     description: "FOUR CHRONIC DISEASE"
     sql: ${unique_id} ;;
   }
 
   dimension: individual_is_in_disease_group_seven {
     type: string
-    label: "Disease Grp-7"
+    label: "Disease Grp-7 (FIVE OR MORE CHRONIC DISEASES)"
     description: "FIVE OR MORE CHRONIC DISEASES"
     sql: CASE WHEN ${individual_is_in_disease_group} = 'GROUP-7' THEN '1'
       ELSE '0'
@@ -172,7 +172,7 @@ view: ebr_measures {
   measure: individual_is_in_disease_group_seven_patients {
     type: count_distinct
     filters: [individual_is_in_disease_group_seven: "1"]
-    label: "Disease Grp7 - N"
+    label: "Disease Grp7 - N (FIVE OR MORE CHRONIC DISEASES)"
     description: "FIVE OR MORE CHRONIC DISEASES"
     sql: ${unique_id} ;;
   }
