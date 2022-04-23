@@ -1,5 +1,5 @@
 view: vw_predictive_healthscore_index {
-  sql_table_name: "DB_KAIROS_PROD"."SCH_AHC_CRISP_REGIONAL"."ML_FINAL_TRAIN_TEST"
+  sql_table_name: "SCH_AHC_CRISP_REGIONAL"."ML_FINAL_TRAIN_TEST"
   ;;
 
   measure: 24_com_acute_cat_count {
