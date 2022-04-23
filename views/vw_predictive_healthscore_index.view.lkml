@@ -1267,7 +1267,7 @@ view: vw_predictive_healthscore_index {
 
   dimension: musculoskeletal_flag {
     type: string
-    label: "Musculoskeletal Flag"
+    #label: "Musculoskeletal Flag"
     sql: CASE WHEN ${msk_flag} = '1' THEN  'True'
               WHEN ${msk_flag} = '0' THEN  'False'
       END;;
