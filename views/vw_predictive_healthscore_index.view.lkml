@@ -130,15 +130,6 @@ view: vw_predictive_healthscore_index {
     sql: ${TABLE}."PERF_FLAG" ;;
   }
 
-
-  dimension: performance_flag {
-    type: string
-    label: "Performance Flag"
-    sql: CASE WHEN ${perf_flag} = '1' THEN  'True'
-              WHEN ${perf_flag} = '0' THEN  'False'
-      END;;
-  }
-
   dimension: 24_com_icd_counts_group_description {
     type: string
     sql: ${TABLE}."24COM_ICD_COUNTS_GROUP_DESCRIPTION" ;;
@@ -1649,7 +1640,7 @@ view: vw_predictive_healthscore_index {
     type: number
     label: "Distinct Diagnosis Counts."
     value_format: "0"
-    sql: ${TABLE}."P_24COM_ICD_COUNT" ;;
+    sql: ${TABLE}."P_24COM_ICD_COUNTS" ;;
   }
 
   dimension: p_age {
@@ -1875,7 +1866,7 @@ view: vw_predictive_healthscore_index {
 
       #url: "/dashboards-next/633?Health Index Decile={{ _filters['vw_predictive_healthscore_index.decile_grouping'] | url_encode }}&Health Index Quartile={{ _filters['vw_predictive_healthscore_index.quartile_grouping'] | url_encode }}&Gender={{ _filters['vw_predictive_healthscore_index.gender'] | url_encode }}&Age Group Description={{ _filters['vw_predictive_healthscore_index.age_group_description'] | url_encode }}&Musculoskeletal Flag={{ _filters['vw_predictive_healthscore_index.musculoskeletal_flag'] | url_encode }}"
 
-      url: "/dashboards-next/2071?Health Index Decile={{ _filters['vw_predictive_healthscore_index.decile_grouping'] | url_encode }}&Health Index Quartile={{ _filters['vw_predictive_healthscore_index.quartile_grouping'] | url_encode }}&Gender={{ _filters['vw_predictive_healthscore_index.gender'] | url_encode }}&Age Group Description={{ _filters['vw_predictive_healthscore_index.age_group_description'] | url_encode }}&Musculoskeletal Flag={{ _filters['vw_predictive_healthscore_index.musculoskeletal_flag'] | url_encode }}&Performance Flag={{ _filters['vw_predictive_healthscore_index.performance_flag'] | url_encode }}"
+      url: "/dashboards-next/2071?Health Index Decile={{ _filters['vw_predictive_healthscore_index.decile_grouping'] | url_encode }}&Health Index Quartile={{ _filters['vw_predictive_healthscore_index.quartile_grouping'] | url_encode }}&Gender={{ _filters['vw_predictive_healthscore_index.gender'] | url_encode }}&Age Group Description={{ _filters['vw_predictive_healthscore_index.age_group_description'] | url_encode }}&Musculoskeletal Flag={{ _filters['vw_predictive_healthscore_index.musculoskeletal_flag'] | url_encode }}"
 
      # url: "/dashboards-next/633?Health Index Decile={{ _filters['vw_predictive_healthscore_index.decile_grouping'] | url_encode }}"
 
