@@ -1,9 +1,9 @@
 view: vw_risk_group_migration {
   label: "Risk Group Summary"
   derived_table: {
-    sql: select * from "SCH_AHC_CRISP_REGIONAL"."VW_RISK_GROUP_MIGRATION"
+    sql: select * from "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_RISK_GROUP_MIGRATION"
           WHERE
-          UNIQUE_ID IN (select DISTINCT UNIQUE_ID from "SCH_AHC_CRISP_REGIONAL"."VW_MEDICAL"
+          UNIQUE_ID IN (select DISTINCT UNIQUE_ID from "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_MEDICAL"
           WHERE
           {% condition DISEASE_CATEGORY %} "ICD_DISEASE_CATEGORY" {% endcondition %} AND
           {% condition DISEASE_DESCRIPTION %} "ICD_DESCRIPTION" {% endcondition %} AND

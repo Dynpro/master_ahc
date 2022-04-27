@@ -1,8 +1,8 @@
 view: vw_medical {
   label: "Medical records"
   derived_table: {
-    sql: select * from "SCH_AHC_CRISP_REGIONAL"."VW_MEDICAL"
-      WHERE "UNIQUE_ID" IN (select DISTINCT "UNIQUE_ID" from "SCH_AHC_CRISP_REGIONAL"."VW_MEDICAL"
+    sql: select * from "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_MEDICAL"
+      WHERE "UNIQUE_ID" IN (select DISTINCT "UNIQUE_ID" from "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_MEDICAL"
         WHERE {% condition PARTICIPANT_YEAR %} LEFT("PAID_DATE", 4) {% endcondition %} AND
         {% condition PARTICIPANT_Flag %} "PARTICIPANT_FLAG" {% endcondition %})
       ;;

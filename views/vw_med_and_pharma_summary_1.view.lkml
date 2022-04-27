@@ -52,7 +52,7 @@ view: vw_med_and_pharma_summary_1 {
                 ELSE 'FALSE'
                 END) as Diabetes_Flag
 
-            From "SCH_AHC_CRISP_REGIONAL"."VW_MEDICAL" as M
+            From "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_MEDICAL" as M
             WHERE                                   /* Dynamic Filter condition*/
             {% condition DISEASE_CATEGORY %} "ICD_DISEASE_CATEGORY" {% endcondition %} AND
             {% condition DESCRIPTION %} "ICD_DESCRIPTION" {% endcondition %} AND
@@ -73,7 +73,7 @@ view: vw_med_and_pharma_summary_1 {
             {% condition DIGESTIVE_DISEASE_OR_NOT %} "ICD_DIGESTIVE_DISEASE" {% endcondition %} AND
             {% condition PARTICIPANT_FLAG_M %} "PARTICIPANT_FLAG" {% endcondition %} AND
             {% condition PARTICIPANT_PROGRAM_NAME_M %} "PARTICIPANT_PROGRAM_NAME" {% endcondition %} AND
-            "UNIQUE_ID" IN (select DISTINCT "UNIQUE_ID" from "SCH_AHC_CRISP_REGIONAL"."VW_MEDICAL"
+            "UNIQUE_ID" IN (select DISTINCT "UNIQUE_ID" from "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_MEDICAL"
               WHERE {% condition PARTICIPANT_YEAR %} LEFT("PAID_DATE", 4) {% endcondition %} AND
                 {% condition PARTICIPANT_Flag %} "PARTICIPANT_FLAG" {% endcondition %})
 
@@ -103,7 +103,7 @@ view: vw_med_and_pharma_summary_1 {
                 ELSE 'FALSE'
                 END) as STATIN_DRUGS_List
 
-            From "SCH_AHC_CRISP_REGIONAL"."VW_PHARMACY" as P
+            From "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_PHARMACY" as P
             WHERE                                   /* Dynamic Filter condition*/
             {% condition DRUG %} "NON_PROPRIETARY_NAME" {% endcondition %} AND
             {% condition DRUG_CODE %} "DRUG_CODE" {% endcondition %} AND

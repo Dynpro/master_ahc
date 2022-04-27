@@ -1,8 +1,8 @@
 view: vw_medication_possession_ratio {
   label: "Medication Possession Ratio"
   derived_table: {
-    sql: select * from "SCH_AHC_CRISP_REGIONAL"."VW_MEDICATION_POSSESSION_RATIO"
-          WHERE "UNIQUE_ID" IN (Select DISTINCT "UNIQUE_ID" from "SCH_AHC_CRISP_REGIONAL"."VW_PHARMACY"
+    sql: select * from "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_MEDICATION_POSSESSION_RATIO"
+          WHERE "UNIQUE_ID" IN (Select DISTINCT "UNIQUE_ID" from "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_PHARMACY"
             WHERE {% condition ACE_INHIBITOR_Drugs %} "ACE_INHIBITOR" {% endcondition %} AND
             {% condition STATIN_Drugs %} "STATIN" {% endcondition %} AND
             {% condition ARB_Drugs %} "ARB" {% endcondition %} AND
@@ -13,7 +13,7 @@ view: vw_medication_possession_ratio {
             {% condition MAINTENANCE_Drugs %} "MAINTENANCE" {% endcondition %})
 
           AND
-            "UNIQUE_ID" IN (Select DISTINCT "UNIQUE_ID" from "SCH_AHC_CRISP_REGIONAL"."VW_MEDICAL"
+            "UNIQUE_ID" IN (Select DISTINCT "UNIQUE_ID" from "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_MEDICAL"
               WHERE
               {% condition DISEASE_CATEGORY %} "ICD_DISEASE_CATEGORY" {% endcondition %} AND
               {% condition DISEASE_SUB_CATEGORY %} "DISEASE_SUB_CATEGORY" {% endcondition %} AND

@@ -1,8 +1,8 @@
 view: vw_pharmacy {
   label: "Pharmacy records"
   derived_table: {
-    sql: select * from "SCH_AHC_CRISP_REGIONAL"."VW_PHARMACY"
-      WHERE "UNIQUE_ID" IN (select DISTINCT "UNIQUE_ID" from "SCH_AHC_CRISP_REGIONAL"."VW_PHARMACY"
+    sql: select * from "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_PHARMACY"
+      WHERE "UNIQUE_ID" IN (select DISTINCT "UNIQUE_ID" from "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_PHARMACY"
         WHERE {% condition PARTICIPANT_YEAR %} LEFT("DATE_FILLED", 4) {% endcondition %} AND
         {% condition PARTICIPANT_Flag %} "PARTICIPANT_FLAG" {% endcondition %})
       ;;

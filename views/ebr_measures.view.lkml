@@ -1,7 +1,7 @@
 view: ebr_measures {
   derived_table: {
-  sql:select * from "SCH_AHC_CRISP_REGIONAL"."EBR_MEASURES"
-      WHERE "UNIQUE_ID" IN (select DISTINCT "UNIQUE_ID" from "SCH_AHC_CRISP_REGIONAL"."VW_MEDICAL"
+  sql:select * from "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_EBR_MEASURES"
+      WHERE "UNIQUE_ID" IN (select DISTINCT "UNIQUE_ID" from "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_MEDICAL"
         WHERE {% condition PARTICIPANT_YEAR %} LEFT("PAID_DATE", 4) {% endcondition %} AND
         {% condition PARTICIPANT_Flag %} "PARTICIPANT_FLAG" {% endcondition %})
     ;;
@@ -39,22 +39,22 @@ view: ebr_measures {
 
   dimension: individual_had_emergency_room_and_inpatient_visit {
     type: string
-    label: "ER & Inpatient Visit"
-    description: "INDIVIDUAL HAD EMERGENCY ROOM & SUBSEQUENT INPATIENT VISIT"
+    label: "ER Visit but No Subsequent Inpatient Visit"
+    description: "INDIVIDUAL HAD EMERGENCY ROOM VISIT but NO SUBSEQUENT INPATIENT VISIT"
     sql: ${TABLE}."INDIVIDUAL_HAD_EMERGENCY_ROOM_AND_INPATIENT_VISIT" ;;
   }
 
   measure: individual_had_emergency_room_and_inpatient_visit_patients {
     type: count_distinct
     filters: [individual_had_emergency_room_and_inpatient_visit: "1"]
-    label: "ER & Inpatient Visit - N"
-    description: "INDIVIDUAL HAD EMERGENCY ROOM & SUBSEQUENT INPATIENT VISIT"
+    label: "ER Visit but No Subsequent Inpatient Visit - N"
+    description: "INDIVIDUAL HAD EMERGENCY ROOM VISIT but NO SUBSEQUENT INPATIENT VISIT"
     sql: ${unique_id} ;;
   }
 
   dimension: individual_is_in_disease_group {
     type: string
-    hidden: yes
+    hidden: no
     sql: ${TABLE}."INDIVIDUAL_IS_IN_DISEASE_GROUP" ;;
   }
 
