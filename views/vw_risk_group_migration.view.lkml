@@ -214,5 +214,32 @@ view: vw_risk_group_migration {
     suggest_explore: vw_medical
     suggest_dimension: vw_medical.PARTICIPANT_NONPARTICIPANT_Flag
   }
+  dimension: Disease_Groups {
+    label: "Disease Groups"
+    type: string
+    sql: case when ${Risk_group} = 'GROUP-1' THEN 'Disease Group-1'
+              when ${Risk_group} = 'GROUP-2' THEN 'Disease Group-2'
+              when ${Risk_group} = 'GROUP-3' THEN 'Disease Group-3'
+              when ${Risk_group} = 'GROUP-4' THEN 'Disease Group-4'
+              when ${Risk_group} = 'GROUP-5' THEN 'Disease Group-5'
+              when ${Risk_group} = 'GROUP-6' THEN 'Disease Group-6'
+              when ${Risk_group} = 'GROUP-7' THEN 'Disease Group-7'
+      ELSE '0'
+      END;;
+  }
+
+  dimension: Groups_Definition {
+    label: "Groups Definition"
+    type: string
+    sql: case when ${Disease_Groups} = 'Disease Group-1' THEN 'No Chronic Disease and Less Than $1500 Medical Expenditures per 12 Months'
+              when ${Disease_Groups} = 'Disease Group-2' THEN 'No Chronic Disease and $1500 or More Medical Expenditures per 12 Months'
+              when ${Disease_Groups} = 'Disease Group-3' THEN 'One Chronic Disease'
+              when ${Disease_Groups} = 'Disease Group-4' THEN 'Two Chronic Disease'
+              when ${Disease_Groups} = 'Disease Group-5' THEN 'Three Chronic Disease'
+              when ${Disease_Groups} = 'Disease Group-6' THEN 'Four Chronic Disease'
+              when ${Disease_Groups} = 'Disease Group-7' THEN 'Five or More Chronic Disease'
+          ELSE '0'
+          END;;
+  }
 
 }
