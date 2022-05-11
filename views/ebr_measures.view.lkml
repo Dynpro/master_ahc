@@ -1,6 +1,6 @@
 view: ebr_measures {
   derived_table: {
-  sql:select * from "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_EBR_MEASURES"
+    sql:select * from "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_EBR_MEASURES"
       WHERE "UNIQUE_ID" IN (select DISTINCT "UNIQUE_ID" from "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_MEDICAL"
         WHERE {% condition PARTICIPANT_YEAR %} LEFT("PAID_DATE", 4) {% endcondition %} AND
         {% condition PARTICIPANT_Flag %} "PARTICIPANT_FLAG" {% endcondition %})
@@ -22,6 +22,14 @@ view: ebr_measures {
     sql: ${unique_id} ;;
   }
 
+  measure: individual_gets_diabetic_test_strips_eligible_patients {
+    type: count_distinct
+    filters: [individual_gets_diabetic_test_strips: "0,1"]
+    label: "Diabetes Test Strips (Eligible) - N"
+    description: "INDIVIDUAL IS ELIGIBLE TO GET DIABETIC TEST STRIPS"
+    sql: ${unique_id} ;;
+  }
+
   dimension: individual_gets_diabetic_test_strips_every_quarter {
     type: string
     label: "Diabetes Test Strips Quaterly"
@@ -33,6 +41,14 @@ view: ebr_measures {
     type: count_distinct
     filters: [individual_gets_diabetic_test_strips_every_quarter: "1"]
     label: "Diabetes Test Strips Quaterly - N"
+    description: "INDIVIDUAL GETS DIABETIC TEST STRIPS EVERY QUARTER"
+    sql: ${unique_id} ;;
+  }
+
+  measure: individual_gets_diabetic_test_strips_every_quarter_eligible_patients {
+    type: count_distinct
+    filters: [individual_gets_diabetic_test_strips_every_quarter: "0,1"]
+    label: "Diabetes Test Strips Quaterly (Eligible) - N"
     description: "INDIVIDUAL GETS DIABETIC TEST STRIPS EVERY QUARTER"
     sql: ${unique_id} ;;
   }
@@ -52,9 +68,17 @@ view: ebr_measures {
     sql: ${unique_id} ;;
   }
 
+  measure: individual_had_emergency_room_and_inpatient_visit_eligible_patients {
+    type: count_distinct
+    filters: [individual_had_emergency_room_and_inpatient_visit: "0,1"]
+    label: "ER Visit but No Subsequent Inpatient Visit (Eligible) - N"
+    description: "INDIVIDUAL HAD EMERGENCY ROOM VISIT but NO SUBSEQUENT INPATIENT VISIT"
+    sql: ${unique_id} ;;
+  }
+
   dimension: individual_is_in_disease_group {
     type: string
-    hidden: no
+    hidden: yes
     sql: ${TABLE}."INDIVIDUAL_IS_IN_DISEASE_GROUP" ;;
   }
 
@@ -71,6 +95,14 @@ view: ebr_measures {
     type: count_distinct
     filters: [individual_is_in_disease_group_one: "1"]
     label: "Disease Grp1 - N (NO CHRONIC DISEASE AND LESS THAN $1500 MEDICAL EXPENDITURES PER 12 MONTHS)"
+    description: "NO CHRONIC DISEASE AND LESS THAN $1500 MEDICAL EXPENDITURES PER 12 MONTHS"
+    sql: ${unique_id} ;;
+  }
+
+  measure: individual_is_in_disease_group_one_eligible_patients {
+    type: count_distinct
+    filters: [individual_is_in_disease_group_one: "0,1"]
+    label: "Disease Grp1 (Eligible) - N (NO CHRONIC DISEASE AND LESS THAN $1500 MEDICAL EXPENDITURES PER 12 MONTHS)"
     description: "NO CHRONIC DISEASE AND LESS THAN $1500 MEDICAL EXPENDITURES PER 12 MONTHS"
     sql: ${unique_id} ;;
   }
@@ -92,6 +124,14 @@ view: ebr_measures {
     sql: ${unique_id} ;;
   }
 
+  measure: individual_is_in_disease_group_two_eligible_patients {
+    type: count_distinct
+    filters: [individual_is_in_disease_group_two: "0,1"]
+    label: "Disease Grp2 (Eligible) - N (NO CHRONIC DISEASE AND $1500 OR MORE MEDICAL EXPENDITURES PER 12 MONTHS)"
+    description: "NO CHRONIC DISEASE AND $1500 OR MORE MEDICAL EXPENDITURES PER 12 MONTHS"
+    sql: ${unique_id} ;;
+  }
+
   dimension: individual_is_in_disease_group_three {
     type: string
     label: "Disease Grp-3 (ONE CHRONIC DISEASE)"
@@ -105,6 +145,14 @@ view: ebr_measures {
     type: count_distinct
     filters: [individual_is_in_disease_group_three: "1"]
     label: "Disease Grp3 - N (ONE CHRONIC DISEASE)"
+    description: "ONE CHRONIC DISEASE"
+    sql: ${unique_id} ;;
+  }
+
+  measure: individual_is_in_disease_group_three_eligible_patients {
+    type: count_distinct
+    filters: [individual_is_in_disease_group_three: "0,1"]
+    label: "Disease Grp3 (Eligible) - N (ONE CHRONIC DISEASE)"
     description: "ONE CHRONIC DISEASE"
     sql: ${unique_id} ;;
   }
@@ -126,9 +174,17 @@ view: ebr_measures {
     sql: ${unique_id} ;;
   }
 
+  measure: individual_is_in_disease_group_four_eligible_patients {
+    type: count_distinct
+    filters: [individual_is_in_disease_group_four: "0,1"]
+    label: "Disease Grp4 (Eligible) - N (TWO CHRONIC DISEASE)"
+    description: "TWO CHRONIC DISEASE"
+    sql: ${unique_id} ;;
+  }
+
   dimension: individual_is_in_disease_group_five {
     type: string
-    label: "Disease Grp-5 (THREE CHRONIC DISEASE)"
+    label: "Disease Grp-5 (THREE CHRONIC DISEASES)"
     description: "THREE CHRONIC DISEASE"
     sql: CASE WHEN ${individual_is_in_disease_group} = 'GROUP-5' THEN '1'
       ELSE '0'
@@ -138,14 +194,22 @@ view: ebr_measures {
   measure: individual_is_in_disease_group_five_patients {
     type: count_distinct
     filters: [individual_is_in_disease_group_five: "1"]
-    label: "Disease Grp5 - N (THREE CHRONIC DISEASE)"
+    label: "Disease Grp5 - N (THREE CHRONIC DISEASES)"
+    description: "THREE CHRONIC DISEASE"
+    sql: ${unique_id} ;;
+  }
+
+  measure: individual_is_in_disease_group_five_eligible_patients {
+    type: count_distinct
+    filters: [individual_is_in_disease_group_five: "0,1"]
+    label: "Disease Grp5 (Eligible) - N (THREE CHRONIC DISEASE)"
     description: "THREE CHRONIC DISEASE"
     sql: ${unique_id} ;;
   }
 
   dimension: individual_is_in_disease_group_six {
     type: string
-    label: "Disease Grp-6 (FOUR CHRONIC DISEASE)"
+    label: "Disease Grp-6 (FOUR CHRONIC DISEASES)"
     description: "FOUR CHRONIC DISEASE"
     sql: CASE WHEN ${individual_is_in_disease_group} = 'GROUP-6' THEN '1'
       ELSE '0'
@@ -155,7 +219,15 @@ view: ebr_measures {
   measure: individual_is_in_disease_group_six_patients {
     type: count_distinct
     filters: [individual_is_in_disease_group_six: "1"]
-    label: "Disease Grp6 - N (FOUR CHRONIC DISEASE)"
+    label: "Disease Grp6 - N (FOUR CHRONIC DISEASES)"
+    description: "FOUR CHRONIC DISEASE"
+    sql: ${unique_id} ;;
+  }
+
+  measure: individual_is_in_disease_group_six_eligible_patients {
+    type: count_distinct
+    filters: [individual_is_in_disease_group_six: "0,1",]
+    label: "Disease Grp6 (Eligible) - N (FOUR CHRONIC DISEASE)"
     description: "FOUR CHRONIC DISEASE"
     sql: ${unique_id} ;;
   }
@@ -177,6 +249,14 @@ view: ebr_measures {
     sql: ${unique_id} ;;
   }
 
+  measure: individual_is_in_disease_group_seven_eligible_patients {
+    type: count_distinct
+    filters: [individual_is_in_disease_group_seven: "0,1"]
+    label: "Disease Grp7 (Eligible) - N (FIVE OR MORE CHRONIC DISEASES)"
+    description: "FIVE OR MORE CHRONIC DISEASES"
+    sql: ${unique_id} ;;
+  }
+
   dimension: individual_taking_drug_with_cost_greater_than_400 {
     type: string
     label: "Drug Cost (>400)"
@@ -188,6 +268,14 @@ view: ebr_measures {
     type: count_distinct
     filters: [individual_taking_drug_with_cost_greater_than_400: "1"]
     label: "Drug Cost (>400) - N"
+    description: "INDIVIDUAL TAKING DRUG WITH COST GREATER THAN 400"
+    sql: ${unique_id} ;;
+  }
+
+  measure: individual_taking_drug_with_cost_greater_than_400_eligible_patients {
+    type: count_distinct
+    filters: [individual_taking_drug_with_cost_greater_than_400: "0,1"]
+    label: "Drug Cost (>400)(Eligible) - N"
     description: "INDIVIDUAL TAKING DRUG WITH COST GREATER THAN 400"
     sql: ${unique_id} ;;
   }
@@ -207,6 +295,14 @@ view: ebr_measures {
     sql: ${unique_id} ;;
   }
 
+  measure: individual_taking_black_label_drug_eligible_patients {
+    type: count_distinct
+    filters: [individual_taking_black_label_drug: "1", individual_taking_black_label_drug: "0"]
+    label: "Black Label Drug (Eligible) - N"
+    description: "INDIVIDUAL TAKING BLACK LABEL DRUG"
+    sql: ${unique_id} ;;
+  }
+
   dimension: individual_taking_specialty_drug {
     type: string
     label: "Speciality Label Drug"
@@ -218,6 +314,14 @@ view: ebr_measures {
     type: count_distinct
     filters: [individual_taking_specialty_drug: "1"]
     label: "Speciality Label Drug - N"
+    description: "INDIVIDUAL TAKING SPECIALTY DRUGS DRUG"
+    sql: ${unique_id} ;;
+  }
+
+  measure: individual_taking_specialty_drug_eligible_patients {
+    type: count_distinct
+    filters: [individual_taking_specialty_drug: "0,1"]
+    label: "Speciality Label Drug (Eligible) - N"
     description: "INDIVIDUAL TAKING SPECIALTY DRUGS DRUG"
     sql: ${unique_id} ;;
   }
@@ -237,6 +341,14 @@ view: ebr_measures {
     sql: ${unique_id} ;;
   }
 
+  measure: individual_had_primary_care_physician_visit_eligible_patients {
+    type: count_distinct
+    filters: [individual_had_primary_care_physician_visit: "0,1"]
+    label: "Primary Care visit (Eligible) - N"
+    description: "INDIVIDUAL HAD PRIMARY CARE PHYSICIAN VISIT"
+    sql: ${unique_id} ;;
+  }
+
   dimension: individual_female_had_breast_cancer_screening {
     type: string
     label: "Breast Cancer Screening"
@@ -248,6 +360,14 @@ view: ebr_measures {
     type: count_distinct
     filters: [individual_female_had_breast_cancer_screening: "1"]
     label: "Breast Cancer Screening - N"
+    description: "INDIVIDUAL FEMALE HAD BREAST CANCER SCREENING"
+    sql: ${unique_id} ;;
+  }
+
+  measure: individual_female_had_breast_cancer_screening_eligible_patients {
+    type: count_distinct
+    filters: [individual_female_had_breast_cancer_screening: "0,1"]
+    label: "Breast Cancer Screening (Eligible) - N"
     description: "INDIVIDUAL FEMALE HAD BREAST CANCER SCREENING"
     sql: ${unique_id} ;;
   }
@@ -267,6 +387,14 @@ view: ebr_measures {
     sql: ${unique_id} ;;
   }
 
+  measure: individual_female_had_colon_cancer_screening_eligible_patients {
+    type: count_distinct
+    filters: [individual_female_had_colon_cancer_screening: "0,1"]
+    label: "Colon Cancer Screening (Eligible) - N"
+    description: "INDIVIDUAL FEMALE HAD COLON CANCER SCREENING"
+    sql: ${unique_id} ;;
+  }
+
   dimension: individual_female_had_cervical_cancer_screening {
     type: string
     label: "Cervical Cancer Screening"
@@ -278,6 +406,14 @@ view: ebr_measures {
     type: count_distinct
     filters: [individual_female_had_cervical_cancer_screening: "1"]
     label: "Cervical Cancer Screening - N"
+    description: "INDIVIDUAL FEMALE HAD CERVICAL CANCER SCREENING"
+    sql: ${unique_id} ;;
+  }
+
+  measure: individual_female_had_cervical_cancer_screening_eligible_patients {
+    type: count_distinct
+    filters: [individual_female_had_cervical_cancer_screening: "0,1"]
+    label: "Cervical Cancer Screening (Eligible) - N"
     description: "INDIVIDUAL FEMALE HAD CERVICAL CANCER SCREENING"
     sql: ${unique_id} ;;
   }
@@ -297,6 +433,14 @@ view: ebr_measures {
     sql: ${unique_id} ;;
   }
 
+  measure: individual_had_diagnosis_of_cardiovascular_and_taking_statin_drug_eligible_patients {
+    type: count_distinct
+    filters: [individual_had_diagnosis_of_cardiovascular_and_taking_statin_drug: "0,1"]
+    label: "Cardiovascular & STATIN Drug (Eligible) - N"
+    description: "INDIVIDUAL HAD DIAGNOSIS OF CARDIOVASCULAR AND TAKING STATIN DRUG"
+    sql: ${unique_id} ;;
+  }
+
   dimension: individual_had_acute_myocardial_infarction_and_taking_beta_blocker {
     type: string
     label: "Myocardial Infraction & Beta-blocker drug"
@@ -308,6 +452,14 @@ view: ebr_measures {
     type: count_distinct
     filters: [individual_had_acute_myocardial_infarction_and_taking_beta_blocker: "1"]
     label: "Myocardial Infraction & Beta-blocker drug - N"
+    description: "INDIVIDUAL HAD ACUTE MYOCARDIAL INFARCTION AND TAKING BETA BLOCKER"
+    sql: ${unique_id} ;;
+  }
+
+  measure: individual_had_acute_myocardial_infarction_and_taking_beta_blocker_eligible_patients {
+    type: count_distinct
+    filters: [individual_had_acute_myocardial_infarction_and_taking_beta_blocker: "0,1"]
+    label: "Myocardial Infraction & Beta-blocker drug (Eligible) - N"
     description: "INDIVIDUAL HAD ACUTE MYOCARDIAL INFARCTION AND TAKING BETA BLOCKER"
     sql: ${unique_id} ;;
   }
@@ -327,6 +479,14 @@ view: ebr_measures {
     sql: ${unique_id} ;;
   }
 
+  measure: individual_has_diabetes_diagnosis_and_screened_for_retinopathy_eligible_patients {
+    type: count_distinct
+    filters: [individual_has_diabetes_diagnosis_and_screened_for_retinopathy: "0,1"]
+    label: "Diabetes & RETINOPATHY Screening (Eligible) - N"
+    description: "INDIVIDUAL HAS DIABETES DIAGNOSIS AND SCREENED FOR RETINOPATHY"
+    sql: ${unique_id} ;;
+  }
+
   dimension: individual_had_diagnosis_of_diabetes_and_taking_ace_inhibitor_or_arb_drugs {
     type: string
     label: "Diabetes & ACE_INHIBITOR/ ARB Drug"
@@ -338,6 +498,14 @@ view: ebr_measures {
     type: count_distinct
     filters: [individual_had_diagnosis_of_diabetes_and_taking_ace_inhibitor_or_arb_drugs: "1"]
     label: "Diabetes & ACE_INHIBITOR/ ARB Drug - N"
+    description: "INDIVIDUAL HAD DIAGNOSIS OF DIABETES AND TAKING ACE_INHIBITOR/ ARB DRUGS"
+    sql: ${unique_id} ;;
+  }
+
+  measure: individual_had_diagnosis_of_diabetes_and_taking_ace_inhibitor_or_arb_drugs_eligible_patients {
+    type: count_distinct
+    filters: [individual_had_diagnosis_of_diabetes_and_taking_ace_inhibitor_or_arb_drugs: "0,1"]
+    label: "Diabetes & ACE_INHIBITOR/ ARB Drug (Eligible)- N"
     description: "INDIVIDUAL HAD DIAGNOSIS OF DIABETES AND TAKING ACE_INHIBITOR/ ARB DRUGS"
     sql: ${unique_id} ;;
   }
@@ -357,6 +525,14 @@ view: ebr_measures {
     sql: ${unique_id} ;;
   }
 
+  measure: individual_had_diagnosis_of_diabetes_and_taking_statin_drugs_eligible_patients {
+    type: count_distinct
+    filters: [individual_had_diagnosis_of_diabetes_and_taking_statin_drugs: "0,1"]
+    label: "Diabetes & STATIN Drug (Eligible)- N"
+    description: "INDIVIDUAL HAD DIAGNOSIS OF DIABETES AND TAKING STATIN DRUGS"
+    sql: ${unique_id} ;;
+  }
+
   dimension: individual_had_diagnosis_of_diabetes_and_taking_antihypertensive_drugs {
     type: string
     label: "Diabetes & ANTI-HYPERTENSIVE Drug"
@@ -369,6 +545,14 @@ view: ebr_measures {
     filters: [individual_had_diagnosis_of_diabetes_and_taking_antihypertensive_drugs: "1"]
     label: "Diabetes & ANTI-HYPERTENSIVE Drug - N"
     description: "INDIVIDUAL HAD DIAGNOSIS OF DIABETES AND TAKING ANTIHYPERTENSIVE DRUGS"
+    sql: ${unique_id} ;;
+  }
+
+  measure: individual_had_diagnosis_of_diabetes_and_taking_antihypertensive_drugs_eligible_patients {
+    type: count_distinct
+    filters: [individual_had_diagnosis_of_diabetes_and_taking_antihypertensive_drugs: "0,1"]
+    label: "HYPERTENSION & ANTI-HYPERTENSIVE Drug (Eligible) - N"
+    description: "INDIVIDUAL HAD DIAGNOSIS OF HYPERTENSION AND TAKING ANTIHYPERTENSIVE DRUGS"
     sql: ${unique_id} ;;
   }
 
@@ -411,4 +595,19 @@ view: ebr_measures {
     suggest_explore: vw_medical
     suggest_dimension: vw_medical.PARTICIPANT_NONPARTICIPANT_Flag
   }
+
+  dimension: HOSPITALIZED_OR_NOT {
+    type: string
+    label: "HOSPITALIZED OR NOT"
+    sql:  ${TABLE}."HOSPITALIZED_OR_NOT" ;;
+  }
+
+  dimension: Inpatient_Hospitalization {
+    type: string
+    label: "Inpatient Hospitalization"
+    sql:  case when ${HOSPITALIZED_OR_NOT} = 'YES' then '1'
+          else '0'
+          end;;
+  }
+
 }
