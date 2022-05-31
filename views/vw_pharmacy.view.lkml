@@ -67,6 +67,22 @@ view: vw_pharmacy {
     sql: ${TABLE}."DATE_FILLED" ;;
   }
 
+  dimension_group: paid_date {
+    type: time
+    label: "FILLED"
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    convert_tz: no
+    datatype: date
+    sql: ${TABLE}."PAID_DATE" ;;
+  }
+
   dimension: days_supply {
     type: number
     label: "TOTAL DAYS SUPPLY"
@@ -502,11 +518,41 @@ view: vw_pharmacy {
     group_label: "PARTICIPANT FILTER"
     suggest_explore: vw_pharmacy
     suggest_dimension:vw_pharmacy.PARTICIPANT_NONPARTICIPANT_Flag
-}
+  }
   dimension: PARTICIPANT_PROGRAM_NAME{
     type: string
     label: "PARTICIPANT PROGRAM NAME"
     sql: ${TABLE}."PARTICIPANT_PROGRAM_NAME";;
 
+  }
+  parameter: reporting_date_filter {
+    type: string
+    label: "Reporting date"
+    allowed_value: {
+      value: "Filled"
+      label: "Prescription Filled date"}
+    allowed_value: {
+      value: "Paid"
+      label: "Claim Paid date"}
+  }
+
+  dimension_group: reporting {
+    type: time
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    convert_tz: no
+    datatype: date
+    label: "Reporting"
+    drill_fields: [reporting_year, reporting_quarter, reporting_month, reporting_raw]
+    sql: CASE WHEN {% parameter reporting_date_filter %} = 'Paid' THEN ${TABLE}."PAID_DATE"
+      WHEN {% parameter reporting_date_filter %} = 'Filled' THEN ${TABLE}."DATE_FILLED"
+      ELSE ${TABLE}."DATE_FILLED"
+      END ;;
   }
 }

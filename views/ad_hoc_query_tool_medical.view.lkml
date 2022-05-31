@@ -6,6 +6,7 @@ view: ad_hoc_query_tool_medical {
           "PATIENT_GENDER" as PATIENT_GENDER,
           "RELATIONSHIP_TO_EMPLOYEE" as RELATIONSHIP_TO_EMPLOYEE,
           "PAID_DATE" as PAID_DATE,
+          "DIAGNOSIS_DATE" as DIAGNOSIS_DATE,
           "PATIENT_AGE" as PATIENT_AGE,
           "AGE_GROUP_1" as AGE_GROUP_1,
           "TOTAL_BILLED_AMT" as Total_Billed_Amt_M,
@@ -241,6 +242,22 @@ view: ad_hoc_query_tool_medical {
     sql: ${TABLE}."PAID_DATE" ;;
   }
 
+  dimension_group: DIAGNOSIS_DATE {
+    type: time
+    label: "PAID"
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    convert_tz: no
+    datatype: date
+    drill_fields: [DIAGNOSIS_DATE_year, DIAGNOSIS_DATE_quarter, DIAGNOSIS_DATE_month, DIAGNOSIS_DATE_week, DIAGNOSIS_DATE_raw]
+    sql: ${TABLE}."DIAGNOSIS_DATE" ;;
+  }
   dimension: PATIENT_GENDER {
     type: string
     label: "PATIENT GENDER"
@@ -496,5 +513,35 @@ view: ad_hoc_query_tool_medical {
     group_label: "PARTICIPANT FILTER"
     suggest_explore: vw_medical
     suggest_dimension: vw_medical.PARTICIPANT_NONPARTICIPANT_Flag
+  }
+  parameter: reporting_date_filter {
+    type: string
+    label: "Reporting date"
+    allowed_value: {
+      value: "Diagnosis"
+      label: "Diagnosis date"}
+    allowed_value: {
+      value: "Paid"
+      label: "Paid date"}
+  }
+
+  dimension_group: reporting {
+    type: time
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    convert_tz: no
+    datatype: date
+    label: "Reporting"
+    drill_fields: [reporting_year, reporting_quarter, reporting_month, reporting_raw]
+    sql: CASE WHEN {% parameter reporting_date_filter %} = 'Paid' THEN ${TABLE}."PAID_DATE"
+      WHEN {% parameter reporting_date_filter %} = 'Diagnosis' THEN ${TABLE}."DIAGNOSIS_DATE"
+      ELSE ${TABLE}."PAID_DATE"
+      END ;;
   }
 }

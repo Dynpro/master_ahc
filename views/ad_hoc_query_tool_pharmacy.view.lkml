@@ -3,7 +3,8 @@ view: ad_hoc_query_tool_pharmacy {
   derived_table: {
     sql: select
           "UNIQUE_ID" as PATIENT_ID_P,
-          "DATE_FILLED" as SERVICE_DATE,
+          "DATE_FILLED" as DATE_FILLED, /*Changes column name from SERVICE_DATE to DATE_FILLED alias, same will be changed in dimension_group*/
+          "PAID_DATE" as PAID_DATE,
           "BRAND_OR_GENERIC" as BRAND_OR_GENERIC,
           "RELATIONSHIP_TO_EMPLOYEE" as RELATIONSHIP_TO_EMPLOYEE,
           "TOTAL_BILLED_AMT" as Total_Billed_Amt_P,
@@ -311,7 +312,24 @@ view: ad_hoc_query_tool_pharmacy {
     ]
     convert_tz: no
     datatype: date
-    sql: ${TABLE}."SERVICE_DATE" ;;
+    drill_fields: [SERVICE_DATE_year, SERVICE_DATE_quarter, SERVICE_DATE_month, SERVICE_DATE_raw]
+    sql: ${TABLE}."DATE_FILLED" ;; #Column mapping changed from SERVICE_DATE to DATE_FILLED - we are removing SERVICE_DATE label from all reporting.
+  }
+  dimension_group: PAID_DATE {
+    type: time
+    label: "FILLED"
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    convert_tz: no
+    datatype: date
+    drill_fields: [PAID_DATE_year, PAID_DATE_quarter, PAID_DATE_month, PAID_DATE_raw]
+    sql: ${TABLE}."PAID_DATE" ;;
   }
 
   dimension: Unique_Id_P {
@@ -413,5 +431,36 @@ view: ad_hoc_query_tool_pharmacy {
     group_label: "PARTICIPANT FILTER"
     suggest_explore: vw_pharmacy
     suggest_dimension:vw_pharmacy.PARTICIPANT_NONPARTICIPANT_Flag
+  }
+
+  parameter: reporting_date_filter {
+    type: string
+    label: "Reporting date"
+    allowed_value: {
+      value: "Filled"
+      label: "Prescription Filled date"}
+    allowed_value: {
+      value: "Paid"
+      label: "Claim Paid date"}
+  }
+
+  dimension_group: reporting {
+    type: time
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    convert_tz: no
+    datatype: date
+    label: "Reporting"
+    drill_fields: [reporting_year, reporting_quarter, reporting_month, reporting_raw]
+    sql: CASE WHEN {% parameter reporting_date_filter %} = 'Paid' THEN ${TABLE}."PAID_DATE"
+      WHEN {% parameter reporting_date_filter %} = 'Filled' THEN ${TABLE}."DATE_FILLED"
+      ELSE ${TABLE}."DATE_FILLED"
+      END ;;
   }
 }

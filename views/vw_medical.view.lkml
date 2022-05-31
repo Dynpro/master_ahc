@@ -531,6 +531,7 @@ view: vw_medical {
     type: count_distinct
     label: "N"
     sql:  ${unique_id} ;;
+    drill_fields: [icd_disease_category, DIAGNOSIS_SUB_CATEGORY, icd_description, PROCEDURE_CATEGORY, PROCEDURE_SUBCATEGORY, procedure_description, icd_chronic_cat]
   }
 
   measure: Patient_percentage {
@@ -544,6 +545,7 @@ view: vw_medical {
     type: sum
     label: "TOTAL $"
     sql:  ${Total_Paid_Amount} ;;
+    drill_fields: [icd_disease_category, DIAGNOSIS_SUB_CATEGORY, icd_description, PROCEDURE_CATEGORY, PROCEDURE_SUBCATEGORY, procedure_description, icd_chronic_cat]
     value_format: "$#,##0"
   }
 
@@ -560,6 +562,7 @@ view: vw_medical {
     sql: CASE WHEN ${Total_Patients} <> 0 THEN ${Total_Paid_Amt}/${Total_Patients}
         ELSE 0
         END;;
+    drill_fields: [icd_disease_category, DIAGNOSIS_SUB_CATEGORY, icd_description, PROCEDURE_CATEGORY, PROCEDURE_SUBCATEGORY, procedure_description, icd_chronic_cat]
     value_format: "$#,##0"
   }
 
@@ -944,6 +947,7 @@ view: vw_medical {
   }
   dimension: patient_gender1 {
     type: string
+    hidden: yes
     sql: case when ${TABLE}."PATIENT_GENDER"= 'M' then 'Male'
               when ${TABLE}."PATIENT_GENDER"= 'F' then 'Female'
               else '0'
@@ -951,6 +955,7 @@ view: vw_medical {
   }
   dimension: relationship_to_employee1 {
     type: string
+    hidden: yes
     label: "RELATIONSHIP TO EMPLOYEE1"
     sql: case when ${TABLE}."RELATIONSHIP_TO_EMPLOYEE" = 'EMPLOYEE' then 'Employee'
               when ${TABLE}."RELATIONSHIP_TO_EMPLOYEE" = 'SPOUSE' then 'Spouse'
@@ -992,4 +997,34 @@ view: vw_medical {
     sql: ${TABLE}."PARTICIPANT_PROGRAM_NAME";;
   }
 
+  parameter: reporting_date_filter {
+    type: string
+    label: "Reporting date"
+    allowed_value: {
+      value: "Diagnosis"
+      label: "Diagnosis date"}
+    allowed_value: {
+      value: "Paid"
+      label: "Paid date"}
+  }
+
+  dimension_group: reporting {
+    type: time
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    convert_tz: no
+    datatype: date
+    label: "Reporting"
+    drill_fields: [reporting_year, reporting_quarter, reporting_month, reporting_raw]
+    sql: CASE WHEN {% parameter reporting_date_filter %} = 'Paid' THEN ${TABLE}."PAID_DATE"
+      WHEN {% parameter reporting_date_filter %} = 'Diagnosis' THEN ${TABLE}."DIAGNOSIS_DATE"
+      ELSE ${TABLE}."PAID_DATE"
+      END ;;
+  }
 }
