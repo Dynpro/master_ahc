@@ -529,7 +529,7 @@ view: vw_pharmacy {
     type: string
     label: "Reporting date"
     allowed_value: {
-      value: "Filled"
+      value: "Service"
       label: "Prescription Filled date"}
     allowed_value: {
       value: "Paid"
@@ -551,7 +551,7 @@ view: vw_pharmacy {
     label: "Reporting"
     drill_fields: [reporting_year, reporting_quarter, reporting_month, reporting_raw]
     sql: CASE WHEN {% parameter reporting_date_filter %} = 'Paid' THEN ${TABLE}."PAID_DATE"
-      WHEN {% parameter reporting_date_filter %} = 'Filled' THEN ${TABLE}."DATE_FILLED"
+      WHEN {% parameter reporting_date_filter %} = 'Service' THEN ${TABLE}."DATE_FILLED"
       ELSE ${TABLE}."DATE_FILLED"
       END ;;
   }
