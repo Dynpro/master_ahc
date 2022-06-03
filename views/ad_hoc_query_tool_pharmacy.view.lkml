@@ -437,8 +437,8 @@ view: ad_hoc_query_tool_pharmacy {
     type: string
     label: "Reporting date"
     allowed_value: {
-      value: "Filled"
-      label: "Prescription Filled date"}
+      value: "Service"
+      label: "Service date"}
     allowed_value: {
       value: "Paid"
       label: "Claim Paid date"}
@@ -459,7 +459,7 @@ view: ad_hoc_query_tool_pharmacy {
     label: "Reporting"
     drill_fields: [reporting_year, reporting_quarter, reporting_month, reporting_raw]
     sql: CASE WHEN {% parameter reporting_date_filter %} = 'Paid' THEN ${TABLE}."PAID_DATE"
-      WHEN {% parameter reporting_date_filter %} = 'Filled' THEN ${TABLE}."DATE_FILLED"
+      WHEN {% parameter reporting_date_filter %} = 'Service' THEN ${TABLE}."DATE_FILLED"
       ELSE ${TABLE}."DATE_FILLED"
       END ;;
   }

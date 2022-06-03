@@ -1027,4 +1027,11 @@ view: vw_medical {
       ELSE ${TABLE}."PAID_DATE"
       END ;;
   }
+
+
+  dimension:Lo_icd_chronic_cat {
+    type: string
+
+    sql: ${TABLE}."ICD_CHRONIC_CAT" ;;
+  }
 }

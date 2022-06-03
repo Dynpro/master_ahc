@@ -518,8 +518,8 @@ view: ad_hoc_query_tool_medical {
     type: string
     label: "Reporting date"
     allowed_value: {
-      value: "Diagnosis"
-      label: "Diagnosis date"}
+      value: "Service"
+      label: "Service date"}
     allowed_value: {
       value: "Paid"
       label: "Paid date"}
@@ -540,7 +540,7 @@ view: ad_hoc_query_tool_medical {
     label: "Reporting"
     drill_fields: [reporting_year, reporting_quarter, reporting_month, reporting_raw]
     sql: CASE WHEN {% parameter reporting_date_filter %} = 'Paid' THEN ${TABLE}."PAID_DATE"
-      WHEN {% parameter reporting_date_filter %} = 'Diagnosis' THEN ${TABLE}."DIAGNOSIS_DATE"
+      WHEN {% parameter reporting_date_filter %} = 'Service' THEN ${TABLE}."DIAGNOSIS_DATE"
       ELSE ${TABLE}."PAID_DATE"
       END ;;
   }
