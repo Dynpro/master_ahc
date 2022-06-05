@@ -523,17 +523,17 @@ view: vw_pharmacy {
     type: string
     label: "PARTICIPANT PROGRAM NAME"
     sql: ${TABLE}."PARTICIPANT_PROGRAM_NAME";;
+ }
 
-  }
   parameter: reporting_date_filter {
     type: string
     label: "Reporting date"
     allowed_value: {
       value: "Service"
-      label: "Prescription Filled date"}
+      label: "Service date"}
     allowed_value: {
       value: "Paid"
-      label: "Claim Paid date"}
+      label: "Paid date"}
   }
 
   dimension_group: reporting {

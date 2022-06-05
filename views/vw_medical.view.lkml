@@ -1002,7 +1002,7 @@ view: vw_medical {
     label: "Reporting date"
     allowed_value: {
       value: "Service"
-      label: "Diagnosis date"}
+      label: "Service date"}
     allowed_value: {
       value: "Paid"
       label: "Paid date"}

@@ -441,7 +441,7 @@ view: ad_hoc_query_tool_pharmacy {
       label: "Service date"}
     allowed_value: {
       value: "Paid"
-      label: "Claim Paid date"}
+      label: "Paid date"}
   }
 
   dimension_group: reporting {
