@@ -12,7 +12,7 @@ view: patient_drug_summary {
         LISTAGG(DISTINCT "DRUG_CODE", ' || ') within group (order by "DRUG_CODE" ASC) as DRUG_CODE_LIST
         FROM "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_PHARMACY"
 
-      GROUP BY PATIENT_ID_M, PAID_YEAR
+      GROUP BY PATIENT_ID_M, YEAR
       ;;
   }
 
