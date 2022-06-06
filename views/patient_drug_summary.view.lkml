@@ -2,7 +2,10 @@ view: patient_drug_summary {
   derived_table: {
     sql: Select
         "UNIQUE_ID" as PATIENT_ID_M,
-        LEFT("PAID_DATE", 4) as PAID_YEAR,
+        LEFT(({% if reporting_date_filter._parameter_value == "'Paid'" %} "PAID_DATE"
+          {% elsif reporting_date_filter._parameter_value == "'Filled'" %} "DATE_FILLED"
+          {% else %} "DATE_FILLED"
+          {% endif %}), 4) as YEAR,
         SUM("TOTAL_EMPLOYER_PAID_AMT") as TOTAL_PAID_AMT,
         LISTAGG(DISTINCT "TEA_CATEGORY", ' || ') within group (order by "TEA_CATEGORY" ASC) as TEA_CATEGORY_LIST,
         LISTAGG(DISTINCT "DRUG_NAME", ' || ') within group (order by "DRUG_NAME" ASC) as DRUG_LIST,
@@ -163,5 +166,20 @@ view: patient_drug_summary {
     label: "Total Summary $"
     sql: ${TABLE}.TOTAL_PAID_AMT ;;
   }
+  parameter: reporting_date_filter {
+    type: string
+    label: "Reporting date"
+    allowed_value: {
+      value: "Filled"
+      label: "Prescription Filled date"}
+    allowed_value: {
+      value: "Paid"
+      label: "Claim Paid date"}
+  }
 
+  dimension: reporting_year {
+    type: string
+    label: "Reporting year"
+    sql: ${TABLE}.YEAR ;;
+  }
 }

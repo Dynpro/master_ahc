@@ -1028,10 +1028,4 @@ view: vw_medical {
       END ;;
   }
 
-
-  dimension:Lo_icd_chronic_cat {
-    type: string
-
-    sql: ${TABLE}."ICD_CHRONIC_CAT" ;;
-  }
 }

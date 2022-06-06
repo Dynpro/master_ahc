@@ -2,7 +2,10 @@ view: patient_diagnosis_summary {
   derived_table: {
     sql: Select
         "UNIQUE_ID" as PATIENT_ID_M,
-        LEFT("PAID_DATE", 4) as PAID_YEAR,
+        LEFT(({% if reporting_date_filter._parameter_value == "'Paid'" %} "PAID_DATE"
+          {% elsif reporting_date_filter._parameter_value == "'Diagnosis'" %} "DIAGNOSIS_DATE"
+          {% else %} "DIAGNOSIS_DATE"
+          {% endif %}), 4) as YEAR,
         SUM("TOTAL_EMPLOYER_PAID_AMT") as TOTAL_PAID_AMT,
         LISTAGG(DISTINCT "ICD_DISEASE_CATEGORY", ' || ') within group (order by "ICD_DISEASE_CATEGORY" ASC) as DIAGNOSIS_CATEGORY_LIST,
         LISTAGG(DISTINCT "ICD_DESCRIPTION", ' || ') within group (order by "ICD_DESCRIPTION" ASC) as DIAGNOSIS_DESCRIPTION_LIST,
@@ -230,7 +233,7 @@ view: patient_diagnosis_summary {
 
   dimension: PATIENT_ID {
     type: string
-    hidden:  yes
+
     label: "PATIENT ID"
     drill_fields: [vw_medical.icd_disease_category, vw_medical.icd_chronic_cat]
     sql: ${TABLE}.PATIENT_ID_M ;;
@@ -238,16 +241,32 @@ view: patient_diagnosis_summary {
 
   dimension: PAID_YEAR {
     type: string
-    hidden:  yes
+
     label: "PAID YEAR"
     sql: ${TABLE}.PAID_YEAR ;;
   }
 
   measure: total_summary_paid_amt {
     type: sum
-    hidden:  yes
+
     label: "Total Summary $"
     sql: ${TABLE}.TOTAL_PAID_AMT ;;
   }
 
+  parameter: reporting_date_filter {
+    type: string
+    label: "Reporting date"
+    allowed_value: {
+      value: "Diagnosis"
+      label: "Diagnosis date"}
+    allowed_value: {
+      value: "Paid"
+      label: "Paid date"}
+  }
+
+  dimension: reporting_year {
+    type: string
+    label: "Reporting year"
+    sql: ${TABLE}.YEAR ;;
+  }
 }
