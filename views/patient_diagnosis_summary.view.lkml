@@ -14,7 +14,7 @@ view: patient_diagnosis_summary {
         LISTAGG(DISTINCT "PROCEDURE_CATEGORY", ' || ') within group (order by "PROCEDURE_CATEGORY" ASC) as PROCEDURE_CATEGORY_LIST
         FROM "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_MEDICAL"
 
-      GROUP BY PATIENT_ID_M, PAID_YEAR
+      GROUP BY PATIENT_ID_M, YEAR
       ;;
   }
 
@@ -233,7 +233,6 @@ view: patient_diagnosis_summary {
 
   dimension: PATIENT_ID {
     type: string
-
     label: "PATIENT ID"
     drill_fields: [vw_medical.icd_disease_category, vw_medical.icd_chronic_cat]
     sql: ${TABLE}.PATIENT_ID_M ;;
@@ -241,14 +240,12 @@ view: patient_diagnosis_summary {
 
   dimension: PAID_YEAR {
     type: string
-
     label: "PAID YEAR"
-    sql: ${TABLE}.PAID_YEAR ;;
+    sql: ${TABLE}.YEAR ;;
   }
 
   measure: total_summary_paid_amt {
     type: sum
-
     label: "Total Summary $"
     sql: ${TABLE}.TOTAL_PAID_AMT ;;
   }

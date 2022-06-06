@@ -158,7 +158,7 @@ view: patient_drug_summary {
   dimension: PAID_YEAR {
     type: string
     label: "Paid Year"
-    sql: ${TABLE}.PAID_YEAR ;;
+    sql: ${TABLE}.YEAR ;;
   }
 
   measure: total_summary_paid_amt {
