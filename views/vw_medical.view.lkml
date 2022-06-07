@@ -1007,7 +1007,6 @@ view: vw_medical {
       value: "Paid"
       label: "Paid date"}
   }
-
   dimension_group: reporting {
     type: time
     timeframes: [
