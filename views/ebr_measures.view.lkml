@@ -536,15 +536,15 @@ view: ebr_measures {
   dimension: individual_had_diagnosis_of_diabetes_and_taking_antihypertensive_drugs {
     type: string
     label: "HYPERTENSION & ANTI-HYPERTENSIVE Drug"
-    description: "INDIVIDUAL HAD DIAGNOSIS OF DIABETES AND TAKING ANTIHYPERTENSIVE DRUGS"
-    sql: ${TABLE}."INDIVIDUAL_HAD_DIAGNOSIS_OF_DIABETES_AND_TAKING_ANTIHYPERTENSIVE_DRUGS" ;;
+    description: "INDIVIDUAL HAD DIAGNOSIS OF HYPERTENSION AND TAKING ANTIHYPERTENSIVE DRUGS"
+    sql: ${TABLE}."INDIVIDUAL_HAD_DIAGNOSIS_OF_HYPERTENSION_AND_TAKING_ANTIHYPERTENSIVE_DRUGS" ;;
   }
 
   measure: individual_had_diagnosis_of_diabetes_and_taking_antihypertensive_drugs_patients {
     type: count_distinct
     filters: [individual_had_diagnosis_of_diabetes_and_taking_antihypertensive_drugs: "1"]
     label: "HYPERTENSION & ANTI-HYPERTENSIVE Drug - N"
-    description: "INDIVIDUAL HAD DIAGNOSIS OF DIABETES AND TAKING ANTIHYPERTENSIVE DRUGS"
+    description: "INDIVIDUAL HAD DIAGNOSIS OF HYPERTENSION AND TAKING ANTIHYPERTENSIVE DRUGS"
     sql: ${unique_id} ;;
   }
 
