@@ -3,7 +3,7 @@ view: patient_drug_summary {
     sql: Select
         "UNIQUE_ID" as PATIENT_ID_M,
         LEFT(({% if reporting_date_filter._parameter_value == "'Paid'" %} "PAID_DATE"
-          {% elsif reporting_date_filter._parameter_value == "'Filled'" %} "DATE_FILLED"
+          {% elsif reporting_date_filter._parameter_value == "'Service'" %} "DATE_FILLED"
           {% else %} "DATE_FILLED"
           {% endif %}), 4) as YEAR,
         SUM("TOTAL_EMPLOYER_PAID_AMT") as TOTAL_PAID_AMT,
@@ -166,15 +166,16 @@ view: patient_drug_summary {
     label: "Total Summary $"
     sql: ${TABLE}.TOTAL_PAID_AMT ;;
   }
+
   parameter: reporting_date_filter {
     type: string
     label: "Reporting date"
     allowed_value: {
-      value: "Filled"
-      label: "Prescription Filled date"}
+      value: "Service"
+      label: "Service date"}
     allowed_value: {
       value: "Paid"
-      label: "Claim Paid date"}
+      label: "Paid date"}
   }
 
   dimension: reporting_year {

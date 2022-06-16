@@ -3,7 +3,7 @@ view: patient_diagnosis_summary {
     sql: Select
         "UNIQUE_ID" as PATIENT_ID_M,
         LEFT(({% if reporting_date_filter._parameter_value == "'Paid'" %} "PAID_DATE"
-          {% elsif reporting_date_filter._parameter_value == "'Diagnosis'" %} "DIAGNOSIS_DATE"
+          {% elsif reporting_date_filter._parameter_value == "'Service'" %} "DIAGNOSIS_DATE"
           {% else %} "DIAGNOSIS_DATE"
           {% endif %}), 4) as YEAR,
         SUM("TOTAL_EMPLOYER_PAID_AMT") as TOTAL_PAID_AMT,
