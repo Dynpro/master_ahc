@@ -606,8 +606,25 @@ view: ebr_measures {
     type: string
     label: "Inpatient Hospitalization"
     sql:  case when ${HOSPITALIZED_OR_NOT} = 'YES' then '1'
-          else '0'
+               when ${HOSPITALIZED_OR_NOT} = 'NO' then '0'
+          else null
           end;;
+  }
+
+  measure: Inpatient_Hospitalization1 {
+    type: count_distinct
+    filters: [individual_is_in_disease_group_one: "1"]
+    label: "Inpatient Hospitalization - N"
+    description: "Inpatient Hospitalization"
+    sql: ${unique_id} ;;
+  }
+
+  measure: Inpatient_Hospitalization_eligible {
+    type: count_distinct
+    filters: [individual_is_in_disease_group_one: "0,1"]
+    label: "Inpatient Hospitalization (Eligible) - N"
+    description: "Inpatient Hospitalization Eligible"
+    sql: ${unique_id} ;;
   }
 
 }
