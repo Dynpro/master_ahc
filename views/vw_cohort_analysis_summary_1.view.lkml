@@ -274,7 +274,7 @@ view: vw_cohort_analysis_summary_1 {
 
   dimension: PAID_YEAR {
     type: string
-    label: "Paid Year"
+    label: "Service Year"
     sql: ${TABLE}.MEDICAL_PAID_YEAR ;;
   }
 
