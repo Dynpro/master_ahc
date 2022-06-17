@@ -115,7 +115,7 @@ view: vw_medical {
     ]
     convert_tz: no
     datatype: date
-    label: "DIAGOSIS"
+    label: "SERVICE"
     drill_fields: [diagnosis_year, diagnosis_quarter, diagnosis_month, diagnosis_raw]
     sql: ${TABLE}."DIAGNOSIS_DATE" ;;
   }
