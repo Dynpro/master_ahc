@@ -921,14 +921,14 @@ view: vw_medical {
   measure: Paid_date_Min {
     type: date
     label: "MEDICAL Claim - START"
-    sql: MIN(${diagnosis_raw}) ;;
+    sql: MIN(${Paid_raw}) ;;
     html: {{ rendered_value | date: "%m / %d / %Y" }} ;;
   }
 
   measure: Paid_date_Max {
     type: date
     label: "MEDICAL Claim - END"
-    sql: MAX(${diagnosis_raw}) ;;
+    sql: MAX(${Paid_raw}) ;;
     html: {{ rendered_value | date: "%m / %d / %Y" }} ;;
   }
 
