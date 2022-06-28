@@ -489,7 +489,7 @@ view: vw_medical {
   dimension: Total_Visit_Unique_Id {
     type: string
     hidden: yes
-    sql: concat(${unique_id}, ${Paid_year}, ${Paid_month}, ${claim_number}, ${reconciled_diagnosis_code_icd10}) ;;
+    sql: concat(${unique_id}, ${reporting_year}, ${reporting_month}, ${claim_number}, ${reconciled_diagnosis_code_icd10}) ;;
   }
 
   measure: Total_Visit {
@@ -501,7 +501,7 @@ view: vw_medical {
 #Total Lost Days & Spend logic.
   dimension: Lost_Days_Unique_Id {
     type: string
-    sql: concat(${unique_id}, ${Paid_year}, ${reconciled_diagnosis_code_icd10}) ;;
+    sql: concat(${unique_id}, ${reporting_year}, ${reconciled_diagnosis_code_icd10}) ;;
   }
 
   measure: Total_Lost_Days {
