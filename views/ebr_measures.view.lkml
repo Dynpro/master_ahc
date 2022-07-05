@@ -626,5 +626,54 @@ view: ebr_measures {
     description: "Inpatient Hospitalization Eligible"
     sql: ${unique_id} ;;
   }
+#Care Management dashboard dimension & measures: Benchmark labelling, HEDIS list of defined measures, Rendering & $ based on previous months
+  dimension: benchmark_year_filter_suggestion {
+    type: string
+    hidden: yes
+    sql: CAST(${year} as number) - 1 ;;
+  }
 
+  parameter: benchmark_year_filter {
+    type: string
+    suggest_dimension: ebr_measures.benchmark_year_filter_suggestion
+  }
+
+  dimension: reporting_benchmark_year {
+    type: string
+    label: "SERVICE Year"
+    sql: CASE WHEN ${year} = CAST({% parameter benchmark_year_filter %} as int) THEN CAST(concat(${year}, ' ', '(Benchmark)') as string)
+      ELSE CAST(${year} as string)
+      END;;
+  }
+
+  dimension: compliant_measures_list {
+    type: string
+    hidden: yes
+    sql: CONCAT((CASE WHEN ${individual_is_in_disease_group_three} = '1' THEN 'Disease Group 3 (1 Chronic disease)' ELSE '' END), ' || ',
+      (CASE WHEN ${individual_is_in_disease_group_four} = '1' THEN 'Disease Group 4 (2 Chronic disease)' ELSE '' END), ' || ',
+      (CASE WHEN ${individual_is_in_disease_group_five} = '1' THEN 'Disease Group 5 (3 Chronic disease)' ELSE '' END), ' || ',
+      (CASE WHEN ${individual_is_in_disease_group_six} = '1' THEN 'Disease Group 6 (4 Chronic disease)' ELSE '' END), ' || ',
+      (CASE WHEN ${individual_is_in_disease_group_seven} = '1' THEN 'Disease Group 7 (5 or more Chronic disease)' ELSE '' END), ' || ',
+      (CASE WHEN ${individual_taking_black_label_drug} = '1' THEN 'Black label drug' ELSE '' END), ' || ',
+      (CASE WHEN ${individual_female_had_breast_cancer_screening} = '1' THEN 'Brest Cancer Screening' ELSE '' END), ' || ',
+      (CASE WHEN ${individual_taking_specialty_drug} = '1' THEN 'Individual taking Specialty drugs' ELSE '' END), ' || ',
+      (CASE WHEN ${individual_female_had_colon_cancer_screening} = '1' THEN 'Colon Cancer Screening' ELSE '' END), ' || ',
+      (CASE WHEN ${individual_female_had_cervical_cancer_screening} = '1' THEN 'Cervical Cancer Screening' ELSE '' END), ' || ',
+      (CASE WHEN ${individual_had_acute_myocardial_infarction_and_taking_beta_blocker} = '1' THEN 'Individual had Acute Myocardial Infraction & taking Beta-blocker drugs' ELSE '' END), ' || ',
+      (CASE WHEN ${individual_had_diagnosis_of_diabetes_and_taking_statin_drugs} = '1' THEN 'Individual had diagnosis of Diabetes & taking STATIN drugs' ELSE '' END), ' || ',
+      (CASE WHEN ${individual_had_diagnosis_of_diabetes_and_taking_antihypertensive_drugs} = '1' THEN 'Individual had diagnosis of Hypertension & taking anti-hypertensive drugs' ELSE '' END))
+      ;;
+  }
+
+  measure: compliant_hedis_measures_list {
+    label: "Risk Factor Identified"
+    sql: LISTAGG(DISTINCT ${compliant_measures_list},  ' || ') ;;
+    html: {% assign words = value | split: ' || ' %}
+      <ul>
+      {% for word in words %}
+        {% if word <> '' %}
+        <li>{{ word }}</li>
+        {% endif %}
+      {% endfor %} ;;
+  }
 }

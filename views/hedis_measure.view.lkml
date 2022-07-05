@@ -489,4 +489,79 @@ view: hedis_measure {
     suggest_explore: vw_medical
     suggest_dimension: vw_medical.PARTICIPANT_NONPARTICIPANT_Flag
   }
+#Care Management dashboard dimension & measures: Benchmark labelling, HEDIS list of defined measures, Rendering & $ based on previous months
+  dimension: benchmark_year_filter_suggestion {
+    type: string
+    hidden: yes
+    sql: CAST(${year} as number) - 1 ;;
+  }
+
+  parameter: benchmark_year_filter {
+    type: string
+    suggest_dimension: hedis_measure.benchmark_year_filter_suggestion
+  }
+
+  dimension: reporting_benchmark_year {
+    type: string
+    label: "SERVICE Year"
+    sql: CASE WHEN ${year} = CAST({% parameter benchmark_year_filter %} as int) THEN CAST(concat(${year}, ' ', '(Benchmark)') as string)
+      ELSE CAST(${year} as string)
+      END;;
+  }
+
+  dimension: compliant_measures_list {
+    type: string
+    hidden: yes
+    sql: CONCAT((CASE WHEN ${aap_compliant} = '1' THEN 'Adult access to Preventive/Ambulatory health services  20 years and above' ELSE '' END), ' || ',
+      (CASE WHEN ${aba_compliant} = '1' THEN 'Adult BMI assessment 18 to 74 years  ' ELSE '' END), ' || ',
+      /*(CASE WHEN ${amm_compliant} = '1' THEN 'Antidepressant medication management 18 years and above' ELSE '' END), ' || ',*/
+      (CASE WHEN ${bcs_compliant} = '1' THEN 'Breast Cancer screening 50 to 74 years' ELSE '' END), ' || ',
+      (CASE WHEN ${ccs_compliant} = '1' THEN 'Cervical Cancer screening  21 to 64 years' ELSE '' END), ' || ',
+      (CASE WHEN ${col_compliant} = '1' THEN 'Colorectal Cancer screening  50 to 75 years' ELSE '' END), ' || ',
+      (CASE WHEN ${cdc_compliant} = '1' THEN 'Comprehensive Diabetes care  18 to 75 years' ELSE '' END), ' || ',
+      (CASE WHEN ${cbp_compliant} = '1' THEN 'Controlling high blood pressure  18 to 85 years' ELSE '' END), ' || ',
+      (CASE WHEN ${smd_compliant} = '1' THEN 'Diabetes monitoring for people with Diabetes & Schizophrenia 18 to 64 years' ELSE '' END), ' || ',
+      (CASE WHEN ${omw_compliant} = '1' THEN 'Osteoporosis management in Women who had a Fracture  67 to 85 years' ELSE '' END), ' || ',
+      (CASE WHEN ${spr_compliant} = '1' THEN 'Use of Spirometry testing in the assessment and diagnosis of COPD  40 years and above' ELSE '' END)) ;;
+  }
+
+  dimension: eligible_measures_list {
+    type: string
+    hidden: yes
+    sql: CONCAT((CASE WHEN ${aap_compliant} = '0' THEN 'Adults’ access to Preventive/Ambulatory health services  20 years and above' ELSE '' END), ' || ',
+      (CASE WHEN ${aba_compliant} = '0' THEN 'Adult BMI assessment 18 to 74 years  ' ELSE '' END), ' || ',
+      /*(CASE WHEN ${amm_eligible} = '1' THEN 'Antidepressant medication management 18 years and above' ELSE '' END), ' || ',*/
+      (CASE WHEN ${bcs_compliant} = '0' THEN 'Breast Cancer screening 50 to 74 years' ELSE '' END), ' || ',
+      (CASE WHEN ${ccs_compliant} = '0' THEN 'Cervical Cancer screening  21 to 64 years' ELSE '' END), ' || ',
+      (CASE WHEN ${col_compliant} = '0' THEN 'Colorectal Cancer screening  50 to 75 years' ELSE '' END), ' || ',
+      (CASE WHEN ${cdc_compliant} = '0' THEN 'Comprehensive Diabetes care  18 to 75 years' ELSE '' END), ' || ',
+      (CASE WHEN ${cbp_compliant} = '0' THEN 'Controlling high blood pressure  18 to 85 years' ELSE '' END), ' || ',
+      (CASE WHEN ${smd_compliant} = '0' THEN 'Diabetes monitoring for people with Diabetes & Schizophrenia 18 to 64 years' ELSE '' END), ' || ',
+      (CASE WHEN ${omw_compliant} = '0' THEN 'Osteoporosis management in Women who had a Fracture  67 to 85 years' ELSE '' END), ' || ',
+      (CASE WHEN ${spr_compliant} = '0' THEN 'Use of Spirometry testing in the assessment and diagnosis of COPD  40 years and above' ELSE '' END)) ;;
+  }
+
+  measure: compliant_hedis_measures_list {
+    label: "Eligible & Compliant"
+    sql: LISTAGG(DISTINCT ${compliant_measures_list},  ' || ') ;;
+    html: {% assign words = value | split: ' || ' %}
+      <ul>
+      {% for word in words %}
+        {% if word <> '' %}
+        <li>{{ word }}</li>
+        {% endif %}
+      {% endfor %} ;;
+  }
+
+  measure: eligible_not_compliant_hedis_measures_list {
+    label: "Eligible & Not Compliant"
+    sql: LISTAGG(DISTINCT ${eligible_measures_list},  ' || ') ;;
+    html: {% assign words = value | split: ' || ' %}
+      <ul>
+      {% for word in words %}
+        {% if word <> '' %}
+        <li>{{ word }}</li>
+        {% endif %}
+      {% endfor %} ;;
+  }
 }
