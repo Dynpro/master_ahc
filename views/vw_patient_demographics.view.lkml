@@ -52,6 +52,13 @@ view: vw_patient_demographics {
     sql: ${TABLE}."PATIENT_DOB" ;;
   }
 
+  dimension: patient_dob1 {
+    label: "PATIENT DOB"
+    type: string
+    sql: ${TABLE}."PATIENT_DOB" ;;
+  }
+
+
   dimension: patient_gender {
     type: string
     sql: ${TABLE}."PATIENT_GENDER" ;;
@@ -107,11 +114,32 @@ view: vw_patient_demographics {
     suggest_explore: vw_medical
     suggest_dimension: vw_medical.PARTICIPANT_NONPARTICIPANT_Flag
   }
+
   dimension: member_id{
     type: string
     label: "MEMBER ID"
-    sql: ${TABLE}."MEMBER_ID" ;;
+    sql: CONCAT(${TABLE}."MEMBER_ID", ' (', ${relationship_to_employee}, ')')  ;;
+    html: <b> {{ member_id._rendered_value }} </b> ({{ relationship_to_employee._rendered_value }})   ;;
   }
 
+  dimension: member_id_list {
+    type: string
+    sql: LISTAGG(DISTINCT ${TABLE}."MEMBER_ID") ;;
+  }
 
+  dimension: patient_name_member_id {
+    type: string
+    sql: CONCAT(${patient_name}, ' (', ${member_id_list}, ')')   ;;
+  }
+
+  dimension: client_name{
+    type: string
+    label: "Affiliation"
+    sql: 'Master AHC' ;;
+  }
+
+  dimension: unique_id_demo {
+    type: string
+    sql: CONCAT(${dependent_f_name}, ${dependent_l_name}, ${patient_dob_raw}, ${patient_gender}) ;;
+  }
 }

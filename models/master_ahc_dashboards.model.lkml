@@ -26,6 +26,13 @@ explore: vw_medical {
     relationship: many_to_one
     sql_on: ${vw_medical.unique_id} = ${vw_patient_demographics.unique_id} ;;
   }
+  join: vw_risk_group_migration {
+    view_label: "Risk Group Migration"
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${vw_medical.unique_id} = ${vw_risk_group_migration.Unique_id} AND
+      ${vw_medical.diagnosis_year} = ${vw_risk_group_migration.File_year};;
+  }
 }
 
 explore: vw_pharmacy {
@@ -47,14 +54,32 @@ explore: vw_pharmacy {
 
 explore: vw_med_and_pharma_summary_1 {
   label: "Ad Hoc Query Tool"
+  join: vw_patient_demographics {
+    view_label: "Patient Demographics"
+    type: left_outer
+    relationship: many_to_one
+    sql_on:  ${vw_med_and_pharma_summary_1.PATIENT_ID} = ${vw_patient_demographics.unique_id} ;;
+  }
 }
 
 explore: ad_hoc_query_tool_medical {
   label: "Ad Hoc Query Tool_MEDICAL"
+  join: vw_patient_demographics {
+    view_label: "Patient Demographics"
+    type: left_outer
+    relationship: many_to_one
+    sql_on:  ${ad_hoc_query_tool_medical.PATIENT_ID} = ${vw_patient_demographics.unique_id} ;;
+  }
 }
 
 explore: ad_hoc_query_tool_pharmacy {
   label: "Ad Hoc Query Tool_PHARMACY"
+  join: vw_patient_demographics {
+    view_label: "Patient Demographics"
+    type: left_outer
+    relationship: many_to_one
+    sql_on:  ${ad_hoc_query_tool_pharmacy.Unique_Id_P} = ${vw_patient_demographics.unique_id} ;;
+  }
 }
 
 explore: vw_cohort_analysis_summary_1 {
@@ -151,6 +176,16 @@ explore: ebr_measures {
 }
 
 explore: vw_patient_demographics {}
-explore: vw_predictive_healthscore_index {}
+
+
+
+explore: vw_predictive_healthscore_index {
+  join: vw_patient_demographics {
+    view_label: "Patient Demographics"
+    type: left_outer
+    relationship: many_to_one
+    sql_on:  ${vw_predictive_healthscore_index.patient_id_l} = ${vw_patient_demographics.unique_id} ;;
+  }
+}
 explore: icd_infographics {}
 explore: cpt_infographics {}

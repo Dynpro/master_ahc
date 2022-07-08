@@ -272,7 +272,7 @@ view: vw_med_and_pharma_summary_1 {
 
   dimension: PAID_YEAR {
     type: string
-    label: "PAID YEAR"
+    label: "Service year"
     sql: ${TABLE}.PAID_YEAR ;;
   }
 
