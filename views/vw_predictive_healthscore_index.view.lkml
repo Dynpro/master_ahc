@@ -1,6 +1,6 @@
 view: vw_predictive_healthscore_index {
-  sql_table_name: "DB_KAIROS_PROD"."SCH_AHC_CRISP_REGIONAL"."ML_FINAL_TRAIN_TEST"
-  ;;
+  sql_table_name: "DB_KAIROS_PROD"."MRS_CALCULATOR_SPACE"."ML_FINAL_TRAIN_TEST_CRISP_REGIONAL"
+    ;;
 
   measure: 24_com_acute_cat_count {
     type: sum
@@ -1711,7 +1711,7 @@ view: vw_predictive_healthscore_index {
   }
 
   #dimension: p_sur {
-    #type: number
+  #type: number
   #   label: "Surgery Count"
   #   value_format: "0"
   #   sql: ${TABLE}."P_SUR" ;;
@@ -1731,6 +1731,12 @@ view: vw_predictive_healthscore_index {
     type: string
     sql: ${TABLE}."PATIENT_ID_L" ;;
   }
+
+  dimension: full_name {
+    type: string
+    sql: ${TABLE}."FULL_NAME" ;;
+  }
+
 
   dimension: pcp_acute_cat_count {
     type: string
@@ -1860,7 +1866,7 @@ view: vw_predictive_healthscore_index {
     type: count_distinct
     label: "Total Patients"
     # html: <a href="https://dynpro.cloud.looker.com/dashboards-next/633">{{total_uid}}</a>;;
-    drill_fields: [patient_id_l, year_file_date_l, avg_24com_paid_amount, age, gender, mbn_flag,neo_flag,risk_flag, 24_com_icd_counts, dcci_24_com,scale_score]
+    drill_fields: [full_name, year_file_date_l, avg_24com_paid_amount, age, gender, mbn_flag,neo_flag,risk_flag, 24_com_icd_counts, dcci_24_com,scale_score]
     link: {
       label: "Patient Analysis"
 
@@ -1868,7 +1874,7 @@ view: vw_predictive_healthscore_index {
 
       url: "/dashboards-next/2071?Health Index Decile={{ _filters['vw_predictive_healthscore_index.decile_grouping'] | url_encode }}&Health Index Quartile={{ _filters['vw_predictive_healthscore_index.quartile_grouping'] | url_encode }}&Gender={{ _filters['vw_predictive_healthscore_index.gender'] | url_encode }}&Age Group Description={{ _filters['vw_predictive_healthscore_index.age_group_description'] | url_encode }}&Musculoskeletal Flag={{ _filters['vw_predictive_healthscore_index.musculoskeletal_flag'] | url_encode }}"
 
-     # url: "/dashboards-next/633?Health Index Decile={{ _filters['vw_predictive_healthscore_index.decile_grouping'] | url_encode }}"
+      # url: "/dashboards-next/633?Health Index Decile={{ _filters['vw_predictive_healthscore_index.decile_grouping'] | url_encode }}"
 
     }
     sql:  CONCAT(${patient_id_l}, ${year_file_date_l}) ;;
@@ -1929,7 +1935,9 @@ view: vw_predictive_healthscore_index {
 
   measure: predicted_paid_amount {
     type: sum
+    label: "Predicted Paid Amount"
     sql: ${TABLE}."PREDICTED_PAID_AMOUNT" ;;
+    value_format: "$0.00,\" K\""
   }
 
   measure: avg_predicted_paid_amount {
