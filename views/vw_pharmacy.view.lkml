@@ -428,7 +428,7 @@ view: vw_pharmacy {
   dimension: unique_id {
     type: string
     primary_key: yes
-    hidden: yes
+    hidden: no
     sql: ${TABLE}."UNIQUE_ID" ;;
   }
 
@@ -441,6 +441,7 @@ view: vw_pharmacy {
   measure: employer_paid_amount {
     type: sum
     label: "TOTAL $"
+    drill_fields: [tea_category, drug_name, drug_code]
     sql: ${total_employer_paid_amt} ;;
     value_format: "$#,##0"
   }
@@ -495,10 +496,9 @@ view: vw_pharmacy {
 
   dimension: PARTICIPANT_NONPARTICIPANT_Flag {
     type: string
-    hidden:  yes
+    hidden:  no
     sql: ${TABLE}."PARTICIPANT_FLAG" ;;
   }
-
 
   dimension: participant_paid_year {
     type: string
@@ -523,7 +523,8 @@ view: vw_pharmacy {
     type: string
     label: "PARTICIPANT PROGRAM NAME"
     sql: ${TABLE}."PARTICIPANT_PROGRAM_NAME";;
- }
+
+  }
 
   parameter: reporting_date_filter {
     type: string
@@ -554,5 +555,45 @@ view: vw_pharmacy {
       WHEN {% parameter reporting_date_filter %} = 'Service' THEN ${TABLE}."DATE_FILLED"
       ELSE ${TABLE}."DATE_FILLED"
       END ;;
+  }
+
+
+#Benchmark labelling, HEDIS list of defined measures, Rendering & $ based on previous months
+  dimension: benchmark_year_filter_suggestion {
+    type: string
+    hidden: yes
+    sql: ${reporting_year} - 1 ;;
+  }
+
+  parameter: benchmark_year_filter {
+    type: string
+    suggest_dimension: vw_pharmacy.benchmark_year_filter_suggestion
+  }
+
+  dimension: reporting_benchmark_year {
+    type: string
+    label: "SERVICE Year"
+    sql: CASE WHEN ${date_filled_year} = CAST({% parameter benchmark_year_filter %} as int) THEN CAST(concat(${date_filled_year}, ' ', '(Benchmark)') as string)
+      ELSE CAST(${date_filled_year} as string)
+      END;;
+  }
+
+
+  measure: drug_name_list {
+    sql: LISTAGG(DISTINCT ${drug_name}, ' || ') within group (order by ${drug_name} ASC) ;;
+    html: {% assign words = value | split: ' || ' %}
+      <ul>
+      {% for word in words %}
+      <li>{{ word }}</li>
+      {% endfor %} ;;
+  }
+
+  measure: tea_category_list {
+    sql: LISTAGG(DISTINCT ${tea_category}, ' || ') within group (order by ${tea_category} ASC) ;;
+    html: {% assign words = value | split: ' || ' %}
+      <ul>
+      {% for word in words %}
+      <li>{{ word }}</li>
+      {% endfor %} ;;
   }
 }

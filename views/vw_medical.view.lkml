@@ -110,6 +110,7 @@ view: vw_medical {
       date,
       week,
       month,
+      month_name,
       quarter,
       year
     ]
@@ -932,8 +933,6 @@ view: vw_medical {
     html: {{ rendered_value | date: "%m / %d / %Y" }} ;;
   }
 
-
-
   dimension: year_and_patient_id {
     type: string
     hidden: yes
@@ -945,6 +944,7 @@ view: vw_medical {
     sql_distinct_key: ${year_and_patient_id} ;;
     sql: ${total_employer_paid_amt}  ;;
   }
+
   dimension: patient_gender1 {
     type: string
     hidden: yes
@@ -953,10 +953,11 @@ view: vw_medical {
               else '0'
           end;;
   }
+
   dimension: relationship_to_employee1 {
     type: string
     hidden: yes
-    label: "RELATIONSHIP TO EMPLOYEE1"
+    label: "Relationship To Employee"
     sql: case when ${TABLE}."RELATIONSHIP_TO_EMPLOYEE" = 'EMPLOYEE' then 'Employee'
               when ${TABLE}."RELATIONSHIP_TO_EMPLOYEE" = 'SPOUSE' then 'Spouse'
               else 'Dependent'
@@ -966,7 +967,7 @@ view: vw_medical {
 
   dimension: PARTICIPANT_NONPARTICIPANT_Flag {
     type: string
-    hidden:  yes
+    hidden:  no
     sql: ${TABLE}."PARTICIPANT_FLAG" ;;
   }
 
@@ -1026,6 +1027,101 @@ view: vw_medical {
       WHEN {% parameter reporting_date_filter %} = 'Service' THEN ${TABLE}."DIAGNOSIS_DATE"
       ELSE ${TABLE}."PAID_DATE"
       END ;;
+  }
+
+
+#Benchmark labelling, HEDIS list of defined measures, Rendering & $ based on previous months
+  dimension: benchmark_year_filter_suggestion {
+    type: string
+    hidden: yes
+    sql: ${reporting_year} - 1 ;;
+  }
+
+  parameter: benchmark_year_filter {
+    type: string
+    suggest_dimension: vw_medical.benchmark_year_filter_suggestion
+  }
+
+  dimension: reporting_benchmark_year {
+    type: string
+    label: "SERVICE Year"
+    sql: CASE WHEN ${diagnosis_year} = CAST({% parameter benchmark_year_filter %} as int) THEN CAST(concat(${diagnosis_year}, ' ', '(Benchmark)') as string)
+      ELSE CAST(${diagnosis_year} as string)
+      END;;
+  }
+
+
+  measure: diagnosis_category_list_1 {
+    sql: LISTAGG(DISTINCT ${icd_disease_category}, ' || ') within group (order by ${icd_disease_category} ASC) ;;
+  }
+
+  measure: diagnosis_category_list {
+    sql: ${diagnosis_category_list_1} ;;
+    html: {% assign words = value | split: ' || ' %}
+      <ul>
+      {% for word in words %}
+      <li>{{ word }}</li>
+      {% endfor %} ;;
+  }
+
+  measure: diagnosis_description_list {
+    sql: LISTAGG(DISTINCT ${icd_description}, ' || ') within group (order by ${icd_description} ASC) ;;
+    html: {% assign words = value | split: ' || ' %}
+      <ul>
+      {% for word in words %}
+      <li>{{ word }}</li>
+      {% endfor %}
+      ;;
+  }
+
+  measure: procedure_category_list {
+    sql: LISTAGG(DISTINCT ${PROCEDURE_CATEGORY}, ' || ') within group (order by ${PROCEDURE_CATEGORY} ASC) ;;
+    html: {% assign words = value | split: ' || ' %}
+      <ul>
+      {% for word in words %}
+      <li>{{ word }}</li>
+      {% endfor %} ;;
+  }
+
+  measure: procedure_description_list {
+    sql: LISTAGG(DISTINCT ${procedure_description}, ' || ') within group (order by ${procedure_description} ASC) ;;
+    html: {% assign words = value | split: ' || ' %}
+      <ul>
+      {% for word in words %}
+      <li>{{ word }}</li>
+      {% endfor %} ;;
+  }
+
+  measure: chronic_category_list {
+    sql: LISTAGG(DISTINCT ${icd_chronic_cat}, ' || ') within group (order by ${icd_chronic_cat} ASC) ;;
+    html: {% assign words = value | split: ' || ' %}
+      <ul>
+      {% for word in words %}
+      <li>{{ word }}</li>
+      {% endfor %} ;;
+  }
+
+  dimension: risk_group_definition {
+    type:  string
+    sql: CASE WHEN ${RISK_GROUP} = 'GROUP-1' THEN CONCAT(${RISK_GROUP}, ' (No Chronic Disease and less than $1500 medical expenditures per 12 months)')
+      WHEN ${RISK_GROUP} = 'GROUP-2' THEN CONCAT(${RISK_GROUP}, ' (No Chronic Disease and $1500 or more medical expenditures per 12 months)')
+      WHEN ${RISK_GROUP} = 'GROUP-3' THEN CONCAT(${RISK_GROUP}, ' (One Chronic Disease)')
+      WHEN ${RISK_GROUP} = 'GROUP-4' THEN CONCAT(${RISK_GROUP}, ' (Two Chronic Disease)')
+      WHEN ${RISK_GROUP} = 'GROUP-5' THEN CONCAT(${RISK_GROUP}, ' (Three Chronic Disease)')
+      WHEN ${RISK_GROUP} = 'GROUP-6' THEN CONCAT(${RISK_GROUP}, ' (Four Chronic Disease)')
+      WHEN ${RISK_GROUP} = 'GROUP-7' THEN CONCAT(${RISK_GROUP}, ' (Five or More Chronic Disease)')
+      ELSE 'Others'
+      END ;;
+  }
+
+  measure: risk_group_list {
+    label: "Risk Group"
+    sql: LISTAGG(DISTINCT ${risk_group_definition}, ' || ') within group (order by ${risk_group_definition} ASC) ;;
+    html: {% assign words = value | split: ' || ' %}
+      <ul>
+      {% for word in words %}
+      <li>{{ word }}</li>
+      {% endfor %} ;;
   }
 
 }
