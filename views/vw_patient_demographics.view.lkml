@@ -101,19 +101,7 @@ view: vw_patient_demographics {
     label: "PARTICIPANT PROGRAM NAME"
     sql: ${TABLE}."PARTICIPANT_PROGRAM_NAME";;
   }
-  filter: PARTICIPANT_YEAR {
-    type: string
-    group_label: "PARTICIPANT FILTER"
-    suggest_explore: vw_medical
-    suggest_dimension: vw_medical.participant_paid_year
-  }
 
-  filter: PARTICIPANT_Flag {
-    type: string
-    group_label: "PARTICIPANT FILTER"
-    suggest_explore: vw_medical
-    suggest_dimension: vw_medical.PARTICIPANT_NONPARTICIPANT_Flag
-  }
 
   dimension: member_id{
     type: string
