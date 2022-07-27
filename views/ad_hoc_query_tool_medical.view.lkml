@@ -22,7 +22,9 @@ view: ad_hoc_query_tool_medical {
           "PRIMARY_PROCEDURE_CODE" as PRIMARY_PROCEDURE_CODE,
           "PLACE_OF_SERVICE_DESCRIPTION" as PLACE_OF_SERVICE_DESCRIPTION,
           "SERVICE_PROVIDER_SPECIALITY_CODE_DESC" as SERVICE_PROVIDER_SPECIALITY_CODE_DESC,
-          "PARTICIPANT_PROGRAM_NAME" as PARTICIPANT_PROGRAM_NAME
+          "PARTICIPANT_PROGRAM_NAME" as PARTICIPANT_PROGRAM_NAME,
+          "PARTICIPANT_FLAG" as PARTICIPANT_FLAG,
+          "ON_BOARD_DATE" AS ON_BOARD_DATE
          from
         "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_MEDICAL"
         WHERE                                 /* Dynamic Filter condition*/
@@ -47,29 +49,29 @@ view: ad_hoc_query_tool_medical {
             {% condition AVOIDABLE_ER_OR_NOT %} "ICD_AVOIDABLE_ER" {% endcondition %} AND
             {% condition DIGESTIVE_DISEASE_OR_NOT %} "ICD_DIGESTIVE_DISEASE" {% endcondition %} AND
 
-            "UNIQUE_ID" IN (select DISTINCT "UNIQUE_ID" from  "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_MEDICAL"
-              WHERE {% condition PARTICIPANT_YEAR %} LEFT("PAID_DATE", 4) {% endcondition %} AND
-              {% condition PARTICIPANT_Flag %} "PARTICIPANT_FLAG" {% endcondition %}) AND
+      "UNIQUE_ID" IN (select DISTINCT "UNIQUE_ID" from  "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_MEDICAL"
+      WHERE {% condition PARTICIPANT_YEAR %} LEFT("PAID_DATE", 4) {% endcondition %} AND
+      {% condition PARTICIPANT_Flag %} "PARTICIPANT_FLAG" {% endcondition %}) AND
 
-            UNIQUE_ID IN (Select DISTINCT UNIQUE_ID from "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_PHARMACY"
-              WHERE
-                {% condition DRUG %} "NON_PROPRIETARY_NAME" {% endcondition %} AND
-                {% condition DRUG_CODE %} "DRUG_CODE" {% endcondition %} AND
-                {% condition TEA_CATEGORY %} "TEA_CATEGORY" {% endcondition %} AND
-                {% condition ACE_INHIBITOR_DRUGS %} "ACE_INHIBITOR" {% endcondition %} AND
-                {% condition STATIN_DRUGS %} "STATIN" {% endcondition %} AND
-                {% condition BETA_BLOCKER_DRUGS %} "BETA_BLOCKER" {% endcondition %} AND
-                {% condition ARB_DRUGS %} "ARB" {% endcondition %} AND
-                {% condition DRI_DRUGS %} "DRI" {% endcondition %} AND
-                {% condition BLACK_LABEL_DRUG %} "BLACK_LABEL_DRUG" {% endcondition %} AND
-                {% condition SPECIALTY_DRUGS %} "SPECIALTY_DRUGS" {% endcondition %} AND
-                {% condition MAINTENANCE_DRUGS %} "MAINTENANCE" {% endcondition %} AND
-                {% condition DIGESTIVE_DISEASE_DRUGS %} "DIGESTIVE_DISEASE" {% endcondition %} AND
-                {% condition BRAND_OR_GENERIC %} "BRAND_OR_GENERIC" {% endcondition %} AND
-                {% condition ACE_INHIBITOR_OR_ARB_DRUGS %} (CASE WHEN "ACE_INHIBITOR" = 'TRUE' OR "ARB" = 'TRUE' THEN 'TRUE'
-                  ELSE 'FALSE'
-                  END) {% endcondition %}
-            ) ;;
+      UNIQUE_ID IN (Select DISTINCT UNIQUE_ID from "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_PHARMACY"
+      WHERE
+      {% condition DRUG %} "NON_PROPRIETARY_NAME" {% endcondition %} AND
+      {% condition DRUG_CODE %} "DRUG_CODE" {% endcondition %} AND
+      {% condition TEA_CATEGORY %} "TEA_CATEGORY" {% endcondition %} AND
+      {% condition ACE_INHIBITOR_DRUGS %} "ACE_INHIBITOR" {% endcondition %} AND
+      {% condition STATIN_DRUGS %} "STATIN" {% endcondition %} AND
+      {% condition BETA_BLOCKER_DRUGS %} "BETA_BLOCKER" {% endcondition %} AND
+      {% condition ARB_DRUGS %} "ARB" {% endcondition %} AND
+      {% condition DRI_DRUGS %} "DRI" {% endcondition %} AND
+      {% condition BLACK_LABEL_DRUG %} "BLACK_LABEL_DRUG" {% endcondition %} AND
+      {% condition SPECIALTY_DRUGS %} "SPECIALTY_DRUGS" {% endcondition %} AND
+      {% condition MAINTENANCE_DRUGS %} "MAINTENANCE" {% endcondition %} AND
+      {% condition DIGESTIVE_DISEASE_DRUGS %} "DIGESTIVE_DISEASE" {% endcondition %} AND
+      {% condition BRAND_OR_GENERIC %} "BRAND_OR_GENERIC" {% endcondition %} AND
+      {% condition ACE_INHIBITOR_OR_ARB_DRUGS %} (CASE WHEN "ACE_INHIBITOR" = 'TRUE' OR "ARB" = 'TRUE' THEN 'TRUE'
+      ELSE 'FALSE'
+      END) {% endcondition %}
+      ) ;;
   }
 
   filter: DISEASE_CATEGORY {
@@ -258,6 +260,7 @@ view: ad_hoc_query_tool_medical {
     drill_fields: [DIAGNOSIS_DATE_year, DIAGNOSIS_DATE_quarter, DIAGNOSIS_DATE_month, DIAGNOSIS_DATE_week, DIAGNOSIS_DATE_raw]
     sql: ${TABLE}."DIAGNOSIS_DATE" ;;
   }
+
   dimension: PATIENT_GENDER {
     type: string
     label: "PATIENT GENDER"
@@ -514,6 +517,14 @@ view: ad_hoc_query_tool_medical {
     suggest_explore: vw_medical
     suggest_dimension: vw_medical.PARTICIPANT_NONPARTICIPANT_Flag
   }
+
+  dimension: PARTICIPANT_FLAG {
+    type: string
+    label: "PARTICIPANT FLAG"
+    suggest_explore: vw_medical
+    suggest_dimension: vw_medical.PARTICIPANT_NONPARTICIPANT_Flag
+  }
+
   parameter: reporting_date_filter {
     type: string
     label: "Reporting date"
@@ -541,7 +552,23 @@ view: ad_hoc_query_tool_medical {
     drill_fields: [reporting_year, reporting_quarter, reporting_month, reporting_raw]
     sql: CASE WHEN {% parameter reporting_date_filter %} = 'Paid' THEN ${TABLE}."PAID_DATE"
       WHEN {% parameter reporting_date_filter %} = 'Service' THEN ${TABLE}."DIAGNOSIS_DATE"
-      ELSE ${TABLE}."PAID_DATE"
+      ELSE ${TABLE}."DIAGNOSIS_DATE"
       END ;;
+  }
+  dimension_group: ON_BOARD_DATE {
+    type: time
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    convert_tz: no
+    datatype: date
+    label: "ON BOARD DATE"
+    drill_fields: [ON_BOARD_DATE_year, ON_BOARD_DATE_quarter, ON_BOARD_DATE_month, ON_BOARD_DATE_raw]
+    sql: ${TABLE}."ON_BOARD_DATE" ;;
   }
 }

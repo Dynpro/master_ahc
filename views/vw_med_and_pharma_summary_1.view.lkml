@@ -19,120 +19,148 @@ view: vw_med_and_pharma_summary_1 {
         MED.DIAGNOSIS_CODE_List as DIAGNOSIS_CODE_List,
         MED.Diabetes_Flag as Diabetes_Flag,
 
-        PHARMA.PATIENT_ID_P as Unique_Id_P,
-        SUM(PHARMA.Total_Billed_Amt_P ) as Total_Billed_Amt_P,
-        SUM(PHARMA.Total_Paid_Amt_P ) as Total_Paid_Amt_P,
-        AVG(PHARMA.Average_Paid_Amt_P ) as Average_Paid_Amt_P,
-        PHARMA.TEA_Cat_List as TEA_Cat_List,
-        PHARMA.Drug_List as Drug_List,
-        PHARMA.ACE_INHIBITOR_List as ACE_INHIBITOR_List,
-        PHARMA.ARB_DRUGS_List as ARB_DRUGS_List,
-        PHARMA.DRI_DRUGS_List as DRI_DRUGS_List,
-        PHARMA.STATIN_DRUGS_List as STATIN_DRUGS_List
+      PHARMA.PATIENT_ID_P as Unique_Id_P,
+      SUM(PHARMA.Total_Billed_Amt_P ) as Total_Billed_Amt_P,
+      SUM(PHARMA.Total_Paid_Amt_P ) as Total_Paid_Amt_P,
+      AVG(PHARMA.Average_Paid_Amt_P ) as Average_Paid_Amt_P,
+      PHARMA.TEA_Cat_List as TEA_Cat_List,
+      PHARMA.Drug_List as Drug_List,
+      PHARMA.ACE_INHIBITOR_List as ACE_INHIBITOR_List,
+      PHARMA.ARB_DRUGS_List as ARB_DRUGS_List,
+      PHARMA.DRI_DRUGS_List as DRI_DRUGS_List,
+      PHARMA.STATIN_DRUGS_List as STATIN_DRUGS_List
 
-        FROM (Select                        /* Medical Summary*/
-              "UNIQUE_ID" as PATIENT_ID_M,
-              "PATIENT_GENDER" as PATIENT_GENDER,
-              "RELATIONSHIP_TO_EMPLOYEE" as RELATIONSHIP_TO_EMPLOYEE,
-              substring("PAID_DATE", 1, 4) as PAID_YEAR,
-              LISTAGG(DISTINCT "AGE_GROUP_1", '| ') within group (order by "AGE_GROUP_1" ASC) as AGE_GROUP_List,
-              SUM ("TOTAL_BILLED_AMT") as Total_Billed_Amt_M,
-              SUM("TOTAL_EMPLOYER_PAID_AMT") as Total_Paid_Amt_M,
-              AVG("TOTAL_EMPLOYER_PAID_AMT") as Average_Paid_Amt_M,
-              LISTAGG(DISTINCT "ICD_DESCRIPTION", '| ') within group (order by "ICD_DESCRIPTION" ASC) as Diagnosis_Desc_List,
-              LISTAGG(DISTINCT "ICD_DISEASE_CATEGORY", '| ') within group (order by "ICD_DISEASE_CATEGORY" ASC) as Diagnosis_Category_List,
-              LISTAGG(DISTINCT "RECONCILED_DIAGNOSIS_CODE_ICD10", '| ') within group (order by "RECONCILED_DIAGNOSIS_CODE_ICD10" ASC) as DIAGNOSIS_CODE_List,
-              LISTAGG(DISTINCT "CCW_CHRONIC_CAT", '| ') within group (order by "CCW_CHRONIC_CAT" ASC) as Chronic_Category_List,
+      FROM (Select                        /* Medical Summary*/
+      "UNIQUE_ID" as PATIENT_ID_M,
+      "PATIENT_GENDER" as PATIENT_GENDER,
+      "RELATIONSHIP_TO_EMPLOYEE" as RELATIONSHIP_TO_EMPLOYEE,
+      LEFT(({% if med_reporting_date_filter._parameter_value == "'Paid'" %} "PAID_DATE"
+      {% elsif med_reporting_date_filter._parameter_value == "'Service'" %} "DIAGNOSIS_DATE"
+      {% else %} "DIAGNOSIS_DATE"
+      {% endif %}), 4) as PAID_YEAR,
+      LISTAGG(DISTINCT "AGE_GROUP_1", '| ') within group (order by "AGE_GROUP_1" ASC) as AGE_GROUP_List,
+      SUM ("TOTAL_BILLED_AMT") as Total_Billed_Amt_M,
+      SUM("TOTAL_EMPLOYER_PAID_AMT") as Total_Paid_Amt_M,
+      AVG("TOTAL_EMPLOYER_PAID_AMT") as Average_Paid_Amt_M,
+      LISTAGG(DISTINCT "ICD_DESCRIPTION", '| ') within group (order by "ICD_DESCRIPTION" ASC) as Diagnosis_Desc_List,
+      LISTAGG(DISTINCT "ICD_DISEASE_CATEGORY", '| ') within group (order by "ICD_DISEASE_CATEGORY" ASC) as Diagnosis_Category_List,
+      LISTAGG(DISTINCT "RECONCILED_DIAGNOSIS_CODE_ICD10", '| ') within group (order by "RECONCILED_DIAGNOSIS_CODE_ICD10" ASC) as DIAGNOSIS_CODE_List,
+      LISTAGG(DISTINCT "CCW_CHRONIC_CAT", '| ') within group (order by "CCW_CHRONIC_CAT" ASC) as Chronic_Category_List,
 
-              LISTAGG(DISTINCT "PROCEDURE_DESCRIPTION", '| ') within group (order by "PROCEDURE_DESCRIPTION" ASC) as PROCEDURE_DESCRIPTION_List,
-              LISTAGG(DISTINCT "PRIMARY_PROCEDURE_CODE", '| ') within group (order by "PRIMARY_PROCEDURE_CODE" ASC) as PROCEDURE_CODE_List,
-              LISTAGG(DISTINCT "PLACE_OF_SERVICE_DESCRIPTION", '| ') within group (order by "PLACE_OF_SERVICE_DESCRIPTION" ASC) as PLACE_OF_SERVICE_DESCRIPTION,
-              LISTAGG(DISTINCT "SERVICE_PROVIDER_SPECIALITY_CODE_DESC", '| ') within group (order by "SERVICE_PROVIDER_SPECIALITY_CODE_DESC" ASC) as SPECIALITY_CODE_DESCRIPTION,
-              (CASE WHEN "CCW_CHRONIC_CAT" = 'DIABETES' THEN 'TRUE'
-                ELSE 'FALSE'
-                END) as Diabetes_Flag
+      LISTAGG(DISTINCT "PROCEDURE_DESCRIPTION", '| ') within group (order by "PROCEDURE_DESCRIPTION" ASC) as PROCEDURE_DESCRIPTION_List,
+      LISTAGG(DISTINCT "PRIMARY_PROCEDURE_CODE", '| ') within group (order by "PRIMARY_PROCEDURE_CODE" ASC) as PROCEDURE_CODE_List,
+      LISTAGG(DISTINCT "PLACE_OF_SERVICE_DESCRIPTION", '| ') within group (order by "PLACE_OF_SERVICE_DESCRIPTION" ASC) as PLACE_OF_SERVICE_DESCRIPTION,
+      LISTAGG(DISTINCT "SERVICE_PROVIDER_SPECIALITY_CODE_DESC", '| ') within group (order by "SERVICE_PROVIDER_SPECIALITY_CODE_DESC" ASC) as SPECIALITY_CODE_DESCRIPTION,
+      (CASE WHEN LISTAGG(DISTINCT "CCW_CHRONIC_CAT", ' ') LIKE '%DIABETES%' THEN 'TRUE'
+      ELSE 'FALSE'
+      END) as Diabetes_Flag
 
-            From "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_MEDICAL" as M
-            WHERE                                   /* Dynamic Filter condition*/
-            {% condition DISEASE_CATEGORY %} "ICD_DISEASE_CATEGORY" {% endcondition %} AND
-            {% condition DESCRIPTION %} "ICD_DESCRIPTION" {% endcondition %} AND
-            {% condition DIAGNOSIS_CODE %} "RECONCILED_DIAGNOSIS_CODE_ICD10" {% endcondition %} AND
-            {% condition CHRONIC_CATEGORY %} "CCW_CHRONIC_CAT" {% endcondition %} AND
-            {% condition GENDER %} "PATIENT_GENDER" {% endcondition %} AND
-            {% condition EMPLOYEE_RELATIONSHIP %} "RELATIONSHIP_TO_EMPLOYEE" {% endcondition %} AND
-            {% condition PLACE_OF_SERVICE_DESC %} "PLACE_OF_SERVICE_DESCRIPTION" {% endcondition %} AND
-            {% condition MAJOR_DISEASE_DIABETES %} "ICD_MAJOR_DISEASE" {% endcondition %} AND
-            {% condition PROCEDURE_CODE_TYPE %} "PROCEDURE_CODE_TYPE" {% endcondition %} AND
-            {% condition PROCEDURE_CODE_DESC %} "PROCEDURE_DESCRIPTION" {% endcondition %} AND
-            {% condition PROCEDURE_CODE %} "PRIMARY_PROCEDURE_CODE" {% endcondition %} AND
-            {% condition LS_MODIFY_OR_NOT %} "ICD_LS_MODIFY" {% endcondition %} AND
-            {% condition ACUTE_OR_NOT %} "CHRONICITY_IDENTIFIER" {% endcondition %} AND
-            {% condition PREVENTATIVE_OR_NOT %} "ICD_PREVENTATIVE" {% endcondition %} AND
-            {% condition CHRONIC_OR_NOT %} "CHRONICITY_IDENTIFIER" {% endcondition %} AND
-            {% condition AVOIDABLE_ER_OR_NOT %} "ICD_AVOIDABLE_ER" {% endcondition %} AND
-            {% condition DIGESTIVE_DISEASE_OR_NOT %} "ICD_DIGESTIVE_DISEASE" {% endcondition %} AND
-            {% condition PARTICIPANT_FLAG_M %} "PARTICIPANT_FLAG" {% endcondition %} AND
-            {% condition PARTICIPANT_PROGRAM_NAME_M %} "PARTICIPANT_PROGRAM_NAME" {% endcondition %} AND
-            "UNIQUE_ID" IN (select DISTINCT "UNIQUE_ID" from "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_MEDICAL"
-              WHERE {% condition PARTICIPANT_YEAR %} LEFT("PAID_DATE", 4) {% endcondition %} AND
-                {% condition PARTICIPANT_Flag %} "PARTICIPANT_FLAG" {% endcondition %})
+      From "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_MEDICAL" as M
+      WHERE                                   /* Dynamic Filter condition*/
+      {% condition DISEASE_CATEGORY %} "ICD_DISEASE_CATEGORY" {% endcondition %} AND
+      {% condition DESCRIPTION %} "ICD_DESCRIPTION" {% endcondition %} AND
+      {% condition DIAGNOSIS_CODE %} "RECONCILED_DIAGNOSIS_CODE_ICD10" {% endcondition %} AND
+      {% condition CHRONIC_CATEGORY %} "CCW_CHRONIC_CAT" {% endcondition %} AND
+      {% condition GENDER %} "PATIENT_GENDER" {% endcondition %} AND
+      {% condition EMPLOYEE_RELATIONSHIP %} "RELATIONSHIP_TO_EMPLOYEE" {% endcondition %} AND
+      {% condition PLACE_OF_SERVICE_DESC %} "PLACE_OF_SERVICE_DESCRIPTION" {% endcondition %} AND
+      {% condition MAJOR_DISEASE_DIABETES %} "ICD_MAJOR_DISEASE" {% endcondition %} AND
+      {% condition PROCEDURE_CODE_TYPE %} "PROCEDURE_CODE_TYPE" {% endcondition %} AND
+      {% condition PROCEDURE_CODE_DESC %} "PROCEDURE_DESCRIPTION" {% endcondition %} AND
+      {% condition PROCEDURE_CODE %} "PRIMARY_PROCEDURE_CODE" {% endcondition %} AND
+      {% condition LS_MODIFY_OR_NOT %} "ICD_LS_MODIFY" {% endcondition %} AND
+      {% condition ACUTE_OR_NOT %} "CHRONICITY_IDENTIFIER" {% endcondition %} AND
+      {% condition PREVENTATIVE_OR_NOT %} "ICD_PREVENTATIVE" {% endcondition %} AND
+      {% condition CHRONIC_OR_NOT %} "CHRONICITY_IDENTIFIER" {% endcondition %} AND
+      {% condition AVOIDABLE_ER_OR_NOT %} "ICD_AVOIDABLE_ER" {% endcondition %} AND
+      {% condition DIGESTIVE_DISEASE_OR_NOT %} "ICD_DIGESTIVE_DISEASE" {% endcondition %} AND
+      {% condition PARTICIPANT_FLAG_M %} "PARTICIPANT_FLAG" {% endcondition %} AND
+      {% condition PARTICIPANT_PROGRAM_NAME_M %} "PARTICIPANT_PROGRAM_NAME" {% endcondition %} AND
+      "UNIQUE_ID" IN (select DISTINCT "UNIQUE_ID" from "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_MEDICAL"
+      WHERE {% condition PARTICIPANT_YEAR %} LEFT("ON_BOARD_DATE", 4) {% endcondition %} AND
+      {% condition PARTICIPANT_Flag %} "PARTICIPANT_FLAG" {% endcondition %})
 
 
-            GROUP BY PATIENT_ID_M, PATIENT_GENDER, RELATIONSHIP_TO_EMPLOYEE, substring("PAID_DATE", 1, 4), Diabetes_Flag) as MED
+      GROUP BY PATIENT_ID_M, PATIENT_GENDER, RELATIONSHIP_TO_EMPLOYEE, PAID_YEAR) as MED
 
       LEFT JOIN
 
-            (Select                         /* Pharma Summary*/
-              "UNIQUE_ID" as PATIENT_ID_P,
-              substring("DATE_FILLED", 1, 4) as SERVICE_DATE,
-              SUM("TOTAL_BILLED_AMT") as Total_Billed_Amt_P,
-              SUM("TOTAL_EMPLOYER_PAID_AMT") as Total_Paid_Amt_P,
-              AVG("TOTAL_EMPLOYER_PAID_AMT") as Average_Paid_Amt_P,
-              LISTAGG(DISTINCT "NON_PROPRIETARY_NAME", '| ') within group (order by "NON_PROPRIETARY_NAME" ASC) as Drug_List,
-              LISTAGG(DISTINCT "TEA_CATEGORY", '| ') within group (order by "TEA_CATEGORY" ASC) as TEA_Cat_List,
-              (CASE WHEN "ACE_INHIBITOR" = 'TRUE' THEN 'TRUE'
-                ELSE 'FALSE'
-                END) as ACE_INHIBITOR_List,
-              (CASE WHEN "ARB" = 'TRUE' THEN 'TRUE'
-                ELSE 'FALSE'
-                END) as ARB_DRUGS_List,
-              (CASE WHEN "DRI" = 'TRUE' THEN 'TRUE'
-                ELSE 'FALSE'
-                END) as DRI_DRUGS_List,
-              (CASE WHEN "STATIN" = 'TRUE' THEN 'TRUE'
-                ELSE 'FALSE'
-                END) as STATIN_DRUGS_List
+      (Select                         /* Pharma Summary*/
+      "UNIQUE_ID" as PATIENT_ID_P,
+      LEFT(({% if pharma_reporting_date_filter._parameter_value == "'Paid'" %} "PAID_DATE"
+      substring("DATE_FILLED", 1, 4) as SERVICE_DATE,
+      {% elsif pharma_reporting_date_filter._parameter_value == "'Service'" %} "DATE_FILLED"
+      {% else %} "DATE_FILLED"
+      {% endif %}), 4) as DATE_FILLED_YEAR,
+      SUM("TOTAL_BILLED_AMT") as Total_Billed_Amt_P,
+      SUM("TOTAL_EMPLOYER_PAID_AMT") as Total_Paid_Amt_P,
+      AVG("TOTAL_EMPLOYER_PAID_AMT") as Average_Paid_Amt_P,
+      LISTAGG(DISTINCT "NON_PROPRIETARY_NAME", '| ') within group (order by "NON_PROPRIETARY_NAME" ASC) as Drug_List,
+      LISTAGG(DISTINCT "TEA_CATEGORY", '| ') within group (order by "TEA_CATEGORY" ASC) as TEA_Cat_List,
+      (CASE WHEN LISTAGG(DISTINCT "ACE_INHIBITOR", ' ') LIKE '%TRUE%' THEN 'TRUE'
+      ELSE 'FALSE'
+      END) as ACE_INHIBITOR_List,
+      (CASE WHEN LISTAGG(DISTINCT "ARB", ' ') LIKE '%TRUE%' THEN 'TRUE'
+      ELSE 'FALSE'
+      END) as ARB_DRUGS_List,
+      (CASE WHEN LISTAGG(DISTINCT "DRI", ' ') LIKE '%TRUE%' THEN 'TRUE'
+      ELSE 'FALSE'
+      END) as DRI_DRUGS_List,
+      (CASE WHEN LISTAGG(DISTINCT "STATIN", ' ') LIKE '%TRUE%' THEN 'TRUE'
+      ELSE 'FALSE'
+      END) as STATIN_DRUGS_List
 
-            From "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_PHARMACY" as P
-            WHERE                                   /* Dynamic Filter condition*/
-            {% condition DRUG %} "NON_PROPRIETARY_NAME" {% endcondition %} AND
-            {% condition DRUG_CODE %} "DRUG_CODE" {% endcondition %} AND
-            {% condition TEA_CATEGORY %} "TEA_CATEGORY" {% endcondition %} AND
-            {% condition ACE_INHIBITOR_DRUGS %} "ACE_INHIBITOR" {% endcondition %} AND
-            {% condition STATIN_DRUGS %} "STATIN" {% endcondition %} AND
-            {% condition BETA_BLOCKER_DRUGS %} "BETA_BLOCKER" {% endcondition %} AND
-            {% condition ARB_DRUGS %} "ARB" {% endcondition %} AND
-            {% condition DRI_DRUGS %} "DRI" {% endcondition %} AND
-            {% condition SPECIALTY_DRUGS %} "SPECIALTY_DRUGS" {% endcondition %} AND
-            {% condition MAINTENANCE_DRUGS %} "MAINTENANCE" {% endcondition %} AND
-            {% condition DIGESTIVE_DISEASE_DRUGS %} "DIGESTIVE_DISEASE" {% endcondition %} AND
-            {% condition BRAND_OR_GENERIC %} "BRAND_OR_GENERIC" {% endcondition %} AND
-            {% condition PARTICIPANT_FLAG_P %} "PARTICIPANT_FLAG" {% endcondition %} AND
-            {% condition PARTICIPANT_PROGRAM_NAME_P %} "PARTICIPANT_PROGRAM_NAME" {% endcondition %}
+      From "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_PHARMACY" as P
+      WHERE                                   /* Dynamic Filter condition*/
+      {% condition DRUG %} "NON_PROPRIETARY_NAME" {% endcondition %} AND
+      {% condition DRUG_CODE %} "DRUG_CODE" {% endcondition %} AND
+      {% condition TEA_CATEGORY %} "TEA_CATEGORY" {% endcondition %} AND
+      {% condition ACE_INHIBITOR_DRUGS %} "ACE_INHIBITOR" {% endcondition %} AND
+      {% condition STATIN_DRUGS %} "STATIN" {% endcondition %} AND
+      {% condition BETA_BLOCKER_DRUGS %} "BETA_BLOCKER" {% endcondition %} AND
+      {% condition ARB_DRUGS %} "ARB" {% endcondition %} AND
+      {% condition DRI_DRUGS %} "DRI" {% endcondition %} AND
+      {% condition SPECIALTY_DRUGS %} "SPECIALTY_DRUGS" {% endcondition %} AND
+      {% condition MAINTENANCE_DRUGS %} "MAINTENANCE" {% endcondition %} AND
+      {% condition DIGESTIVE_DISEASE_DRUGS %} "DIGESTIVE_DISEASE" {% endcondition %} AND
+      {% condition BRAND_OR_GENERIC %} "BRAND_OR_GENERIC" {% endcondition %} AND
+      {% condition PARTICIPANT_FLAG_P %} "PARTICIPANT_FLAG" {% endcondition %} AND
+      {% condition PARTICIPANT_PROGRAM_NAME_P %} "PARTICIPANT_PROGRAM_NAME" {% endcondition %}
 
-            GROUP BY PATIENT_ID_P, substring("DATE_FILLED", 1, 4), ACE_INHIBITOR_List, ARB_DRUGS_List, DRI_DRUGS_List, STATIN_DRUGS_List) as PHARMA
+      GROUP BY PATIENT_ID_P, DATE_FILLED_YEAR) as PHARMA
 
-        ON                                  /*Join condition on MED & PHARMA tab */
-        MED.PATIENT_ID_M = PHARMA.PATIENT_ID_P AND
-        MED.PAID_YEAR = PHARMA.SERVICE_DATE
+      ON                                  /*Join condition on MED & PHARMA tab */
+      MED.PATIENT_ID_M = PHARMA.PATIENT_ID_P AND
+      MED.PAID_YEAR = PHARMA.DATE_FILLED_YEAR
 
-        GROUP BY Unique_Id_M, PAID_YEAR, PATIENT_GENDER, RELATIONSHIP_TO_EMPLOYEE, Diagnosis_Description_List,
-        Diagnosis_Category_List, Chronic_Category_List, AGE_GROUP_List, PROCEDURE_DESCRIPTION_List, PROCEDURE_CODE_List,
-        PLACE_OF_SERVICE_DESCRIPTION, SPECIALITY_CODE_DESCRIPTION, DIAGNOSIS_CODE_List, Diabetes_Flag,
-        Unique_Id_P, TEA_Cat_List, Drug_List, ACE_INHIBITOR_List, ARB_DRUGS_List, DRI_DRUGS_List, STATIN_DRUGS_List
-        ;;
+      GROUP BY Unique_Id_M, PAID_YEAR, PATIENT_GENDER, RELATIONSHIP_TO_EMPLOYEE, Diagnosis_Description_List,
+      Diagnosis_Category_List, Chronic_Category_List, AGE_GROUP_List, PROCEDURE_DESCRIPTION_List, PROCEDURE_CODE_List,
+      PLACE_OF_SERVICE_DESCRIPTION, SPECIALITY_CODE_DESCRIPTION, DIAGNOSIS_CODE_List, Diabetes_Flag,
+      Unique_Id_P, TEA_Cat_List, Drug_List, ACE_INHIBITOR_List, ARB_DRUGS_List, DRI_DRUGS_List, STATIN_DRUGS_List
+      ;;
   }
 
+  parameter: med_reporting_date_filter {
+    type: string
+    label: "Med-Reporting date"
+    allowed_value: {
+      value: "Service"
+      label: "Service date"}
+    allowed_value: {
+      value: "Paid"
+      label: "Paid date"}
+  }
+
+  parameter: pharma_reporting_date_filter {
+    type: string
+    label: "Pharma-Reporting date"
+    allowed_value: {
+      value: "Service"
+      label: "Service date"}
+    allowed_value: {
+      value: "Paid"
+      label: "Paid date"}
+  }
 
   filter: DISEASE_CATEGORY {
     #default_value: "Diseases of the Musculoskeletal System and Connective Tissue"
@@ -272,7 +300,7 @@ view: vw_med_and_pharma_summary_1 {
 
   dimension: PAID_YEAR {
     type: string
-    label: "Service year"
+    label: "Service Year"
     sql: ${TABLE}.PAID_YEAR ;;
   }
 
@@ -369,7 +397,7 @@ view: vw_med_and_pharma_summary_1 {
     type: sum
     label: "MED_TOTAL PAID AMT"
     sql: ${TABLE}.Total_Paid_Amt_M ;;
-    value_format: "$#,##0"
+    value_format: "$#,##0.00"
   }
 
   measure: AVERAGE_PAID_AMT_M {
@@ -378,7 +406,7 @@ view: vw_med_and_pharma_summary_1 {
     sql: CASE WHEN ${TOTAL_PATIENTS} <> 0 THEN ${TOTAL_PAID_AMT_M}/${TOTAL_PATIENTS}
           ELSE 0
           END ;;
-    value_format: "$#,##0"
+    value_format: "$#,##0.00"
   }
 
   measure: TOTAL_PATIENTS {
@@ -589,19 +617,19 @@ view: vw_med_and_pharma_summary_1 {
     sql: ${PATIENT_ID} ;;
   }
 
-filter:PARTICIPANT_PROGRAM_NAME_M {
-  type: string
-  label: "PARTICIPANT PROGRAM NAME M"
-  suggest_explore: vw_medical
-  suggest_dimension: vw_medical.PARTICIPANT_PROGRAM_NAME
-}
+  filter:PARTICIPANT_PROGRAM_NAME_M {
+    type: string
+    label: "PARTICIPANT PROGRAM NAME M"
+    suggest_explore: vw_medical
+    suggest_dimension: vw_medical.PARTICIPANT_PROGRAM_NAME
+  }
 
-filter:PARTICIPANT_PROGRAM_NAME_P {
-  type: string
-  label: "PARTICIPANT PROGRAM NAME P"
-  suggest_explore: vw_pharmacy
-  suggest_dimension: vw_pharmacy.PARTICIPANT_PROGRAM_NAME
-}
+  filter:PARTICIPANT_PROGRAM_NAME_P {
+    type: string
+    label: "PARTICIPANT PROGRAM NAME P"
+    suggest_explore: vw_pharmacy
+    suggest_dimension: vw_pharmacy.PARTICIPANT_PROGRAM_NAME
+  }
   filter: PARTICIPANT_YEAR {
     type: string
     group_label: "PARTICIPANT FILTER"

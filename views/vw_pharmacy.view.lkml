@@ -3,7 +3,7 @@ view: vw_pharmacy {
   derived_table: {
     sql: select * from "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_PHARMACY"
       WHERE "UNIQUE_ID" IN (select DISTINCT "UNIQUE_ID" from "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_PHARMACY"
-        WHERE {% condition PARTICIPANT_YEAR %} LEFT("DATE_FILLED", 4) {% endcondition %} AND
+        WHERE {% condition PARTICIPANT_YEAR %} LEFT("ON_BOARD_DATE", 4) {% endcondition %} AND
         {% condition PARTICIPANT_Flag %} "PARTICIPANT_FLAG" {% endcondition %})
       ;;
   }
@@ -503,7 +503,7 @@ view: vw_pharmacy {
   dimension: participant_paid_year {
     type: string
     hidden: yes
-    sql: ${date_filled_year} ;;
+    sql: ${ON_BOARD_DATE_year} ;;
   }
 
   filter: PARTICIPANT_YEAR {
@@ -519,6 +519,7 @@ view: vw_pharmacy {
     suggest_explore: vw_pharmacy
     suggest_dimension:vw_pharmacy.PARTICIPANT_NONPARTICIPANT_Flag
   }
+
   dimension: PARTICIPANT_PROGRAM_NAME{
     type: string
     label: "PARTICIPANT PROGRAM NAME"
@@ -555,6 +556,23 @@ view: vw_pharmacy {
       WHEN {% parameter reporting_date_filter %} = 'Service' THEN ${TABLE}."DATE_FILLED"
       ELSE ${TABLE}."DATE_FILLED"
       END ;;
+  }
+
+  dimension_group: ON_BOARD_DATE {
+    type: time
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    convert_tz: no
+    datatype: date
+    label: "ON BOARD DATE"
+    drill_fields: [ON_BOARD_DATE_year, ON_BOARD_DATE_quarter, ON_BOARD_DATE_month, ON_BOARD_DATE_raw]
+    sql: ${TABLE}."ON_BOARD_DATE" ;;
   }
 
 

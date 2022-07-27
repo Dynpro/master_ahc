@@ -33,6 +33,12 @@ explore: vw_medical {
     sql_on: ${vw_medical.unique_id} = ${vw_risk_group_migration.Unique_id} AND
       ${vw_medical.diagnosis_year} = ${vw_risk_group_migration.File_year};;
   }
+  join: vw_participant_trigger {
+    view_label: "Participant Trigger"
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${vw_medical.unique_id} = ${vw_participant_trigger.unique_id} ;;
+  }
 }
 
 explore: vw_pharmacy {
@@ -50,6 +56,12 @@ explore: vw_pharmacy {
     relationship: many_to_one
     sql_on: ${vw_pharmacy.unique_id} = ${vw_patient_demographics.unique_id} ;;
   }
+  join: vw_participant_trigger {
+    view_label: "Participant Trigger"
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${vw_pharmacy.unique_id} = ${vw_participant_trigger.unique_id} ;;
+  }
 }
 
 explore: vw_med_and_pharma_summary_1 {
@@ -59,6 +71,12 @@ explore: vw_med_and_pharma_summary_1 {
     type: left_outer
     relationship: many_to_one
     sql_on:  ${vw_med_and_pharma_summary_1.PATIENT_ID} = ${vw_patient_demographics.unique_id} ;;
+  }
+  join: vw_participant_trigger {
+    view_label: "Participant Trigger"
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${vw_med_and_pharma_summary_1.PATIENT_ID} = ${vw_participant_trigger.unique_id} ;;
   }
 }
 
@@ -70,6 +88,12 @@ explore: ad_hoc_query_tool_medical {
     relationship: many_to_one
     sql_on:  ${ad_hoc_query_tool_medical.PATIENT_ID} = ${vw_patient_demographics.unique_id} ;;
   }
+  join: vw_participant_trigger {
+    view_label: "Participant Trigger"
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${ad_hoc_query_tool_medical.PATIENT_ID} = ${vw_participant_trigger.unique_id} ;;
+  }
 }
 
 explore: ad_hoc_query_tool_pharmacy {
@@ -79,6 +103,12 @@ explore: ad_hoc_query_tool_pharmacy {
     type: left_outer
     relationship: many_to_one
     sql_on:  ${ad_hoc_query_tool_pharmacy.Unique_Id_P} = ${vw_patient_demographics.unique_id} ;;
+  }
+  join: vw_participant_trigger {
+    view_label: "Participant Trigger"
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${ad_hoc_query_tool_pharmacy.Unique_Id_P} = ${vw_participant_trigger.unique_id} ;;
   }
 }
 
@@ -101,6 +131,12 @@ explore: vw_risk_group_migration {
     sql_on: ${vw_risk_group_migration.Unique_id} = ${patient_diagnosis_summary.PATIENT_ID} AND
       ${vw_risk_group_migration.File_year} = ${patient_diagnosis_summary.reporting_year} ;;
   }
+  join: vw_participant_trigger {
+    view_label: "Participant Trigger"
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${vw_risk_group_migration.Unique_id} = ${vw_participant_trigger.unique_id} ;;
+  }
 }
 
 explore: vw_risk_group_med_pharma_summary {
@@ -122,6 +158,12 @@ explore: vw_medication_possession_ratio {
     sql_on: ${vw_medication_possession_ratio.unique_id} = ${patient_diagnosis_summary.PATIENT_ID} AND
       ${vw_medication_possession_ratio.year} = ${patient_diagnosis_summary.reporting_year} ;;
   }
+  join: vw_participant_trigger {
+    view_label: "Participant Trigger"
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${vw_medication_possession_ratio.unique_id} = ${vw_participant_trigger.unique_id} ;;
+  }
 }
 
 explore: vw_preventive_screening {
@@ -139,6 +181,12 @@ explore: vw_preventive_screening {
       ${vw_preventive_screening.year} = ${patient_diagnosis_summary.reporting_year} ;;
   }
   label: "Preventive Screening"
+  join: vw_participant_trigger {
+    view_label: "Participant Trigger"
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${vw_preventive_screening.unique_id} = ${vw_participant_trigger.unique_id} ;;
+  }
 }
 
 explore: hedis_measure {
@@ -156,6 +204,14 @@ explore: hedis_measure {
       ${hedis_measure.year} = ${patient_diagnosis_summary.reporting_year} ;;
   }
   label: "HEDIS Measures"
+  join: vw_participant_trigger {
+    view_label: "Participant Trigger"
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${hedis_measure.unique_id} = ${vw_participant_trigger.unique_id} AND
+      ${hedis_measure.year} = ${vw_participant_trigger.Plan_Year} ;;
+
+  }
 }
 
 explore: ebr_measures {
@@ -173,11 +229,17 @@ explore: ebr_measures {
     sql_on: ${ebr_measures.unique_id} = ${patient_diagnosis_summary.PATIENT_ID} AND
       ${ebr_measures.year} = ${patient_diagnosis_summary.reporting_year} ;;
   }
+  join: vw_participant_trigger {
+    view_label: "Participant Trigger"
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${ebr_measures.unique_id} = ${vw_participant_trigger.unique_id} AND
+      ${ebr_measures.year} = ${vw_participant_trigger.Plan_Year} ;;
+
+  }
 }
 
 explore: vw_patient_demographics {}
-
-
 
 explore: vw_predictive_healthscore_index {
   join: vw_patient_demographics {
@@ -186,6 +248,16 @@ explore: vw_predictive_healthscore_index {
     relationship: many_to_one
     sql_on:  ${vw_predictive_healthscore_index.patient_id_l} = ${vw_patient_demographics.unique_id} ;;
   }
+
 }
 explore: icd_infographics {}
 explore: cpt_infographics {}
+
+explore: vw_participant_trigger {
+  join: vw_patient_demographics {
+    view_label: "Patient Demographics"
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${vw_participant_trigger.unique_id} = ${vw_patient_demographics.unique_id} ;;
+  }
+}

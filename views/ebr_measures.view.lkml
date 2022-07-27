@@ -1,11 +1,7 @@
 view: ebr_measures {
-  derived_table: {
-    sql:select * from "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_EBR_MEASURES"
-      WHERE "UNIQUE_ID" IN (select DISTINCT "UNIQUE_ID" from "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_MEDICAL"
-        WHERE {% condition PARTICIPANT_YEAR %} LEFT("PAID_DATE", 4) {% endcondition %} AND
-        {% condition PARTICIPANT_Flag %} "PARTICIPANT_FLAG" {% endcondition %})
-    ;;
-  }
+  label: "EBR Measures"
+  sql_table_name: "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_EBR_MEASURES" ;;
+
 
   dimension: individual_gets_diabetic_test_strips {
     type: string
@@ -78,7 +74,7 @@ view: ebr_measures {
 
   dimension: individual_is_in_disease_group {
     type: string
-    hidden: yes
+    #hidden: yes
     sql: ${TABLE}."INDIVIDUAL_IS_IN_DISEASE_GROUP" ;;
   }
 
@@ -556,6 +552,28 @@ view: ebr_measures {
     sql: ${unique_id} ;;
   }
 
+  dimension: individual_has_daibetes_diagnosis_and_screened_for_podiatry {
+    type: string
+    label: "Diabetes Podiatry Screening"
+    description: "INDIVIDUAL HAS DIABETES DIAGNOSIS AND SCREENED FOR PODIATRY"
+    sql: ${TABLE}."INDIVIDUAL_HAS_DIABETES_DIAGNOSIS_AND_SCREENED_FOR_PODIATRY" ;;
+  }
+
+  measure: individual_has_daibetes_diagnosis_and_screened_for_podiatry_patients {
+    type: count_distinct
+    filters: [individual_has_daibetes_diagnosis_and_screened_for_podiatry: "1"]
+    label: "Diabetes Podiatry Screening - N"
+    description: "INDIVIDUAL HAS DIABETES DIAGNOSIS AND SCREENED FOR PODIATRY"
+    sql: ${unique_id} ;;
+  }
+
+  measure: individual_has_daibetes_diagnosis_and_screened_for_podiatry_eligible_patients {
+    type: count_distinct
+    filters: [individual_has_daibetes_diagnosis_and_screened_for_podiatry: "0,1"]
+    label: "Diabetes Podiatry Screening(Eligible) - N"
+    description: "INDIVIDUAL HAS DIABETES DIAGNOSIS AND SCREENED FOR PODIATRY"
+    sql: ${unique_id} ;;
+  }
 
   dimension: unique_id {
     type: string
@@ -582,19 +600,7 @@ view: ebr_measures {
     drill_fields: []
   }
 
-  filter: PARTICIPANT_YEAR {
-    type: string
-    group_label: "PARTICIPANT FILTER"
-    suggest_explore: vw_medical
-    suggest_dimension: vw_medical.participant_paid_year
-  }
 
-  filter: PARTICIPANT_Flag {
-    type: string
-    group_label: "PARTICIPANT FILTER"
-    suggest_explore: vw_medical
-    suggest_dimension: vw_medical.PARTICIPANT_NONPARTICIPANT_Flag
-  }
 
   dimension: HOSPITALIZED_OR_NOT {
     type: string
@@ -626,6 +632,8 @@ view: ebr_measures {
     description: "Inpatient Hospitalization Eligible"
     sql: ${unique_id} ;;
   }
+
+
 #Care Management dashboard dimension & measures: Benchmark labelling, HEDIS list of defined measures, Rendering & $ based on previous months
   dimension: benchmark_year_filter_suggestion {
     type: string
