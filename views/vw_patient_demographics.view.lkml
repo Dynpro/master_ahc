@@ -58,7 +58,6 @@ view: vw_patient_demographics {
     sql: ${TABLE}."PATIENT_DOB" ;;
   }
 
-
   dimension: patient_gender {
     type: string
     sql: ${TABLE}."PATIENT_GENDER" ;;
@@ -69,6 +68,7 @@ view: vw_patient_demographics {
     label: "Patient Age"
     sql: DATEDIFF( year, ${patient_dob_raw}, CURRENT_DATE()) ;;
   }
+
   dimension: AgeGroup {
     type: tier
     label: "AGE GROUP"
@@ -89,7 +89,6 @@ view: vw_patient_demographics {
     sql: ${TABLE}."UNIQUE_ID" ;;
   }
 
-
   measure: count {
     type: count
     hidden: yes
@@ -101,7 +100,6 @@ view: vw_patient_demographics {
     label: "PARTICIPANT PROGRAM NAME"
     sql: ${TABLE}."PARTICIPANT_PROGRAM_NAME";;
   }
-
 
   dimension: member_id{
     type: string
@@ -123,11 +121,24 @@ view: vw_patient_demographics {
   dimension: client_name{
     type: string
     label: "Affiliation"
-    sql: 'Master AHC' ;;
+    sql: 'Master AHC Medical' ;;
   }
 
   dimension: unique_id_demo {
     type: string
     sql: CONCAT(${dependent_f_name}, ${dependent_l_name}, ${patient_dob_raw}, ${patient_gender}) ;;
   }
+
+  dimension: PARTICIPANT_FLAG {
+    type: string
+    label: "PARTICIPANT FLAG"
+    sql: ${TABLE}."PARTICIPANT_FLAG" ;;
+  }
+
+  dimension: PARTICIPANT_YEAR {
+    type: string
+    label: "PARTICIPANT YEAR"
+    sql: ${TABLE}."PARTICIPANT_YEAR" ;;
+  }
+
 }
