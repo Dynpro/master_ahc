@@ -12,17 +12,17 @@ view: vw_medication_possession_ratio {
             {% condition SPECIALTY_Drugs %} "SPECIALTY_DRUGS" {% endcondition %} AND
             {% condition MAINTENANCE_Drugs %} "MAINTENANCE" {% endcondition %})
 
-          AND
-            "UNIQUE_ID" IN (Select DISTINCT "UNIQUE_ID" from "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_MEDICAL"
-              WHERE
-              {% condition DISEASE_CATEGORY %} "ICD_DISEASE_CATEGORY" {% endcondition %} AND
-              {% condition DISEASE_SUB_CATEGORY %} "DISEASE_SUB_CATEGORY" {% endcondition %} AND
-              {% condition PROCEDURE_CATEGORY %} "PROCEDURE_CATEGORY" {% endcondition %} AND
-              {% condition PROCEDURE_SUBCATEGORY %} "PROCEDURE_SUBCATEGORY" {% endcondition %} AND
-              {% condition CHRONIC_CATEGORY %} "CCW_CHRONIC_CAT" {% endcondition %} AND
-              {% condition PARTICIPANT_YEAR %} LEFT("PAID_DATE", 4) {% endcondition %} AND
-              {% condition PARTICIPANT_Flag %} "PARTICIPANT_FLAG" {% endcondition %})
-    ;;
+      AND
+      "UNIQUE_ID" IN (Select DISTINCT "UNIQUE_ID" from "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_MEDICAL"
+      WHERE
+      {% condition DISEASE_CATEGORY %} "ICD_DISEASE_CATEGORY" {% endcondition %} AND
+      {% condition DISEASE_SUB_CATEGORY %} "DISEASE_SUB_CATEGORY" {% endcondition %} AND
+      {% condition PROCEDURE_CATEGORY %} "PROCEDURE_CATEGORY" {% endcondition %} AND
+      {% condition PROCEDURE_SUBCATEGORY %} "PROCEDURE_SUBCATEGORY" {% endcondition %} AND
+      {% condition CHRONIC_CATEGORY %} "CCW_CHRONIC_CAT" {% endcondition %} AND
+      {% condition PARTICIPANT_YEAR %} LEFT("ON_BOARD_DATE", 4) {% endcondition %} AND
+      {% condition PARTICIPANT_Flag %} "PARTICIPANT_FLAG" {% endcondition %})
+      ;;
   }
 
 
@@ -186,7 +186,7 @@ view: vw_medication_possession_ratio {
 
   dimension: year {
     type: number
-    label: "YEAR"
+    label: "Year"
     sql: ${TABLE}."YEAR" ;;
     value_format: "0"
   }

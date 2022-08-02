@@ -3,7 +3,7 @@ view: vw_medical {
   derived_table: {
     sql: select * from "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_MEDICAL"
       WHERE "UNIQUE_ID" IN (select DISTINCT "UNIQUE_ID" from "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_MEDICAL"
-        WHERE {% condition PARTICIPANT_YEAR %} LEFT("PAID_DATE", 4) {% endcondition %} AND
+        WHERE {% condition PARTICIPANT_YEAR %} LEFT("ON_BOARD_DATE", 4) {% endcondition %} AND
         {% condition PARTICIPANT_Flag %} "PARTICIPANT_FLAG" {% endcondition %})
       ;;
   }
@@ -973,8 +973,8 @@ view: vw_medical {
 
   dimension: participant_paid_year {
     type: string
-    hidden: yes
-    sql: ${Paid_year} ;;
+    hidden: no
+    sql: ${ON_BOARD_DATE_year} ;;
   }
 
   filter: PARTICIPANT_YEAR {
@@ -1024,8 +1024,25 @@ view: vw_medical {
     drill_fields: [reporting_year, reporting_quarter, reporting_month, reporting_raw]
     sql: CASE WHEN {% parameter reporting_date_filter %} = 'Paid' THEN ${TABLE}."PAID_DATE"
       WHEN {% parameter reporting_date_filter %} = 'Service' THEN ${TABLE}."DIAGNOSIS_DATE"
-      ELSE ${TABLE}."PAID_DATE"
+      ELSE ${TABLE}."DIAGNOSIS_DATE"
       END ;;
+  }
+
+  dimension_group: ON_BOARD_DATE {
+    type: time
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    convert_tz: no
+    datatype: date
+    label: "ON BOARD DATE"
+    drill_fields: [ON_BOARD_DATE_year, ON_BOARD_DATE_quarter, ON_BOARD_DATE_month, ON_BOARD_DATE_raw]
+    sql: ${TABLE}."ON_BOARD_DATE" ;;
   }
 
 

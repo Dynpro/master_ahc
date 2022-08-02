@@ -12,7 +12,9 @@ view: ad_hoc_query_tool_pharmacy {
           "NON_PROPRIETARY_NAME" as Drug_List,
           "TEA_CATEGORY" as TEA_Cat_List,
           "MEMBER_AGE" as MEMBER_AGE,
-          "PARTICIPANT_PROGRAM_NAME" as PARTICIPANT_PROGRAM_NAME
+          "PARTICIPANT_PROGRAM_NAME" as PARTICIPANT_PROGRAM_NAME,
+          "PARTICIPANT_FLAG" as PARTICIPANT_FLAG,
+          "ON_BOARD_DATE" AS ON_BOARD_DATE
         from
         "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_PHARMACY"
         WHERE                                 /* Dynamic Filter condition*/
@@ -31,31 +33,31 @@ view: ad_hoc_query_tool_pharmacy {
             {% condition BRAND_OR_GENERIC %} "BRAND_OR_GENERIC" {% endcondition %} AND
 
 
-            UNIQUE_ID IN (Select DISTINCT UNIQUE_ID from "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_MEDICAL"
-            WHERE
-              {% condition DISEASE_CATEGORY %} "ICD_DISEASE_CATEGORY" {% endcondition %} AND
-              {% condition PROCEDURE_MAJOR_CATEGORY %} "PROCEDURE_CATEGORY" {% endcondition %} AND
-              {% condition PROCEDURE_SUBCATEGORY %} "PROCEDURE_SUB_CATEGORY" {% endcondition %} AND
-              {% condition DISEASE_SUBCATEGORY %} "DISEASE_SUB_CATEGORY" {% endcondition %} AND
-              {% condition DISEASE_DESCRIPTION %} "ICD_DESCRIPTION" {% endcondition %} AND
-              {% condition DIAGNOSIS_CODE %} "RECONCILED_DIAGNOSIS_CODE_ICD10" {% endcondition %} AND
-              {% condition CHRONIC_CATEGORY %} "CCW_CHRONIC_CAT" {% endcondition %} AND
-              {% condition GENDER %} "PATIENT_GENDER" {% endcondition %} AND
-              {% condition EMPLOYEE_RELATIONSHIP %} "RELATIONSHIP_TO_EMPLOYEE" {% endcondition %} AND
-              {% condition PLACE_OF_SERVICE_DESC %} "PLACE_OF_SERVICE_DESCRIPTION" {% endcondition %} AND
-              {% condition MAJOR_DISEASE_DIABETES %} "ICD_MAJOR_DISEASE" {% endcondition %} AND
-              {% condition PROCEDURE_CODE_TYPE %} "PROCEDURE_CODE_TYPE" {% endcondition %} AND
-              {% condition PROCEDURE_CODE_DESC %} "PROCEDURE_DESCRIPTION" {% endcondition %} AND
-              {% condition PROCEDURE_CODE %} "PRIMARY_PROCEDURE_CODE" {% endcondition %} AND
-              {% condition LS_MODIFY_OR_NOT %} "ICD_LS_MODIFY" {% endcondition %} AND
-              {% condition ACUTE_OR_NOT %} "CHRONICITY_IDENTIFIER" {% endcondition %} AND
-              {% condition PREVENTATIVE_OR_NOT %} "ICD_PREVENTATIVE" {% endcondition %} AND
-              {% condition CHRONIC_OR_NOT %} "CHRONICITY_IDENTIFIER" {% endcondition %} AND
-              {% condition AVOIDABLE_ER_OR_NOT %} "ICD_AVOIDABLE_ER" {% endcondition %} AND
-              {% condition DIGESTIVE_DISEASE_OR_NOT %} "ICD_DIGESTIVE_DISEASE" {% endcondition %} AND
-              {% condition PARTICIPANT_YEAR %} LEFT("PAID_DATE", 4) {% endcondition %} AND
-              {% condition PARTICIPANT_Flag %} "PARTICIPANT_FLAG" {% endcondition %})
-             ;;
+      UNIQUE_ID IN (Select DISTINCT UNIQUE_ID from "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_MEDICAL"
+      WHERE
+      {% condition DISEASE_CATEGORY %} "ICD_DISEASE_CATEGORY" {% endcondition %} AND
+      {% condition PROCEDURE_MAJOR_CATEGORY %} "PROCEDURE_CATEGORY" {% endcondition %} AND
+      {% condition PROCEDURE_SUBCATEGORY %} "PROCEDURE_SUB_CATEGORY" {% endcondition %} AND
+      {% condition DISEASE_SUBCATEGORY %} "DISEASE_SUB_CATEGORY" {% endcondition %} AND
+      {% condition DISEASE_DESCRIPTION %} "ICD_DESCRIPTION" {% endcondition %} AND
+      {% condition DIAGNOSIS_CODE %} "RECONCILED_DIAGNOSIS_CODE_ICD10" {% endcondition %} AND
+      {% condition CHRONIC_CATEGORY %} "CCW_CHRONIC_CAT" {% endcondition %} AND
+      {% condition GENDER %} "PATIENT_GENDER" {% endcondition %} AND
+      {% condition EMPLOYEE_RELATIONSHIP %} "RELATIONSHIP_TO_EMPLOYEE" {% endcondition %} AND
+      {% condition PLACE_OF_SERVICE_DESC %} "PLACE_OF_SERVICE_DESCRIPTION" {% endcondition %} AND
+      {% condition MAJOR_DISEASE_DIABETES %} "ICD_MAJOR_DISEASE" {% endcondition %} AND
+      {% condition PROCEDURE_CODE_TYPE %} "PROCEDURE_CODE_TYPE" {% endcondition %} AND
+      {% condition PROCEDURE_CODE_DESC %} "PROCEDURE_DESCRIPTION" {% endcondition %} AND
+      {% condition PROCEDURE_CODE %} "PRIMARY_PROCEDURE_CODE" {% endcondition %} AND
+      {% condition LS_MODIFY_OR_NOT %} "ICD_LS_MODIFY" {% endcondition %} AND
+      {% condition ACUTE_OR_NOT %} "CHRONICITY_IDENTIFIER" {% endcondition %} AND
+      {% condition PREVENTATIVE_OR_NOT %} "ICD_PREVENTATIVE" {% endcondition %} AND
+      {% condition CHRONIC_OR_NOT %} "CHRONICITY_IDENTIFIER" {% endcondition %} AND
+      {% condition AVOIDABLE_ER_OR_NOT %} "ICD_AVOIDABLE_ER" {% endcondition %} AND
+      {% condition DIGESTIVE_DISEASE_OR_NOT %} "ICD_DIGESTIVE_DISEASE" {% endcondition %} AND
+      {% condition PARTICIPANT_YEAR %} LEFT("PAID_DATE", 4) {% endcondition %} AND
+      {% condition PARTICIPANT_Flag %} "PARTICIPANT_FLAG" {% endcondition %})
+      ;;
   }
 
   #All the MEDICAL table Filter, Dimension & Measures.
@@ -315,6 +317,7 @@ view: ad_hoc_query_tool_pharmacy {
     drill_fields: [SERVICE_DATE_year, SERVICE_DATE_quarter, SERVICE_DATE_month, SERVICE_DATE_raw]
     sql: ${TABLE}."DATE_FILLED" ;; #Column mapping changed from SERVICE_DATE to DATE_FILLED - we are removing SERVICE_DATE label from all reporting.
   }
+
   dimension_group: PAID_DATE {
     type: time
     label: "FILLED"
@@ -433,6 +436,13 @@ view: ad_hoc_query_tool_pharmacy {
     suggest_dimension:vw_pharmacy.PARTICIPANT_NONPARTICIPANT_Flag
   }
 
+  dimension: PARTICIPANT_FLAG {
+    type: string
+    label: "PARTICIPANT FLAG"
+    suggest_explore: vw_pharmacy
+    suggest_dimension:vw_pharmacy.PARTICIPANT_NONPARTICIPANT_Flag
+  }
+
   parameter: reporting_date_filter {
     type: string
     label: "Reporting date"
@@ -463,4 +473,40 @@ view: ad_hoc_query_tool_pharmacy {
       ELSE ${TABLE}."DATE_FILLED"
       END ;;
   }
+  dimension_group: ON_BOARD_DATE {
+    type: time
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    convert_tz: no
+    datatype: date
+    label: "ON BOARD DATE"
+    drill_fields: [ON_BOARD_DATE_year, ON_BOARD_DATE_quarter, ON_BOARD_DATE_month, ON_BOARD_DATE_raw]
+    sql: ${TABLE}."ON_BOARD_DATE" ;;
+  }
+
+  dimension: benchmark_year_filter_suggestion {
+    type: string
+    hidden: yes
+    sql: ${reporting_year} - 1 ;;
+  }
+
+  parameter: benchmark_year_filter {
+    type: string
+    suggest_dimension: ad_hoc_query_tool_pharmacy.benchmark_year_filter_suggestion
+  }
+
+  dimension: reporting_benchmark_year {
+    type: string
+    label: "SERVICE Year"
+    sql: CASE WHEN ${reporting_year} = CAST({% parameter benchmark_year_filter %} as int) THEN CAST(concat(${reporting_year}, ' ', '(Benchmark)') as string)
+      ELSE CAST(${reporting_year} as string)
+      END;;
+  }
+
 }
