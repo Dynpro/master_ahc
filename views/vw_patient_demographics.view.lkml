@@ -105,7 +105,12 @@ view: vw_patient_demographics {
     type: string
     label: "MEMBER ID"
     sql: CONCAT(${TABLE}."MEMBER_ID", ' (', ${relationship_to_employee}, ')')  ;;
-    html: <b> {{ member_id._rendered_value }} </b> ({{ relationship_to_employee._rendered_value }})   ;;
+    #html: <b> {{ member_id._rendered_value }} </b> ({{ relationship_to_employee._rendered_value }})   ;;
+  }
+  dimension: member_id_without_relationship{
+    type: string
+    label: "MEMBER ID"
+    sql: ${TABLE}."MEMBER_ID"  ;;
   }
 
   dimension: member_id_list {
