@@ -103,7 +103,7 @@ view: vw_patient_demographics {
 
   dimension: member_id{
     type: string
-    label: "MEMBER ID"
+    label: "MEMBER ID (Relationship)"
     sql: CONCAT(${TABLE}."MEMBER_ID", ' (', ${relationship_to_employee}, ')')  ;;
     #html: <b> {{ member_id._rendered_value }} </b> ({{ relationship_to_employee._rendered_value }})   ;;
   }
