@@ -549,4 +549,62 @@ view: hedis_measure {
         {% endif %}
       {% endfor %} ;;
   }
+
+  ##percent of measures
+
+  measure: AAP_PERCENT {
+    type: number
+    value_format: "0.0\%"
+    sql: ${aap_compliant_patients}/NULLIF(${aap_eligible_patients},0) *100;;
+  }
+  measure: ABA_PERCENT {
+    type: number
+    value_format: "0.0\%"
+    sql: ${aba_compliant_patients}/NULLIF(${aba_eligible_patients},0) *100;;
+  }
+  measure: AMM_PERCENT {
+    type: number
+    value_format: "0.0\%"
+    sql: ${patients_amm_compliant}/NULLIF(${patients_amm_eligible},0) *100;;
+  }
+  measure: BCS_PERCENT {
+    type: number
+    value_format: "0.0\%"
+    sql: ${bcs_compliant_patients}/NULLIF(${bcs_eligible_patients},0) *100;;
+  }
+  measure: CBP_PERCENT {
+    type: number
+    value_format: "0.0\%"
+    sql: ${cbp_compliant_patients}/NULLIF(${cbp_eligible_patients},0) *100;;
+  }
+  measure: CCS_PERCENT {
+    type: number
+    value_format: "0.0\%"
+    sql: ${ccs_compliant_patients}/NULLIF(${ccs_eligible_patients},0) *100;;
+  }
+  measure: CDC_PERCENT {
+    type: number
+    value_format: "0.0\%"
+    sql: ${cdc_compliant_patients}/NULLIF(${cdc_eligible_patients},0) *100;;
+  }
+  measure: COL_PERCENT {
+    type: number
+    value_format: "0.0\%"
+    sql: ${col_compliant_patients}/NULLIF(${col_eligible_patients},0) *100;;
+  }
+  measure: OMW_PERCENT {
+    type: number
+    value_format: "0.0\%"
+    sql: ${omw_compliant_patients}/NULLIF(${omw_eligible_patients},0) *100;;
+  }
+  measure: SMD_PERCENT {
+    type: number
+    value_format: "0.0\%"
+    sql: ${smd_compliant_patients}/NULLIF(${smd_eligible_patients},0) *100;;
+  }
+  measure: SPR_PERCENT {
+    type: number
+    value_format: "0.0\%"
+    sql: ${spr_compliant_patients}/NULLIF(${spr_eligible_patients},0) *100;;
+  }
 }
