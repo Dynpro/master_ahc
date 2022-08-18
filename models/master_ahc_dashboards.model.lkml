@@ -270,13 +270,4 @@ explore: patient_all_medical_pharmacy_summary { #designed for Claim Analysis sum
     relationship: many_to_one
     sql_on: ${patient_all_medical_pharmacy_summary.PATIENT_ID} = ${vw_patient_demographics.unique_id} ;;
   }
-  join: patient_all_medical_summary {
-    view_label: "Patient Medical summary"
-    type: left_outer
-    relationship: many_to_one
-    sql_on: ${patient_all_medical_pharmacy_summary.PATIENT_ID} = ${patient_all_medical_summary.PATIENT_ID} ;;
-  }
-
 }
-
-explore: patient_all_medical_summary {}
