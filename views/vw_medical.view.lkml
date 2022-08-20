@@ -640,13 +640,21 @@ view: vw_medical {
           END ;;
   }
 
-  dimension: Primarycare_Physician_and_Speciality {
+   dimension: Primarycare_Physician_and_Speciality {
     type: string
     label: "PCP & SPECIALTY SERVICES"
     description: "Primary care physician & Specialty services"
-    sql: CASE WHEN ${place_of_service} IN ('5', '6', '7', '8', '11', '17', '18', '49', '71', '72') THEN 'PRIMARY CARE PHYSICIAN SERVICES'
-          WHEN ${place_of_service} NOT IN ('5', '6', '7', '8', '11', '17', '18', '49', '71', '72') THEN 'SPECIALTY SERVICES'
-          ELSE 'OTHER Services'
+    sql: CASE WHEN ${reconciled_diagnosis_code_icd10} IN ('Z0000', 'Z0001') OR
+            ${primary_procedure_code} IN ('99214', '99381', '99382', '99383', '99384', '99385', '99386', '99387', '99391', '99392',
+              '99393', '99394', '99395', '99396', '99397', '99401', '99402', '99403', '99404', '99411', '99412', '99461', '99497',
+              'G0296', 'G0402', 'G0438', 'G0439', 'G0445', 'G0468', 'S0610', 'S0612', 'S0613') OR
+            ${service_provider_speciality_code} IN ('01', '08', '11', '16', '50', '97') OR
+            ${place_of_service} IN ('5', '6', '7', '8', '11', '17', '18', '49', '71', '72') THEN 'PRIMARY CARE PHYSICIAN SERVICES'
+          WHEN ${service_provider_speciality_code} IN ('02', '03',  '06', '07', '09', '10', '12', '13', '14', '18', '20', '21', '25',
+            '29', '30', '31', '33', '34', '35', '36', '39', '41', '46', '48', '51', '52', '53', '55', '56', '57', '65', '66', '67',
+            '71', '72', '76', '77', '78', '82', '84', '94', '96', 'B2', 'B5', 'C0', 'C3')
+           THEN 'SPECIALTY SERVICES'
+          ELSE 'OTHER SERVICES'
           END  ;;
   }
 
