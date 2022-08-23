@@ -126,7 +126,7 @@ view: vw_patient_demographics {
   dimension: client_name{
     type: string
     label: "Affiliation"
-    sql: 'Master AHC Medical' ;;
+    sql: 'Master AHC' ;;
   }
 
   dimension: unique_id_demo {
