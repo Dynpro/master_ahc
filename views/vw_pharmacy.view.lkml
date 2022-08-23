@@ -614,4 +614,10 @@ view: vw_pharmacy {
       <li>{{ word }}</li>
       {% endfor %} ;;
   }
+  dimension: EMPLOYER_NAME {
+    type: string
+    label: "Affiliation"
+    sql: ${TABLE}."EMPLOYER_NAME" ;;
+  }
+
 }
