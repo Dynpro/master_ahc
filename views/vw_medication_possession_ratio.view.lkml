@@ -209,4 +209,5 @@ view: vw_medication_possession_ratio {
     suggest_explore: vw_medical
     suggest_dimension: vw_medical.PARTICIPANT_NONPARTICIPANT_Flag
   }
+
 }

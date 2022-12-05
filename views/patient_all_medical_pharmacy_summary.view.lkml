@@ -3,6 +3,8 @@ view: patient_all_medical_pharmacy_summary {
     sql: select
       MP.UNIQUE_ID as UNIQUE_ID,
       MP.SERVICE_YEAR as YEAR,
+      M1.RISK_GROUP as RISK_GROUP,
+      M1.CCW_CHRONIC_CAT_LIST as CCW_CHRONIC_CAT_LIST,
       SUM(M1.TOTAL_PAID_AMT) as TOTAL_PAID_AMT_M,
       SUM(M1.CHRONIC_TOTAL_PAID_AMT) as CHRONIC_TOTAL_PAID_AMT,
       M2.DIAGNOSIS_CATEGORY_LIST as DIAGNOSIS_CATEGORY_LIST,
@@ -28,6 +30,8 @@ view: patient_all_medical_pharmacy_summary {
       (Select
       "UNIQUE_ID" as PATIENT_ID_M,
       LEFT("DIAGNOSIS_DATE", 4) as SERVICE_YEAR,
+      "RISK_GROUP" as RISK_GROUP,
+      LISTAGG(DISTINCT "CCW_CHRONIC_CAT", ' || ') within group (order by "CCW_CHRONIC_CAT" ASC) as CCW_CHRONIC_CAT_LIST,
       SUM("TOTAL_EMPLOYER_PAID_AMT") as TOTAL_PAID_AMT,
       SUM(CASE WHEN "CCW_CHRONIC_CAT" IS NULL THEN 0
       ELSE "TOTAL_EMPLOYER_PAID_AMT"
@@ -35,7 +39,7 @@ view: patient_all_medical_pharmacy_summary {
       FROM "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_MEDICAL"
       WHERE {% condition CHRONIC_CATEGORY %} "CCW_CHRONIC_CAT" {% endcondition %} AND
       {% condition DIAGNOSIS_CATEGORY %} "ICD_DISEASE_CATEGORY" {% endcondition %}
-      GROUP BY PATIENT_ID_M, SERVICE_YEAR) as M1
+      GROUP BY PATIENT_ID_M, SERVICE_YEAR,RISK_GROUP) as M1
 
       ON MP.UNIQUE_ID = M1.PATIENT_ID_M AND
       MP.SERVICE_YEAR = M1.SERVICE_YEAR
@@ -74,7 +78,7 @@ view: patient_all_medical_pharmacy_summary {
       GROUP BY PATIENT_ID_P) as P2
       ON MP.UNIQUE_ID = P2.PATIENT_ID_P
 
-      GROUP BY UNIQUE_ID, YEAR, DIAGNOSIS_CATEGORY_LIST, DIAGNOSIS_DESCRIPTION_LIST, CHRONIC_CATEGORY_LIST, PROCEDURE_DESCRIPTION_LIST,
+      GROUP BY UNIQUE_ID, YEAR, RISK_GROUP,CCW_CHRONIC_CAT_LIST, DIAGNOSIS_CATEGORY_LIST, DIAGNOSIS_DESCRIPTION_LIST, CHRONIC_CATEGORY_LIST, PROCEDURE_DESCRIPTION_LIST,
       PROCEDURE_CATEGORY_LIST, TEA_CATEGORY_LIST, DRUG_LIST, DRUG_CODE_LIST
       ;;
   }
@@ -84,7 +88,7 @@ view: patient_all_medical_pharmacy_summary {
   dimension: PATIENT_ID {
     type: string
     label: "Patient Id"
-    sql: ${TABLE}.UNIQUE_ID ;;
+    sql: ${TABLE}."UNIQUE_ID" ;;
   }
 
   dimension: reporting_year {
@@ -180,6 +184,17 @@ view: patient_all_medical_pharmacy_summary {
     sql: ${TABLE}.PROCEDURE_DESCRIPTION_LIST ;;
   }
 
+  dimension: RISK_GROUP {
+    type: string
+    sql: ${TABLE}.RISK_GROUP ;;
+  }
+
+  dimension: CCW_CHRONIC_CAT_LIST {
+    type: string
+    label: "Chronic Category"
+    sql: ${TABLE}.CCW_CHRONIC_CAT_LIST ;;
+  }
+
   measure: total_medical_paid_amt {
     type: sum
     label: "Total Med $"
@@ -190,6 +205,22 @@ view: patient_all_medical_pharmacy_summary {
     type: sum
     label: "CHRONIC TOTAL $"
     sql: ${TABLE}."CHRONIC_TOTAL_PAID_AMT" ;;
+  }
 
+  measure: RISK_GROUP_list {
+    type: string
+    label: "RISK Group"
+    sql: LISTAGG(DISTINCT ${RISK_GROUP}, ' || ') within group (order by ${RISK_GROUP} ASC) ;;
+  }
+
+  measure: Chronic_Category_list_2 {
+    type: string
+    label: "Chronic Category list"
+    sql: LISTAGG(DISTINCT ${CCW_CHRONIC_CAT_LIST}, ' || ') within group (order by ${CCW_CHRONIC_CAT_LIST} ASC) ;;
+    html: {% assign words = value | split: ' || ' %}
+          <ul>
+          {% for word in words %}
+          <li>{{ word }}</li>
+          {% endfor %} ;;
   }
 }

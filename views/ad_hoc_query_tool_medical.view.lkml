@@ -261,6 +261,7 @@ view: ad_hoc_query_tool_medical {
     sql: ${TABLE}."DIAGNOSIS_DATE" ;;
   }
 
+
   dimension: PATIENT_GENDER {
     type: string
     label: "PATIENT GENDER"
@@ -300,6 +301,15 @@ view: ad_hoc_query_tool_medical {
     label: "CHRONIC CATEGORY"
     drill_fields: [PATIENT_GENDER, CHRONIC_CATEGORY, DISEASE_CATEGORY, DISEASE_DESCRIPTION, RECONCILED_DIAGNOSIS_CODE_ICD10, PROCEDURE_DESCRIPTION, PRIMARY_PROCEDURE_CODE, PLACE_OF_SERVICE_DESCRIPTION]
     sql: ${TABLE}.CCW_CHRONIC_CAT ;;
+  }
+
+  # FOR DATA SCIENCE
+
+  dimension: ICD_CHRONIC_CAT_LIST {
+    type: string
+    label: "CHRONIC CATEGORY LIST"
+    drill_fields: [PATIENT_GENDER, CHRONIC_CATEGORY, DISEASE_CATEGORY, DISEASE_DESCRIPTION, RECONCILED_DIAGNOSIS_CODE_ICD10, PROCEDURE_DESCRIPTION, PRIMARY_PROCEDURE_CODE, PLACE_OF_SERVICE_DESCRIPTION]
+    sql: IFNULL (${TABLE}.CCW_CHRONIC_CAT,'NO CHRONIC') ;;
   }
 
   dimension: PROCEDURE_DESCRIPTION {
@@ -571,4 +581,79 @@ view: ad_hoc_query_tool_medical {
     drill_fields: [ON_BOARD_DATE_year, ON_BOARD_DATE_quarter, ON_BOARD_DATE_month, ON_BOARD_DATE_raw]
     sql: ${TABLE}."ON_BOARD_DATE" ;;
   }
+
+  dimension: benchmark_year_filter_suggestion {
+    type: string
+    hidden: yes
+    sql: ${reporting_year} - 1 ;;
+  }
+
+  parameter: benchmark_year_filter {
+    type: string
+    suggest_dimension: ad_hoc_query_tool_medical.benchmark_year_filter_suggestion
+  }
+
+  dimension: reporting_benchmark_year {
+    type: string
+    label: "SERVICE Year"
+    sql: CASE WHEN ${reporting_year} = CAST({% parameter benchmark_year_filter %} as int) THEN CAST(concat(${reporting_year}, ' ', '(Benchmark)') as string)
+      ELSE CAST(${reporting_year} as string)
+      END;;
+  }
+
+#Date Range for Executive summery
+
+  filter: date_range_filter_1 {
+    type: date
+    datatype: date
+  }
+
+  filter: date_range_filter_2 {
+    type: date
+    datatype: date
+  }
+
+  filter: date_range_filter_3 {
+    type: date
+    datatype: date
+  }
+
+  dimension: date_range_filter_dimension_1 {
+    type: string
+    sql: CONCAT({% date_start date_range_filter_1 %}, ' - ', IFNULL({% date_end date_range_filter_1 %}, '')) ;;
+  }
+
+  dimension: date_range_filter_dimension_2 {
+    type: string
+    sql: CONCAT({% date_start date_range_filter_2 %}, ' - ', IFNULL({% date_end date_range_filter_2 %}, '')) ;;
+  }
+
+  dimension: date_range_filter_dimension_3 {
+    type: string
+    sql: CONCAT({% date_start date_range_filter_3 %}, ' - ', IFNULL({% date_end date_range_filter_3 %}, '')) ;;
+  }
+
+  dimension: date_range {
+    type: string
+    sql: CASE WHEN ${reporting_date} BETWEEN {% date_start date_range_filter_1 %} AND {% date_end date_range_filter_1 %} THEN ${date_range_filter_dimension_1}
+        WHEN ${reporting_date} BETWEEN {% date_start date_range_filter_2 %} AND {% date_end date_range_filter_2 %} THEN ${date_range_filter_dimension_2}
+        WHEN ${reporting_date} BETWEEN {% date_start date_range_filter_3 %} AND {% date_end date_range_filter_3 %} THEN ${date_range_filter_dimension_3}
+        ELSE NULL
+        /*CONCAT('before  ', {% date_end date_range_filter_1 %}) */
+        END ;;
+  }
+
+
+  measure: Diagnosis_date_Min {
+    type: date
+    label: "MEDICAL Claim - START"
+    sql: MIN(${DIAGNOSIS_DATE_raw}) ;;
+  }
+
+  measure: Diagnosis_date_Max {
+    type: date
+    label: "MEDICAL Claim - END"
+    sql: MAX(${DIAGNOSIS_DATE_raw}) ;;
+  }
+
 }

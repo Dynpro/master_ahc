@@ -202,7 +202,7 @@ view: hedis_measure {
 ##CERVICAL CANCER SCREENING
   dimension: ccs_compliant {
     type: string
-    label: "CCS Comliant"
+    label: "CCS Compliant"
     sql: ${TABLE}."CCS_COMPLIANT" ;;
   }
 
@@ -215,7 +215,7 @@ view: hedis_measure {
   measure: ccs_compliant_patients {
     type: count_distinct
     filters: [ccs_compliant: "1"]
-    label: "CCS Comliant - N"
+    label: "CCS Compliant - N"
     sql: ${unique_id} ;;
   }
 
@@ -607,4 +607,5 @@ view: hedis_measure {
     value_format: "0.0\%"
     sql: ${spr_compliant_patients}/NULLIF(${spr_eligible_patients},0) *100;;
   }
+
 }

@@ -3,26 +3,30 @@ view: vw_patient_demographics {
     ;;
 
   dimension: dependent_f_name {
+    label: "Patient First Name"
     type: string
-    hidden: yes
+    hidden: no
     sql: ${TABLE}."DEPENDENT_F_NAME" ;;
   }
 
   dimension: dependent_l_name {
+    label: "Patient Last Name"
     type: string
-    hidden: yes
+    hidden: no
     sql: ${TABLE}."DEPENDENT_L_NAME" ;;
   }
 
   dimension: dependent_m_name {
+    label: "Patient Middle Name"
     type: string
-    hidden: yes
+    hidden: no
     sql: ${TABLE}."DEPENDENT_M_NAME" ;;
   }
 
   dimension: patient_name {
     type: string
-    sql: CONCAT(IFNULL(${dependent_f_name}, ''), ' ', IFNULL(${dependent_m_name}, ''), ' ', IFNULL(${dependent_l_name}, '')) ;;
+    sql: CONCAT(IFNULL(${dependent_f_name}, ''), ' ',IFF(${dependent_m_name} is NULL,'',CONCAT(${dependent_m_name},' ')),IFNULL(${dependent_l_name}, '')) ;;
+    # sql: CONCAT(IFNULL(${dependent_f_name}, ''), ' ', IFNULL(${dependent_m_name}, ''), ' ', IFNULL(${dependent_l_name}, '')) ;;
   }
 
   dimension: dependent_ssn {
@@ -77,6 +81,7 @@ view: vw_patient_demographics {
     style: integer
     sql:  ${patient_current_age};;
   }
+
   dimension: relationship_to_employee {
     type: string
     label: "RELATIONSHIP TO EMPLOYEE"
@@ -107,6 +112,7 @@ view: vw_patient_demographics {
     sql: CONCAT(${TABLE}."MEMBER_ID", ' (', ${relationship_to_employee}, ')')  ;;
     #html: <b> {{ member_id._rendered_value }} </b> ({{ relationship_to_employee._rendered_value }})   ;;
   }
+
   dimension: member_id_without_relationship{
     type: string
     label: "MEMBER ID"
@@ -126,7 +132,7 @@ view: vw_patient_demographics {
   dimension: client_name{
     type: string
     label: "Affiliation"
-    sql: 'Master AHC' ;;
+    sql: 'Crisp Regional' ;;
   }
 
   dimension: unique_id_demo {
@@ -145,5 +151,95 @@ view: vw_patient_demographics {
     label: "PARTICIPANT YEAR"
     sql: ${TABLE}."PARTICIPANT_YEAR" ;;
   }
+  dimension: TERMINATION_DATE {
+    type: date
+    label: "Eligibility Termination Date"
+    sql: ${TABLE}."TERMINATION_DATE" ;;
+  }
 
+  dimension: Current_date {
+    type: date
+    label: "Current date"
+    sql: CURRENT_DATE() ;;
+  }
+
+  dimension: termination_date_filter {
+    type: string
+    sql: CASE WHEN ${TERMINATION_DATE} > ${Current_date} OR ${TERMINATION_DATE} IS NULL THEN 'After Current date'
+      ELSE 'On/Before Current date'
+      END;;
+  }
+
+  dimension: EFFECTIVE_DATE {
+    type: date
+    label: "Eligibility Effective Date"
+    sql: ${TABLE}."EFFECTIVE_DATE" ;;
+  }
+
+  dimension: effective_date_filter {
+    type: string
+    sql: CASE WHEN DATEDIFF(day, ${Current_date}, ${EFFECTIVE_DATE}) >= -30 AND DATEDIFF(day, ${Current_date}, ${EFFECTIVE_DATE}) <= 30 THEN 'On or within 30 days before Current Date'
+          ELSE 'Outside of 30 days before Current Date'
+          END;;
+  }
+
+  dimension: Email {
+    type: string
+    label: "Patient Email Address"
+    sql: ${TABLE}."EMAIL" ;;
+  }
+
+  dimension: Address {
+    type: string
+    label: "Patient Address"
+    sql: ${TABLE}."ADDRESS" ;;
+  }
+
+  dimension: Phone {
+    type: string
+    label: "Patient Phone Number"
+    sql: ${TABLE}."PHONE" ;;
+  }
+
+  dimension: State {
+    type: string
+    label: "Patient State"
+    sql: ${TABLE}."STATE" ;;
+  }
+
+  dimension: Zip_Code {
+    type: string
+    label: "Patient Zip Code"
+    sql: ${TABLE}."ZIP" ;;
+  }
+
+  dimension: Class_Code {
+    type: string
+    label: "Class Code"
+    sql: ${TABLE}."CLASS_CODE" ;;
+  }
+
+  dimension: City {
+    type: string
+    label: "Patient City"
+    sql: ${TABLE}."CITY" ;;
+  }
+
+  dimension: member_id_with_class_code{
+    type: string
+    label: "MEMBER ID (Class Code)"
+    sql: CONCAT(${TABLE}."MEMBER_ID", ' (', ${Class_Code}, ')')  ;;
+  }
+
+  dimension: PRIMARY_INSURED_FIRSTNAME {
+    type: string
+    label: "Primary Insured First Name"
+    sql: null ;;
+  }
+
+  dimension: PRIMARY_INSURED_LASTNAME {
+    type: string
+    label: "Primary Insured Last Name"
+    sql: null ;;
+  }
 }

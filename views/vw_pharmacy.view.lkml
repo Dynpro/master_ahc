@@ -483,14 +483,14 @@ view: vw_pharmacy {
   measure: Filled_date_Min {
     type: date
     label: "PHARMACY Claim - START"
-    sql: MIN(${date_filled_raw}) ;;
+    sql: MIN(${reporting_raw}) ;;
     html: {{ rendered_value | date: "%m / %d / %Y" }} ;;
   }
 
   measure: Filled_date_Max {
     type: date
     label: "PHARMACY Claim - END"
-    sql: MAX(${date_filled_raw}) ;;
+    sql: MAX(${reporting_raw}) ;;
     html: {{ rendered_value | date: "%m / %d / %Y" }} ;;
   }
 
@@ -620,4 +620,45 @@ view: vw_pharmacy {
     sql: ${TABLE}."EMPLOYER_NAME" ;;
   }
 
+#Date Range for Executive summery
+
+  filter: date_range_filter_1 {
+    type: date
+    datatype: date
+  }
+
+  filter: date_range_filter_2 {
+    type: date
+    datatype: date
+  }
+
+  filter: date_range_filter_3 {
+    type: date
+    datatype: date
+  }
+
+  dimension: date_range_filter_dimension_1 {
+    type: string
+    sql: CONCAT({% date_start date_range_filter_1 %}, ' - ', IFNULL({% date_end date_range_filter_1 %}, '')) ;;
+  }
+
+  dimension: date_range_filter_dimension_2 {
+    type: string
+    sql: CONCAT({% date_start date_range_filter_2 %}, ' - ', IFNULL({% date_end date_range_filter_2 %}, '')) ;;
+  }
+
+  dimension: date_range_filter_dimension_3 {
+    type: string
+    sql: CONCAT({% date_start date_range_filter_3 %}, ' - ', IFNULL({% date_end date_range_filter_3 %}, '')) ;;
+  }
+
+  dimension: date_range {
+    type: string
+    sql: CASE WHEN ${reporting_date} BETWEEN {% date_start date_range_filter_1 %} AND {% date_end date_range_filter_1 %} THEN ${date_range_filter_dimension_1}
+        WHEN ${reporting_date} BETWEEN {% date_start date_range_filter_2 %} AND {% date_end date_range_filter_2 %} THEN ${date_range_filter_dimension_2}
+        WHEN ${reporting_date} BETWEEN {% date_start date_range_filter_3 %} AND {% date_end date_range_filter_3 %} THEN ${date_range_filter_dimension_3}
+        ELSE NULL
+        /*CONCAT('before  ', {% date_end date_range_filter_1 %}) */
+        END ;;
+  }
 }

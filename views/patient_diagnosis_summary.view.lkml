@@ -254,8 +254,8 @@ view: patient_diagnosis_summary {
     type: string
     label: "Reporting date"
     allowed_value: {
-      value: "Diagnosis"
-      label: "Diagnosis date"}
+      value: "Service"
+      label: "Service date"}
     allowed_value: {
       value: "Paid"
       label: "Paid date"}

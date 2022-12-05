@@ -684,4 +684,67 @@ view: ebr_measures {
         {% endif %}
       {% endfor %} ;;
   }
+
+#Cancer Screening Rate for PHM
+  measure: Breast_Cancer_Screening_Rate{
+    type: number
+    value_format: "0.0\%"
+    label: "Breast Cancer Screening Rate"
+    sql: ${individual_female_had_breast_cancer_screening_patients}/NULLIF(${individual_female_had_breast_cancer_screening_eligible_patients},0)*100 ;;
+  }
+
+  measure: Cervical_Cancer_Screening_Rate{
+    type: number
+    value_format: "0.0\%"
+    label: "Cervical Cancer Screening Rate"
+    sql: ${individual_female_had_cervical_cancer_screening_patients}/NULLIF(${individual_female_had_cervical_cancer_screening_eligible_patients},0)*100 ;;
+  }
+
+  measure: Colon_Cancer_Screening_Rate{
+    type: number
+    value_format: "0.0\%"
+    label: "Colon Cancer Screening Rate"
+    sql: ${individual_female_had_colon_cancer_screening_patients}/NULLIF(${individual_female_had_colon_cancer_screening_eligible_patients},0)*100 ;;
+  }
+
+
+  dimension: cancer_preventive_bcs_diagnosis {
+    type: string
+    sql: ${TABLE}."CANCER_PREVENTIVE_BCS_DIAGNOSIS" ;;
+  }
+
+  measure: cancer_preventive_bcs_diagnosis_patients {
+    type: count_distinct
+    filters: [cancer_preventive_bcs_diagnosis: "BREAST CANCER"]
+    label: "Breast Cancer Preventive Screening - N"
+    description: "INDIVIDUAL FEMALE HAD PREVENTIVE SCREENING FOR BREAST CANCER"
+    sql: ${unique_id} ;;
+  }
+
+  dimension: cancer_preventive_ccs_diagnosis {
+    type: string
+    sql: ${TABLE}."CANCER_PREVENTIVE_CCS_DIAGNOSIS" ;;
+  }
+
+  measure: cancer_preventive_ccs_diagnosis_patients {
+    type: count_distinct
+    filters: [cancer_preventive_ccs_diagnosis: "CERVICAL CANCER"]
+    label: "Cervical Cancer Preventive Screening - N"
+    description: "INDIVIDUAL FEMALE HAD PREVENTIVE SCREENING FOR CERVICAL CANCER"
+    sql: ${unique_id} ;;
+  }
+
+  dimension: cancer_preventive_col_diagnosis {
+    type: string
+    sql: ${TABLE}."CANCER_PREVENTIVE_COL_DIAGNOSIS" ;;
+  }
+
+  measure: cancer_preventive_col_diagnosis_patients {
+    type: count_distinct
+    filters: [cancer_preventive_col_diagnosis: "COLON CANCER"]
+    label: "Colon Cancer Preventive Screening - N"
+    description: "INDIVIDUAL FEMALE HAD PREVENTIVE SCREENING FOR COLON CANCER"
+    sql: ${unique_id} ;;
+  }
+
 }

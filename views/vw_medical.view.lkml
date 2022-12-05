@@ -531,6 +531,7 @@ view: vw_medical {
   measure: Total_Patients {
     type: count_distinct
     label: "N"
+    value_format: "0"
     sql:  ${unique_id} ;;
     drill_fields: [icd_disease_category, DIAGNOSIS_SUB_CATEGORY, icd_description, PROCEDURE_CATEGORY, PROCEDURE_SUBCATEGORY, procedure_description, icd_chronic_cat]
   }
@@ -640,7 +641,7 @@ view: vw_medical {
           END ;;
   }
 
-   dimension: Primarycare_Physician_and_Speciality {
+  dimension: Primarycare_Physician_and_Speciality {
     type: string
     label: "PCP & SPECIALTY SERVICES"
     description: "Primary care physician & Specialty services"
@@ -657,7 +658,6 @@ view: vw_medical {
           ELSE 'OTHER SERVICES'
           END  ;;
   }
-
 # Cancer Screening Eligible Population (Breast, Colon & Cervical Cancer)
   dimension: Cancer_Screening_Eligible_Population {
     type: string
@@ -891,7 +891,7 @@ view: vw_medical {
 
   dimension: Eye_Exam_Flag {
     type: string
-    hidden: yes
+    hidden: no
     sql: CASE WHEN ${primary_procedure_code} IN ('67028', '67030', '67031', '67036', '67039',
         '67040', '67041', '67042', '67043', '67101', '67105', '67107', '67108', '67110', '67112', '67113', '67121', '67141', '67145', '67208', '67210', '67218', '67220', '67221', '67227', '67228', '92002', '92004', '92012', '92014', '92018', '92019', '92225', '92226', '92230', '92235', '92240', '92250', '92260', '92203', '99204', '99205', '99213', '99214', '99215', '2022F', '2024F', '2026F', '3072F', 'S0620', 'S0621', 'S3000') THEN 'TRUE'
       ELSE 'FALSE'
@@ -1149,4 +1149,45 @@ view: vw_medical {
       {% endfor %} ;;
   }
 
+#Date Range for Executive summery
+
+  filter: date_range_filter_1 {
+    type: date
+    datatype: date
+  }
+
+  filter: date_range_filter_2 {
+    type: date
+    datatype: date
+  }
+
+  filter: date_range_filter_3 {
+    type: date
+    datatype: date
+  }
+
+  dimension: date_range_filter_dimension_1 {
+    type: string
+    sql: CONCAT({% date_start date_range_filter_1 %}, ' - ', IFNULL({% date_end date_range_filter_1 %}, '')) ;;
+  }
+
+  dimension: date_range_filter_dimension_2 {
+    type: string
+    sql: CONCAT({% date_start date_range_filter_2 %}, ' - ', IFNULL({% date_end date_range_filter_2 %}, '')) ;;
+  }
+
+  dimension: date_range_filter_dimension_3 {
+    type: string
+    sql: CONCAT({% date_start date_range_filter_3 %}, ' - ', IFNULL({% date_end date_range_filter_3 %}, '')) ;;
+  }
+
+  dimension: date_range {
+    type: string
+    sql: CASE WHEN ${reporting_date} BETWEEN {% date_start date_range_filter_1 %} AND {% date_end date_range_filter_1 %} THEN ${date_range_filter_dimension_1}
+        WHEN ${reporting_date} BETWEEN {% date_start date_range_filter_2 %} AND {% date_end date_range_filter_2 %} THEN ${date_range_filter_dimension_2}
+        WHEN ${reporting_date} BETWEEN {% date_start date_range_filter_3 %} AND {% date_end date_range_filter_3 %} THEN ${date_range_filter_dimension_3}
+        ELSE NULL
+        /*CONCAT('before  ', {% date_end date_range_filter_1 %}) */
+        END ;;
+  }
 }

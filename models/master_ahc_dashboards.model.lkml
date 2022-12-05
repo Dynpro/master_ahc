@@ -3,12 +3,12 @@ connection: "snowflake_prod"
 # include all the views
 include: "/views/**/*.view"
 
-datagroup: master_ahc_dashboards_default_datagroup {
+datagroup: crisp_regional_dashboards_default_datagroup {
   # sql_trigger: SELECT MAX(id) FROM etl_log;;
   max_cache_age: "1 hour"
 }
 
-persist_with: master_ahc_dashboards_default_datagroup
+persist_with: crisp_regional_dashboards_default_datagroup
 
 
 explore: vw_medical {
@@ -39,6 +39,13 @@ explore: vw_medical {
     relationship: many_to_one
     sql_on: ${vw_medical.unique_id} = ${vw_participant_trigger.unique_id} ;;
   }
+  join: vw_vital_alert {
+    view_label: "Vital Report"
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${vw_medical.unique_id} = ${vw_vital_alert.unique_id} AND
+      ${vw_medical.diagnosis_year} = ${vw_vital_alert.date_year};;
+  }
 }
 
 explore: vw_pharmacy {
@@ -61,6 +68,13 @@ explore: vw_pharmacy {
     type: left_outer
     relationship: many_to_one
     sql_on: ${vw_pharmacy.unique_id} = ${vw_participant_trigger.unique_id} ;;
+  }
+  join: vw_vital_alert {
+    view_label: "Vital Report"
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${vw_pharmacy.unique_id} = ${vw_vital_alert.unique_id} AND
+      LEFT(${vw_pharmacy.reporting_year}, 4) = ${vw_vital_alert.date_year};;
   }
 }
 
@@ -136,6 +150,13 @@ explore: vw_risk_group_migration {
     type: left_outer
     relationship: many_to_one
     sql_on: ${vw_risk_group_migration.Unique_id} = ${vw_participant_trigger.unique_id} ;;
+  }
+  join: patient_all_medical_pharmacy_summary {
+    view_label: "Patient Medical & Pharmacy Summary"
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${patient_all_medical_pharmacy_summary.PATIENT_ID} = ${vw_risk_group_migration.Unique_id} AND
+      ${patient_all_medical_pharmacy_summary.reporting_year} = ${vw_risk_group_migration.File_year} ;;
   }
 }
 
@@ -241,6 +262,9 @@ explore: ebr_measures {
 
 explore: vw_patient_demographics {}
 
+explore: vw_plan_year {}
+
+
 explore: vw_predictive_healthscore_index {
   join: vw_patient_demographics {
     view_label: "Patient Demographics"
@@ -249,9 +273,20 @@ explore: vw_predictive_healthscore_index {
     sql_on:  ${vw_predictive_healthscore_index.patient_id_l} = ${vw_patient_demographics.unique_id} ;;
   }
 
+   # for plan Year
+  join: vw_plan_year {
+    type: left_outer
+    relationship: one_to_one
+    sql_on:  ${vw_predictive_healthscore_index.patient_id_l} =  ${vw_plan_year.unique_id} and
+      ${vw_predictive_healthscore_index.year_file_date_l} = ${vw_plan_year.file_year};;
+  }
+
+
 }
+explore: hedis_compliance {}
 explore: icd_infographics {}
 explore: cpt_infographics {}
+
 
 explore: vw_participant_trigger {
   join: vw_patient_demographics {
@@ -262,7 +297,6 @@ explore: vw_participant_trigger {
   }
 }
 
-
 explore: patient_all_medical_pharmacy_summary { #designed for Claim Analysis summary dashboard.
   join: vw_patient_demographics {
     view_label: "Patient Demographics"
@@ -270,4 +304,32 @@ explore: patient_all_medical_pharmacy_summary { #designed for Claim Analysis sum
     relationship: many_to_one
     sql_on: ${patient_all_medical_pharmacy_summary.PATIENT_ID} = ${vw_patient_demographics.unique_id} ;;
   }
+  join: vw_participant_trigger {
+    view_label: "Participant Trigger"
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${patient_all_medical_pharmacy_summary.PATIENT_ID} = ${vw_participant_trigger.unique_id}  ;;
+
+  }
 }
+
+explore:patient_yearly_total_avg_spend_comparison{
+  join: vw_patient_demographics {
+    view_label: "Patient Demographics"
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${patient_yearly_total_avg_spend_comparison.patients_id} = ${vw_patient_demographics.unique_id};;
+  }
+}
+
+explore : vw_vital_alert{
+  join: vw_patient_demographics {
+    view_label: "Patient Demographics"
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${vw_vital_alert.unique_id} = ${vw_patient_demographics.unique_id} ;;
+  }
+}
+
+explore: hedis_compliance_percent{}
+explore: compliance_summary {}

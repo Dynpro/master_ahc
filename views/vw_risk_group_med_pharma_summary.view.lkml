@@ -24,20 +24,20 @@ view: vw_risk_group_med_pharma_summary {
           AND
 
 
-            UNIQUE_ID IN (select DISTINCT UNIQUE_ID from "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_PHARMACY"
-            WHERE
-                {% condition ACE_INHIBITOR_DRUGS %} "ACE_INHIBITOR" {% endcondition %} AND
-                {% condition STATIN_DRUGS %} "STATIN" {% endcondition %} AND
-                {% condition BETA_BLOCKER_DRUGS %} "BETA_BLOCKER" {% endcondition %} AND
-                {% condition ARB_DRUGS %} "ARB" {% endcondition %} AND
-                {% condition DRI_DRUGS %} "DRI" {% endcondition %} AND
-                {% condition BLACK_LABEL_DRUG %} "BLACK_LABEL_DRUG" {% endcondition %} AND
-                {% condition SPECIALTY_DRUGS %} "SPECIALTY_DRUGS" {% endcondition %} AND
-                {% condition MAINTENANCE_DRUGS %} "MAINTENANCE" {% endcondition %} AND
-                {% condition DIGESTIVE_DISEASE_DRUGS %} "DIGESTIVE_DISEASE" {% endcondition %} AND
-                {% condition BRAND_OR_GENERIC %} "BRAND_OR_GENERIC" {% endcondition %})
+      UNIQUE_ID IN (select DISTINCT UNIQUE_ID from "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_PHARMACY"
+      WHERE
+      {% condition ACE_INHIBITOR_DRUGS %} "ACE_INHIBITOR" {% endcondition %} AND
+      {% condition STATIN_DRUGS %} "STATIN" {% endcondition %} AND
+      {% condition BETA_BLOCKER_DRUGS %} "BETA_BLOCKER" {% endcondition %} AND
+      {% condition ARB_DRUGS %} "ARB" {% endcondition %} AND
+      {% condition DRI_DRUGS %} "DRI" {% endcondition %} AND
+      {% condition BLACK_LABEL_DRUG %} "BLACK_LABEL_DRUG" {% endcondition %} AND
+      {% condition SPECIALTY_DRUGS %} "SPECIALTY_DRUGS" {% endcondition %} AND
+      {% condition MAINTENANCE_DRUGS %} "MAINTENANCE" {% endcondition %} AND
+      {% condition DIGESTIVE_DISEASE_DRUGS %} "DIGESTIVE_DISEASE" {% endcondition %} AND
+      {% condition BRAND_OR_GENERIC %} "BRAND_OR_GENERIC" {% endcondition %})
 
-    ;;
+      ;;
   }
   drill_fields: [Unique_id, File_year, Risk_group, Total_paid_amt, Mean_paid_amt, Chronic, Chronic_count, Comorbid, Comorbid_count]
 
