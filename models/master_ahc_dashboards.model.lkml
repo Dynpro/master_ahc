@@ -331,5 +331,14 @@ explore : vw_vital_alert{
   }
 }
 
+explore: patient_migration_across_years_summary {
+  label: "Patient Yearly Migration summary"
+  join: vw_patient_demographics {
+    view_label: "Patient Demographics"
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${patient_migration_across_years_summary.UNIQUE_ID} = ${vw_patient_demographics.unique_id} ;;
+  }
+}
 explore: hedis_compliance_percent{}
 explore: compliance_summary {}
