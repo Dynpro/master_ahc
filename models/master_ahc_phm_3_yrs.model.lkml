@@ -54,3 +54,8 @@ explore: vw_preventive_screening {
   label: "Preventive Screening"
   sql_always_having: ${year} IN ('2020', '2021','2022') ;;
 }
+
+explore: ebr_measures {
+  label: "EBR Measures"
+  sql_always_where: ${year} IN ('2020', '2021', '2022') ;;
+}

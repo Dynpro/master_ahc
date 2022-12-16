@@ -132,7 +132,7 @@ view: vw_patient_demographics {
   dimension: client_name{
     type: string
     label: "Affiliation"
-    sql: 'Crisp Regional' ;;
+    sql: 'Master AHC' ;;
   }
 
   dimension: unique_id_demo {
