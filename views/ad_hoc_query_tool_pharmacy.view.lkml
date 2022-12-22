@@ -551,4 +551,17 @@ view: ad_hoc_query_tool_pharmacy {
         END ;;
   }
 
+  measure: Date_Filled_Min {
+    type: date
+    label: "PHARMACY Claim - START"
+    sql: MIN(${SERVICE_DATE_raw}) ;;
+    html: {{ rendered_value | date: "%m / %d / %Y" }} ;;
+  }
+
+  measure: Date_Filled_Max {
+    type: date
+    label: "PHARMACY Claim - END"
+    sql: MAX(${SERVICE_DATE_raw}) ;;
+    html: {{ rendered_value | date: "%m / %d / %Y" }} ;;
+  }
 }

@@ -648,12 +648,14 @@ view: ad_hoc_query_tool_medical {
     type: date
     label: "MEDICAL Claim - START"
     sql: MIN(${DIAGNOSIS_DATE_raw}) ;;
+    html: {{ rendered_value | date: "%m / %d / %Y" }} ;;
   }
 
   measure: Diagnosis_date_Max {
     type: date
     label: "MEDICAL Claim - END"
     sql: MAX(${DIAGNOSIS_DATE_raw}) ;;
+    html: {{ rendered_value | date: "%m / %d / %Y" }} ;;
   }
 
 }
