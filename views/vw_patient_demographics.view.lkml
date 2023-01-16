@@ -135,7 +135,6 @@ view: vw_patient_demographics {
     sql: ${TABLE}."EMPLOYER_NAME" ;;
   }
 
-
   dimension: unique_id_demo {
     type: string
     sql: CONCAT(${dependent_f_name}, ${dependent_l_name}, ${patient_dob_raw}, ${patient_gender}) ;;
@@ -242,5 +241,11 @@ view: vw_patient_demographics {
     type: string
     label: "Primary Insured Last Name"
     sql: null ;;
+  }
+
+  measure: Total_Patients {
+    type: count_distinct
+    label: "N"
+    sql:  ${unique_id} ;;
   }
 }
