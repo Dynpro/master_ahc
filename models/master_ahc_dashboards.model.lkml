@@ -283,7 +283,7 @@ explore: vw_predictive_healthscore_index {
 
 
 }
-explore: hedis_compliance {}
+
 explore: icd_infographics {}
 explore: cpt_infographics {}
 
