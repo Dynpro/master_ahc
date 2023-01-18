@@ -46,6 +46,11 @@ explore: vw_medical {
     sql_on: ${vw_medical.unique_id} = ${vw_vital_alert.unique_id} AND
       ${vw_medical.diagnosis_year} = ${vw_vital_alert.date_year};;
   }
+  join : patient_migration_across_years_summary{
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${vw_medical.unique_id} = ${patient_migration_across_years_summary.UNIQUE_ID}  ;;
+  }
 }
 
 explore: vw_pharmacy {
