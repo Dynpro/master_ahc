@@ -643,7 +643,6 @@ view: ad_hoc_query_tool_medical {
         END ;;
   }
 
-
   measure: Diagnosis_date_Min {
     type: date
     label: "MEDICAL Claim - START"

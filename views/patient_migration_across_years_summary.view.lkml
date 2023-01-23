@@ -77,6 +77,12 @@ view: patient_migration_across_years_summary {
     sql: ${TABLE}."TARGET_PARTICIPANT_PROGRAM_NAME" ;;
   }
 
+  dimension: reference_year_participant_program_name {
+    label: "Reference year & Participant Program Name "
+    type: string
+    sql: CONCAT(${REFERENCE_YEAR}, ' - ', ${REFERENCE_PARTICIPANT_PROGRAM_NAME}) ;;
+  }
+
   measure: total_patients {
     type: count_distinct
     sql: ${UNIQUE_ID} ;;
