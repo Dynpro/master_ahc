@@ -531,7 +531,7 @@ view: vw_medical {
   measure: Total_Patients {
     type: count_distinct
     label: "N"
-    value_format: "0"
+    #value_format: "0"
     sql:  ${unique_id} ;;
     drill_fields: [icd_disease_category, DIAGNOSIS_SUB_CATEGORY, icd_description, PROCEDURE_CATEGORY, PROCEDURE_SUBCATEGORY, procedure_description, icd_chronic_cat]
   }
