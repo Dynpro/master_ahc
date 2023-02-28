@@ -2,8 +2,8 @@ view: patient_yearly_total_avg_spend_comparison {
   label: "Patient Avergae comparison (Yearly)"
   derived_table: {
     sql: SELECT
-        MP.UNIQUE_ID as UNIQUE_ID,
-        MP.SERVICE_YEAR as SERVICE_YEAR,
+          MP.UNIQUE_ID as UNIQUE_ID,
+          MP.SERVICE_YEAR as SERVICE_YEAR,
 
       MEDICAL_SUMMARY.TOTAL_PATIENT_YEARLY_PAID_AMT as TOTAL_PATIENT_YEARLY_PAID_AMT_M,
       MEDICAL_SUMMARY.TOTAL_SPEND_YEARLY as TOTAL_SPEND_YEARLY_M,
@@ -22,7 +22,13 @@ view: patient_yearly_total_avg_spend_comparison {
       PHARMA_SUMMARY.AVERAGE_SPEND_YEARLY as AVERAGE_SPEND_YEARLY_P,
       PHARMA_SUMMARY.TOTAL_PAID_AMT_ALL_YEARS as TOTAL_PAID_AMT_ALL_YEARS_P,
       PHARMA_SUMMARY.TOTAL_PATIENTS_ALL_YEARS as TOTAL_PATIENTS_ALL_YEARS_P,
-      PHARMA_SUMMARY.AVERAGE_SPEND_ALL_YEARS as AVERAGE_SPEND_ALL_YEARS_P
+      PHARMA_SUMMARY.AVERAGE_SPEND_ALL_YEARS as AVERAGE_SPEND_ALL_YEARS_P,
+
+      CHRONIC_AVG.CHRONIC_TOTAL_SPEND_YEARLY AS CHRONIC_TOTAL_SPEND_YEARLY,
+      CHRONIC_AVG.CHRONIC_TOTAL_PATIENTS_YEARLY AS CHRONIC_TOTAL_PATIENTS_YEARLY,
+      CHRONIC_AVG.CHRONIC_AVERAGE_SPEND_YEARLY AS CHRONIC_AVERAGE_SPEND_YEARLY,
+      CHRONIC_AVG.CHRONIC_TOTAL_PATIENT_YEARLY_PAID_AMT AS CHRONIC_TOTAL_PATIENT_YEARLY_PAID_AMT
+
       FROM
       (SELECT SERVICE_YEAR, UNIQUE_ID FROM /*To get all Patient's ID from both medical & pharmacy data*/
       ((SELECT LEFT("DIAGNOSIS_DATE", 4) AS SERVICE_YEAR, "UNIQUE_ID" FROM "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_MEDICAL"
@@ -78,7 +84,54 @@ view: patient_yearly_total_avg_spend_comparison {
       {% condition PARTICIPANT_PROGRAM_NAME %} "PARTICIPANT_PROGRAM_NAME" {% endcondition %}) as PHARMA_SUMMARY
       ON MP.SERVICE_YEAR = PHARMA_SUMMARY.SERVICE_YEAR
       AND MP.UNIQUE_ID = PHARMA_SUMMARY.PATIENT_ID_M
+
+      JOIN
+
+      (Select DISTINCT
+      "UNIQUE_ID" as PATIENT_ID_M,
+      LEFT("DIAGNOSIS_DATE", 4) as SERVICE_YEAR,
+      SUM("TOTAL_EMPLOYER_PAID_AMT") OVER (PARTITION BY SERVICE_YEAR, PATIENT_ID_M) as CHRONIC_TOTAL_PATIENT_YEARLY_PAID_AMT,
+      SUM("TOTAL_EMPLOYER_PAID_AMT") OVER (PARTITION BY SERVICE_YEAR) AS CHRONIC_TOTAL_SPEND_YEARLY,
+      COUNT(DISTINCT "UNIQUE_ID") OVER (PARTITION BY SERVICE_YEAR) AS CHRONIC_TOTAL_PATIENTS_YEARLY,
+      (CASE WHEN CHRONIC_TOTAL_PATIENTS_YEARLY <> 0 THEN CHRONIC_TOTAL_SPEND_YEARLY/CHRONIC_TOTAL_PATIENTS_YEARLY
+      ELSE 0
+      END) as CHRONIC_AVERAGE_SPEND_YEARLY
+      FROM "DB_KAIROS_PROD"."SCH_AHC_CRISP_REGIONAL"."LKR_TAB_MEDICAL"
+      WHERE "CCW_CHRONIC_CAT" IS NOT NULL AND
+      {% condition PARTICIPANT_FLAG %} "PARTICIPANT_FLAG" {% endcondition %} AND
+      {% condition PARTICIPANT_PROGRAM_NAME %} "PARTICIPANT_PROGRAM_NAME" {% endcondition %}) AS CHRONIC_AVG
+      ON MP.SERVICE_YEAR = CHRONIC_AVG.SERVICE_YEAR
+      AND MP.UNIQUE_ID = CHRONIC_AVG.PATIENT_ID_M
       ;;
+  }
+
+  dimension: chronic_total_amount {
+    type: string
+    sql: ${TABLE}."CHRONIC_TOTAL_PATIENT_YEARLY_PAID_AMT" ;;
+    value_format: "$#,##0"
+  }
+
+  dimension: chronic_total_amount_yearly {
+    type: string
+    sql: ${TABLE}."CHRONIC_TOTAL_SPEND_YEARLY" ;;
+  }
+
+  dimension: chronic_total_patients_yearly {
+    type: string
+    sql: ${TABLE}."CHRONIC_TOTAL_PATIENTS_YEARLY" ;;
+  }
+
+  dimension: chronic_average_amount_yearly {
+    type: string
+    sql: ${TABLE}."CHRONIC_AVERAGE_SPEND_YEARLY" ;;
+    value_format: "$#,##0.00"
+  }
+
+  dimension: patient_total_chronic_spend_vs_avg_chronic_spend_medical {
+    type: string
+    sql: CASE WHEN ${chronic_total_amount} >= ${chronic_average_amount_yearly} THEN 'Greater than Year Average Spend'
+      ELSE 'Less than Year Average Spend'
+      END ;;
   }
 
   filter: PARTICIPANT_FLAG {
