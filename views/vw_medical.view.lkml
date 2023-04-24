@@ -576,7 +576,7 @@ view: vw_medical {
   dimension: ICD_MAJOR_DISEASE {
     type: string
     label: "DIABETES ?"
-    sql: ${TABLE}."ICD_MAJOR_DISEASE" ;;
+    sql: ${TABLE}."CCW_CHRONIC_CAT" ;;
   }
 
   dimension: Chronic_vs_Acute {
