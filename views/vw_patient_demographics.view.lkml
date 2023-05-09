@@ -3,21 +3,21 @@ view: vw_patient_demographics {
     ;;
 
   dimension: dependent_f_name {
-    label: "Patient First Name"
+    label: "Member First Name"
     type: string
     hidden: no
     sql: ${TABLE}."DEPENDENT_F_NAME" ;;
   }
 
   dimension: dependent_l_name {
-    label: "Patient Last Name"
+    label: "Member Last Name"
     type: string
     hidden: no
     sql: ${TABLE}."DEPENDENT_L_NAME" ;;
   }
 
   dimension: dependent_m_name {
-    label: "Patient Middle Name"
+    label: "Member Middle Name"
     type: string
     hidden: no
     sql: ${TABLE}."DEPENDENT_M_NAME" ;;
@@ -25,6 +25,7 @@ view: vw_patient_demographics {
 
   dimension: patient_name {
     type: string
+    label: "Member Name"
     sql: CONCAT(IFNULL(${dependent_f_name}, ''), ' ',IFF(${dependent_m_name} is NULL,'',CONCAT(${dependent_m_name},' ')),IFNULL(${dependent_l_name}, '')) ;;
     # sql: CONCAT(IFNULL(${dependent_f_name}, ''), ' ', IFNULL(${dependent_m_name}, ''), ' ', IFNULL(${dependent_l_name}, '')) ;;
   }
@@ -52,24 +53,31 @@ view: vw_patient_demographics {
     ]
     convert_tz: no
     datatype: date
-    label: "Patient DOB"
+    label: "Member DOB"
     sql: ${TABLE}."PATIENT_DOB" ;;
   }
 
   dimension: patient_dob1 {
-    label: "PATIENT DOB"
+    label: "Member DOB"
     type: string
     sql: ${TABLE}."PATIENT_DOB" ;;
   }
 
   dimension: patient_gender {
+    label: "Member Gender"
     type: string
     sql: ${TABLE}."PATIENT_GENDER" ;;
   }
 
   dimension: patient_current_age {
     type: number
-    label: "Patient Age"
+    label: "Member Age"
+    sql: DATEDIFF( year, ${patient_dob_raw}, CURRENT_DATE()) ;;
+  }
+
+  dimension: patient_current_age1 {
+    type: string
+    label: "Current Patient Age"
     sql: DATEDIFF( year, ${patient_dob_raw}, CURRENT_DATE()) ;;
   }
 
@@ -94,6 +102,7 @@ view: vw_patient_demographics {
     sql: ${TABLE}."UNIQUE_ID" ;;
   }
 
+
   measure: count {
     type: count
     hidden: yes
@@ -106,13 +115,18 @@ view: vw_patient_demographics {
     sql: ${TABLE}."PARTICIPANT_PROGRAM_NAME";;
   }
 
+  dimension: PATIENT_ACTIVE_FLAG{
+    type: string
+    label: "MEMBER ACTIVE FLAG"
+    sql: ${TABLE}."ACTIVE";;
+  }
+
   dimension: member_id{
     type: string
     label: "MEMBER ID (Relationship)"
     sql: CONCAT(${TABLE}."MEMBER_ID", ' (', ${relationship_to_employee}, ')')  ;;
-    #html: <b> {{ member_id._rendered_value }} </b> ({{ relationship_to_employee._rendered_value }})   ;;
+    # html: <b> {{ member_id._rendered_value }} </b> ({{ relationship_to_employee._rendered_value }})   ;;
   }
-
   dimension: member_id_without_relationship{
     type: string
     label: "MEMBER ID"
@@ -125,6 +139,7 @@ view: vw_patient_demographics {
   }
 
   dimension: patient_name_member_id {
+    label: "Member Name Member ID"
     type: string
     sql: CONCAT(${patient_name}, ' (', ${member_id_list}, ')')   ;;
   }
@@ -151,6 +166,7 @@ view: vw_patient_demographics {
     label: "PARTICIPANT YEAR"
     sql: ${TABLE}."PARTICIPANT_YEAR" ;;
   }
+
   dimension: TERMINATION_DATE {
     type: date
     label: "Eligibility Termination Date"
@@ -185,31 +201,31 @@ view: vw_patient_demographics {
 
   dimension: Email {
     type: string
-    label: "Patient Email Address"
+    label: "Member Email Address"
     sql: ${TABLE}."EMAIL" ;;
   }
 
   dimension: Address {
     type: string
-    label: "Patient Address"
+    label: "Member Address"
     sql: ${TABLE}."ADDRESS" ;;
   }
 
   dimension: Phone {
     type: string
-    label: "Patient Phone Number"
+    label: "Member Phone Number"
     sql: ${TABLE}."PHONE" ;;
   }
 
   dimension: State {
     type: string
-    label: "Patient State"
+    label: "Member State"
     sql: ${TABLE}."STATE" ;;
   }
 
   dimension: Zip_Code {
     type: string
-    label: "Patient Zip Code"
+    label: "Member Zip Code"
     sql: ${TABLE}."ZIP" ;;
   }
 
@@ -221,7 +237,7 @@ view: vw_patient_demographics {
 
   dimension: City {
     type: string
-    label: "Patient City"
+    label: "Member City"
     sql: ${TABLE}."CITY" ;;
   }
 
@@ -229,7 +245,9 @@ view: vw_patient_demographics {
     type: string
     label: "MEMBER ID (Class Code)"
     sql: CONCAT(${TABLE}."MEMBER_ID", ' (', ${Class_Code}, ')')  ;;
+
   }
+
 
   dimension: PRIMARY_INSURED_FIRSTNAME {
     type: string
@@ -243,9 +261,76 @@ view: vw_patient_demographics {
     sql: null ;;
   }
 
+  dimension: Medical {
+    type: string
+    label: "Medical"
+    sql: ${TABLE}."MEDICAL" ;;
+  }
+
+  dimension: Pharmacy {
+    type: string
+    label: "Pharmacy"
+    sql: ${TABLE}."PHARMA" ;;
+  }
+
+  dimension: Eligibility {
+    type: string
+    label: "Eligibility"
+    sql: ${TABLE}."ELIG" ;;
+  }
+
+  measure: Medical_Patients {
+    type: sum
+    label: "Medical - N"
+    sql: ${Medical} ;;
+  }
+
+  measure: Pharmacy_Patients {
+    type: sum
+    label: "Pharmacy - N"
+    sql: ${TABLE}."PHARMA" ;;
+  }
+
+  measure: Eligibility_Patients {
+    type: sum
+    label: "Eligibility - N"
+    sql: ${TABLE}."ELIG" ;;
+  }
+
   measure: Total_Patients {
     type: count_distinct
     label: "N"
+    # value_format: "#,##0"
     sql:  ${unique_id} ;;
+  }
+
+  measure: PARTICIPANT_PROGRAM_NAME_1{
+    type: string
+    label: "PARTICIPANT PROGRAM NAME 1"
+    sql: ${TABLE}."PARTICIPANT_PROGRAM_NAME";;
+  }
+
+  dimension: onboard_status{
+    type: string
+    label: "Onboard Status"
+    sql: ${TABLE}."ONBOARD_STATUS" ;;
+  }
+
+  dimension_group: ON_BOARD_DATE {
+    type: time
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    convert_tz: no
+    datatype: date
+    label: "ON BOARD DATE"
+    drill_fields: [ON_BOARD_DATE_year, ON_BOARD_DATE_quarter, ON_BOARD_DATE_month, ON_BOARD_DATE_raw]
+    sql: ${TABLE}."ON_BOARD_DATE" ;;
+
   }
 }

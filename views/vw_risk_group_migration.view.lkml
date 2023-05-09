@@ -254,6 +254,7 @@ view: vw_risk_group_migration {
     label: "Chronic Category"
     sql: ${TABLE}."CHRONIC_CAT";;
   }
+
 ## Used in Referral List Dashboard
 
   dimension: Risk_Group_1 {

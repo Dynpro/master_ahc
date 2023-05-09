@@ -186,12 +186,13 @@ view: vw_medication_possession_ratio {
 
   dimension: year {
     type: number
-    label: "Year"
+    label: "YEAR"
     sql: ${TABLE}."YEAR" ;;
     value_format: "0"
   }
 
   measure: Total_Patients {
+    label: "Total Members"
     type: count_distinct
     sql: ${unique_id} ;;
   }

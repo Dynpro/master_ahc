@@ -29,19 +29,19 @@ view: vw_combine_data {
 
   dimension: dependent_f_name {
     type: string
-    label: "Patient First Name"
+    label: "Member First Name"
     sql: ${TABLE}."DEPENDENT_F_NAME" ;;
   }
 
   dimension: dependent_l_name {
     type: string
-    label: "Patient Last Name"
+    label: "Member Last Name"
     sql: ${TABLE}."DEPENDENT_L_NAME" ;;
   }
 
   dimension: dependent_m_name {
     type: string
-    label: "Patient Middle Name"
+    label: "Member Middle Name"
     sql: ${TABLE}."DEPENDENT_M_NAME" ;;
   }
 
@@ -152,6 +152,7 @@ view: vw_combine_data {
 
   dimension: patient_age {
     type: number
+    label: "Member Age"
     sql: ${TABLE}."PATIENT_AGE" ;;
   }
 
@@ -167,11 +168,13 @@ view: vw_combine_data {
     ]
     convert_tz: no
     datatype: date
+    label: "Member DOB"
     sql: ${TABLE}."PATIENT_DOB" ;;
   }
 
   dimension: patient_gender {
     type: string
+    label: "Member Gender"
     sql: ${TABLE}."PATIENT_GENDER" ;;
   }
 

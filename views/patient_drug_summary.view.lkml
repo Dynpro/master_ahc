@@ -20,7 +20,7 @@ view: patient_drug_summary {
   dimension: PATIENT_ID {
     type: string
     drill_fields: [vw_pharmacy.tea_category, vw_pharmacy.drug_name]
-    label: "Patient Id"
+    label: "Member Id"
     sql: ${TABLE}.PATIENT_ID_M ;;
   }
 
@@ -166,7 +166,6 @@ view: patient_drug_summary {
     label: "Total Summary $"
     sql: ${TABLE}.TOTAL_PAID_AMT ;;
   }
-
   parameter: reporting_date_filter {
     type: string
     label: "Reporting date"

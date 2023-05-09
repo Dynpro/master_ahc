@@ -47,7 +47,7 @@ view: vw_pharmacy {
 
   dimension: class_code {
     type: number
-    hidden: yes
+    hidden: no
     sql: ${TABLE}."CLASS_CODE" ;;
   }
 
@@ -64,23 +64,14 @@ view: vw_pharmacy {
     ]
     convert_tz: no
     datatype: date
+    drill_fields: [date_filled_year,date_filled_quarter,date_filled_month,date_filled_raw]
     sql: ${TABLE}."DATE_FILLED" ;;
   }
 
-  dimension_group: paid_date {
-    type: time
-    label: "FILLED"
-    timeframes: [
-      raw,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    convert_tz: no
-    datatype: date
-    sql: ${TABLE}."PAID_DATE" ;;
+  dimension: Year {
+    type: number
+    sql: ${date_filled_year} ;;
+    value_format: "0"
   }
 
   dimension: days_supply {
@@ -187,7 +178,7 @@ view: vw_pharmacy {
 
   dimension: member_age {
     type: number
-    label: "PATIENT AGE"
+    label: "MEMBER AGE"
     sql: ${TABLE}."MEMBER_AGE" ;;
   }
 
@@ -214,7 +205,7 @@ view: vw_pharmacy {
 
   dimension: member_sex {
     type: string
-    label: "PATIENT GENDER"
+    label: "MEMBER GENDER"
     sql: ${TABLE}."MEMBER_SEX" ;;
   }
 
@@ -428,7 +419,7 @@ view: vw_pharmacy {
   dimension: unique_id {
     type: string
     primary_key: yes
-    hidden: no
+    hidden: yes
     sql: ${TABLE}."UNIQUE_ID" ;;
   }
 
@@ -441,7 +432,7 @@ view: vw_pharmacy {
   measure: employer_paid_amount {
     type: sum
     label: "TOTAL $"
-    drill_fields: [tea_category, drug_name, drug_code]
+    drill_fields: [drug_code,drug_name,tea_category,employer_paid_amount]
     sql: ${total_employer_paid_amt} ;;
     value_format: "$#,##0"
   }
@@ -496,13 +487,14 @@ view: vw_pharmacy {
 
   dimension: PARTICIPANT_NONPARTICIPANT_Flag {
     type: string
-    hidden:  no
+    hidden:  yes
     sql: ${TABLE}."PARTICIPANT_FLAG" ;;
   }
 
+
   dimension: participant_paid_year {
     type: string
-    hidden: yes
+    hidden: no
     sql: ${ON_BOARD_DATE_year} ;;
   }
 
@@ -527,6 +519,23 @@ view: vw_pharmacy {
 
   }
 
+  dimension_group: paid_date {
+    type: time
+    label: "FILLED"
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    convert_tz: no
+    datatype: date
+    drill_fields: [paid_date_year,paid_date_quarter,paid_date_month,paid_date_raw]
+    sql: ${TABLE}."PAID_DATE" ;;
+  }
+
   parameter: reporting_date_filter {
     type: string
     label: "Reporting date"
@@ -537,7 +546,6 @@ view: vw_pharmacy {
       value: "Paid"
       label: "Paid date"}
   }
-
   dimension_group: reporting {
     type: time
     timeframes: [
@@ -574,7 +582,6 @@ view: vw_pharmacy {
     drill_fields: [ON_BOARD_DATE_year, ON_BOARD_DATE_quarter, ON_BOARD_DATE_month, ON_BOARD_DATE_raw]
     sql: ${TABLE}."ON_BOARD_DATE" ;;
   }
-
 
 #Benchmark labelling, HEDIS list of defined measures, Rendering & $ based on previous months
   dimension: benchmark_year_filter_suggestion {
@@ -615,8 +622,9 @@ view: vw_pharmacy {
       {% endfor %} ;;
   }
 
-  dimension: employer_name {
+  dimension: EMPLOYER_NAME {
     type: string
+    label: "Affiliation"
     sql: ${TABLE}."EMPLOYER_NAME" ;;
   }
 

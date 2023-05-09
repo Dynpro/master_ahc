@@ -61,6 +61,7 @@ view: vw_preventive_screening {
     type: string
     label: "DIAGNOSIS YEAR"
     sql: ${TABLE}."YEAR" ;;
+    value_format: "0"
   }
 
   measure: Total_Patients {

@@ -13,7 +13,8 @@ view: ad_hoc_query_tool_pharmacy {
           "TEA_CATEGORY" as TEA_Cat_List,
           "MEMBER_AGE" as MEMBER_AGE,
           "PARTICIPANT_PROGRAM_NAME" as PARTICIPANT_PROGRAM_NAME,
-          "PARTICIPANT_FLAG" as PARTICIPANT_FLAG,
+          "ON_BOARD_DATE" AS ON_BOARD_DATE,
+          "PARTICIPANT_FLAG" AS PARTICIPANT_FLAG,
           "ON_BOARD_DATE" AS ON_BOARD_DATE
         from
         "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_PHARMACY"
@@ -55,7 +56,7 @@ view: ad_hoc_query_tool_pharmacy {
       {% condition CHRONIC_OR_NOT %} "CHRONICITY_IDENTIFIER" {% endcondition %} AND
       {% condition AVOIDABLE_ER_OR_NOT %} "ICD_AVOIDABLE_ER" {% endcondition %} AND
       {% condition DIGESTIVE_DISEASE_OR_NOT %} "ICD_DIGESTIVE_DISEASE" {% endcondition %} AND
-      {% condition PARTICIPANT_YEAR %} LEFT("PAID_DATE", 4) {% endcondition %} AND
+      {% condition PARTICIPANT_YEAR %} LEFT("ON_BOARD_DATE", 4) {% endcondition %} AND
       {% condition PARTICIPANT_Flag %} "PARTICIPANT_FLAG" {% endcondition %})
       ;;
   }
@@ -314,8 +315,7 @@ view: ad_hoc_query_tool_pharmacy {
     ]
     convert_tz: no
     datatype: date
-    drill_fields: [SERVICE_DATE_year, SERVICE_DATE_quarter, SERVICE_DATE_month, SERVICE_DATE_raw]
-    sql: ${TABLE}."DATE_FILLED" ;; #Column mapping changed from SERVICE_DATE to DATE_FILLED - we are removing SERVICE_DATE label from all reporting.
+    sql: ${TABLE}."DATE_FILLED" ;;#Column mapping changed from SERVICE_DATE to DATE_FILLED - we are removing SERVICE_DATE label from all reporting.
   }
 
   dimension_group: PAID_DATE {
@@ -337,7 +337,7 @@ view: ad_hoc_query_tool_pharmacy {
 
   dimension: Unique_Id_P {
     type: string
-    hidden: yes
+    hidden: no
     label: "Unique Id_P"
     sql: ${TABLE}.PATIENT_ID_P ;;
   }
@@ -403,7 +403,7 @@ view: ad_hoc_query_tool_pharmacy {
 
   dimension: member_age {
     type: number
-    label: "MEMBER_AGE"
+    label: "MEMBER AGE"
     sql: ${TABLE}."MEMBER_AGE" ;;
   }
 

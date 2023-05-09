@@ -23,7 +23,6 @@ view: ad_hoc_query_tool_medical {
           "PLACE_OF_SERVICE_DESCRIPTION" as PLACE_OF_SERVICE_DESCRIPTION,
           "SERVICE_PROVIDER_SPECIALITY_CODE_DESC" as SERVICE_PROVIDER_SPECIALITY_CODE_DESC,
           "PARTICIPANT_PROGRAM_NAME" as PARTICIPANT_PROGRAM_NAME,
-          "PARTICIPANT_FLAG" as PARTICIPANT_FLAG,
           "ON_BOARD_DATE" AS ON_BOARD_DATE
          from
         "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_MEDICAL"
@@ -50,7 +49,7 @@ view: ad_hoc_query_tool_medical {
             {% condition DIGESTIVE_DISEASE_OR_NOT %} "ICD_DIGESTIVE_DISEASE" {% endcondition %} AND
 
       "UNIQUE_ID" IN (select DISTINCT "UNIQUE_ID" from  "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_MEDICAL"
-      WHERE {% condition PARTICIPANT_YEAR %} LEFT("PAID_DATE", 4) {% endcondition %} AND
+      WHERE {% condition PARTICIPANT_YEAR %} LEFT("ON_BOARD_DATE", 4) {% endcondition %} AND
       {% condition PARTICIPANT_Flag %} "PARTICIPANT_FLAG" {% endcondition %}) AND
 
       UNIQUE_ID IN (Select DISTINCT UNIQUE_ID from "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_PHARMACY"
@@ -222,8 +221,8 @@ view: ad_hoc_query_tool_medical {
   dimension: PATIENT_ID {
     type: string
     primary_key: yes
-    label: "PATIENT ID"
-    hidden: yes
+    label: "MEMBER ID"
+    hidden: no
     sql: ${TABLE}.PATIENT_ID_M ;;
   }
 
@@ -261,10 +260,9 @@ view: ad_hoc_query_tool_medical {
     sql: ${TABLE}."DIAGNOSIS_DATE" ;;
   }
 
-
   dimension: PATIENT_GENDER {
     type: string
-    label: "PATIENT GENDER"
+    label: "MEMBER GENDER"
     drill_fields: [RELATIONSHIP_TO_EMPLOYEE, CHRONIC_CATEGORY, DISEASE_CATEGORY, DISEASE_SUB_CATEGORY, DISEASE_DESCRIPTION, RECONCILED_DIAGNOSIS_CODE_ICD10, PROCEDURE_CATEGORY, PROCEDURE_SUB_CATEGORY, PROCEDURE_DESCRIPTION, PRIMARY_PROCEDURE_CODE, PLACE_OF_SERVICE_DESCRIPTION]
     sql: ${TABLE}.PATIENT_GENDER ;;
   }
@@ -303,8 +301,7 @@ view: ad_hoc_query_tool_medical {
     sql: ${TABLE}.CCW_CHRONIC_CAT ;;
   }
 
-  # FOR DATA SCIENCE
-
+# FOR DATA SCIENCE PREDICTIVE
   dimension: ICD_CHRONIC_CAT_LIST {
     type: string
     label: "CHRONIC CATEGORY LIST"
@@ -359,7 +356,7 @@ view: ad_hoc_query_tool_medical {
 
   dimension: PATIENT_AGE {
     type: string
-    label: "PATIENT AGE"
+    label: "MEMBER AGE"
     sql: ${TABLE}.PATIENT_AGE ;;
   }
 
@@ -528,13 +525,6 @@ view: ad_hoc_query_tool_medical {
     suggest_dimension: vw_medical.PARTICIPANT_NONPARTICIPANT_Flag
   }
 
-  dimension: PARTICIPANT_FLAG {
-    type: string
-    label: "PARTICIPANT FLAG"
-    suggest_explore: vw_medical
-    suggest_dimension: vw_medical.PARTICIPANT_NONPARTICIPANT_Flag
-  }
-
   parameter: reporting_date_filter {
     type: string
     label: "Reporting date"
@@ -582,6 +572,7 @@ view: ad_hoc_query_tool_medical {
     sql: ${TABLE}."ON_BOARD_DATE" ;;
   }
 
+
   dimension: benchmark_year_filter_suggestion {
     type: string
     hidden: yes
@@ -596,8 +587,8 @@ view: ad_hoc_query_tool_medical {
   dimension: reporting_benchmark_year {
     type: string
     label: "SERVICE Year"
-    sql: CASE WHEN ${reporting_year} = CAST({% parameter benchmark_year_filter %} as int) THEN CAST(concat(${reporting_year}, ' ', '(Benchmark)') as string)
-      ELSE CAST(${reporting_year} as string)
+    sql: CASE WHEN ${DIAGNOSIS_DATE_year} = CAST({% parameter benchmark_year_filter %} as int) THEN CAST(concat(${DIAGNOSIS_DATE_year}, ' ', '(Benchmark)') as string)
+      ELSE CAST(${DIAGNOSIS_DATE_year} as string)
       END;;
   }
 
@@ -656,5 +647,4 @@ view: ad_hoc_query_tool_medical {
     sql: MAX(${DIAGNOSIS_DATE_raw}) ;;
     html: {{ rendered_value | date: "%m / %d / %Y" }} ;;
   }
-
 }

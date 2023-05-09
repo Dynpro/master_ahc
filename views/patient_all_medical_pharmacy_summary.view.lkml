@@ -5,6 +5,12 @@ view: patient_all_medical_pharmacy_summary {
       MP.SERVICE_YEAR as YEAR,
       M1.RISK_GROUP as RISK_GROUP,
       M1.CCW_CHRONIC_CAT_LIST as CCW_CHRONIC_CAT_LIST,
+      M1.TOTAL_SPEND_YEARLY as TOTAL_SPEND_YEARLY_M,
+      M1.TOTAL_PATIENTS_YEARLY as TOTAL_PATIENTS_YEARLY_M,
+      M1.AVERAGE_SPEND_YEARLY as AVERAGE_SPEND_YEARLY_M,
+      P1.TOTAL_SPEND_YEARLY as TOTAL_SPEND_YEARLY_P,
+      P1.TOTAL_PATIENTS_YEARLY as TOTAL_PATIENTS_YEARLY_P,
+      P1.AVERAGE_SPEND_YEARLY as AVERAGE_SPEND_YEARLY_P,
       SUM(M1.TOTAL_PAID_AMT) as TOTAL_PAID_AMT_M,
       SUM(M1.CHRONIC_TOTAL_PAID_AMT) as CHRONIC_TOTAL_PAID_AMT,
       M2.DIAGNOSIS_CATEGORY_LIST as DIAGNOSIS_CATEGORY_LIST,
@@ -27,30 +33,62 @@ view: patient_all_medical_pharmacy_summary {
       GROUP BY SERVICE_YEAR, UNIQUE_ID) AS MP
 
       LEFT JOIN /*To get the Patient's yearwise medical summary*/
+
+      (select M1_1.PATIENT_ID_M as PATIENT_ID_M,
+      M1_1.SERVICE_YEAR as SERVICE_YEAR,
+      M1_1.RISK_GROUP as RISK_GROUP,
+      LISTAGG(DISTINCT M1_1.CCW_CHRONIC_CAT, ' || ') within group (order by M1_1.CCW_CHRONIC_CAT ASC) as CCW_CHRONIC_CAT_LIST,
+      SUM(M1_1.TOTAL_PAID_AMT) as TOTAL_PAID_AMT,
+      SUM(CASE WHEN M1_1.CCW_CHRONIC_CAT IS NULL THEN 0
+      ELSE M1_1.TOTAL_PAID_AMT
+      END) AS CHRONIC_TOTAL_PAID_AMT,
+      M1_1.TOTAL_SPEND_YEARLY as TOTAL_SPEND_YEARLY,
+      M1_1.TOTAL_PATIENTS_YEARLY as TOTAL_PATIENTS_YEARLY,
+      M1_1.AVERAGE_SPEND_YEARLY as AVERAGE_SPEND_YEARLY
+      FROM
       (Select
       "UNIQUE_ID" as PATIENT_ID_M,
       LEFT("DIAGNOSIS_DATE", 4) as SERVICE_YEAR,
       "RISK_GROUP" as RISK_GROUP,
-      LISTAGG(DISTINCT "CCW_CHRONIC_CAT", ' || ') within group (order by "CCW_CHRONIC_CAT" ASC) as CCW_CHRONIC_CAT_LIST,
-      SUM("TOTAL_EMPLOYER_PAID_AMT") as TOTAL_PAID_AMT,
-      SUM(CASE WHEN "CCW_CHRONIC_CAT" IS NULL THEN 0
-      ELSE "TOTAL_EMPLOYER_PAID_AMT"
-      END) AS CHRONIC_TOTAL_PAID_AMT
+      "CCW_CHRONIC_CAT" as CCW_CHRONIC_CAT,
+      "TOTAL_EMPLOYER_PAID_AMT" as TOTAL_PAID_AMT,
+      SUM("TOTAL_EMPLOYER_PAID_AMT") OVER (PARTITION BY SERVICE_YEAR) as TOTAL_SPEND_YEARLY,
+      COUNT(DISTINCT "UNIQUE_ID") OVER (PARTITION BY SERVICE_YEAR) AS TOTAL_PATIENTS_YEARLY,
+      (CASE WHEN TOTAL_PATIENTS_YEARLY <> 0 THEN TOTAL_SPEND_YEARLY/TOTAL_PATIENTS_YEARLY
+      ELSE 0
+      END) as AVERAGE_SPEND_YEARLY
       FROM "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_MEDICAL"
-      WHERE {% condition CHRONIC_CATEGORY %} "CCW_CHRONIC_CAT" {% endcondition %} AND
-      {% condition DIAGNOSIS_CATEGORY %} "ICD_DISEASE_CATEGORY" {% endcondition %}
-      GROUP BY PATIENT_ID_M, SERVICE_YEAR,RISK_GROUP) as M1
+      WHERE
+      {% condition CHRONIC_CATEGORY %} "CCW_CHRONIC_CAT" {% endcondition %} AND
+      {% condition DIAGNOSIS_CATEGORY %} "ICD_DISEASE_CATEGORY" {% endcondition %}) as M1_1
+      GROUP BY M1_1.PATIENT_ID_M, M1_1.SERVICE_YEAR, M1_1.RISK_GROUP, M1_1.TOTAL_SPEND_YEARLY,
+      M1_1.TOTAL_PATIENTS_YEARLY, M1_1.AVERAGE_SPEND_YEARLY) as M1
 
       ON MP.UNIQUE_ID = M1.PATIENT_ID_M AND
       MP.SERVICE_YEAR = M1.SERVICE_YEAR
 
       LEFT JOIN /*To get the Patient's yearwise pharmacy summary*/
+
+      (Select P1_1.PATIENT_ID_P as PATIENT_ID_P,
+      P1_1.SERVICE_YEAR as SERVICE_YEAR,
+      SUM(P1_1.TOTAL_PAID_AMT) as TOTAL_PAID_AMT,
+      P1_1.TOTAL_SPEND_YEARLY as TOTAL_SPEND_YEARLY,
+      P1_1.TOTAL_PATIENTS_YEARLY as TOTAL_PATIENTS_YEARLY,
+      P1_1.AVERAGE_SPEND_YEARLY as AVERAGE_SPEND_YEARLY
+      FROM
       (Select
       "UNIQUE_ID" as PATIENT_ID_P,
       LEFT("DATE_FILLED", 4) as SERVICE_YEAR,
-      SUM("TOTAL_EMPLOYER_PAID_AMT") as TOTAL_PAID_AMT
-      FROM "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_PHARMACY"
-      GROUP BY PATIENT_ID_P, SERVICE_YEAR) as P1
+      "TOTAL_EMPLOYER_PAID_AMT" as TOTAL_PAID_AMT,
+      SUM("TOTAL_EMPLOYER_PAID_AMT") OVER (PARTITION BY SERVICE_YEAR) as TOTAL_SPEND_YEARLY,
+      COUNT(DISTINCT "UNIQUE_ID") OVER (PARTITION BY SERVICE_YEAR) AS TOTAL_PATIENTS_YEARLY,
+      (CASE WHEN TOTAL_PATIENTS_YEARLY <> 0 THEN TOTAL_SPEND_YEARLY/TOTAL_PATIENTS_YEARLY
+      ELSE 0
+      END) as AVERAGE_SPEND_YEARLY
+      FROM "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_PHARMACY") as P1_1
+      GROUP BY  P1_1.PATIENT_ID_P, P1_1.SERVICE_YEAR, P1_1.TOTAL_SPEND_YEARLY,
+      P1_1.TOTAL_PATIENTS_YEARLY, P1_1.AVERAGE_SPEND_YEARLY) as P1
+
       ON MP.UNIQUE_ID = P1.PATIENT_ID_P AND
       MP.SERVICE_YEAR = P1.SERVICE_YEAR
 
@@ -79,7 +117,7 @@ view: patient_all_medical_pharmacy_summary {
       ON MP.UNIQUE_ID = P2.PATIENT_ID_P
 
       GROUP BY UNIQUE_ID, YEAR, RISK_GROUP,CCW_CHRONIC_CAT_LIST, DIAGNOSIS_CATEGORY_LIST, DIAGNOSIS_DESCRIPTION_LIST, CHRONIC_CATEGORY_LIST, PROCEDURE_DESCRIPTION_LIST,
-      PROCEDURE_CATEGORY_LIST, TEA_CATEGORY_LIST, DRUG_LIST, DRUG_CODE_LIST
+      PROCEDURE_CATEGORY_LIST, TEA_CATEGORY_LIST, DRUG_LIST, DRUG_CODE_LIST, TOTAL_SPEND_YEARLY_M, TOTAL_PATIENTS_YEARLY_M, AVERAGE_SPEND_YEARLY_M, TOTAL_SPEND_YEARLY_P, TOTAL_PATIENTS_YEARLY_P, AVERAGE_SPEND_YEARLY_P
       ;;
   }
 
@@ -87,7 +125,8 @@ view: patient_all_medical_pharmacy_summary {
 #Patient Id from both Medical & Pharmacy data:
   dimension: PATIENT_ID {
     type: string
-    label: "Patient Id"
+    primary_key: yes
+    label: "Member Id"
     sql: ${TABLE}."UNIQUE_ID" ;;
   }
 
@@ -126,7 +165,35 @@ view: patient_all_medical_pharmacy_summary {
     label: "Total Pharma $"
     sql: ${TABLE}.TOTAL_PAID_AMT_P ;;
   }
+  dimension: total_spend_yearly_pharmacy {
+    type: string
+    sql: ${TABLE}."TOTAL_SPEND_YEARLY_P" ;;
+  }
 
+  dimension: total_patients_yearly_pharmacy {
+    type: string
+    label: "Total Members Yearly Pharmacy"
+    sql: ${TABLE}."TOTAL_PATIENTS_YEARLY_P" ;;
+  }
+
+  dimension: average_spend_yearly_pharmacy {
+    type: number
+    sql: ${TABLE}."AVERAGE_SPEND_YEARLY_P" ;;
+    value_format: "$#,##0.00"
+  }
+
+  dimension: total_pharmacy_paid_amount {
+    type: number
+    sql: ${TABLE}."TOTAL_PAID_AMT_P" ;;
+  }
+
+  dimension: patient_total_spend_vs_yearly_avg_spend_pharmacy {
+    type: string
+    label: "Member Total Spend vs Yearly Avg Spend Pharmacy"
+    sql: CASE WHEN ${total_pharmacy_paid_amount} >= ${average_spend_yearly_pharmacy} THEN 'Greater than Year Average Spend'
+      ELSE 'Less than Year Average Spend'
+      END ;;
+  }
 #Medical filters, dimension & measures:
   filter: CHRONIC_CATEGORY {
     type: string
@@ -200,7 +267,35 @@ view: patient_all_medical_pharmacy_summary {
     label: "Total Med $"
     sql: ${TABLE}.TOTAL_PAID_AMT_M ;;
   }
+  dimension: total_spend_yearly_medical {
+    type: string
+    sql: ${TABLE}."TOTAL_SPEND_YEARLY_M" ;;
+  }
 
+  dimension: total_patients_yearly_medical {
+    type: string
+    label: "Total Members Yearly Medical"
+    sql: ${TABLE}."TOTAL_PATIENTS_YEARLY_M" ;;
+  }
+
+  dimension: average_spend_yearly_medical {
+    type: number
+    sql: ${TABLE}."AVERAGE_SPEND_YEARLY_M" ;;
+    value_format: "$#,##0.00"
+  }
+
+  dimension: total_medical_paid_amount {
+    type: number
+    sql: ${TABLE}."TOTAL_PAID_AMT_M" ;;
+  }
+
+  dimension: patient_total_spend_vs_yearly_avg_spend_medical {
+    type: string
+    label: "Member Total Spend vs Yearly Avg Spend Medical"
+    sql: CASE WHEN ${total_medical_paid_amount} >= ${average_spend_yearly_medical} THEN 'Greater than Year Average Spend'
+      ELSE 'Less than Year Average Spend'
+      END ;;
+  }
   measure: chronic_total_amt {
     type: sum
     label: "CHRONIC TOTAL $"
@@ -223,4 +318,5 @@ view: patient_all_medical_pharmacy_summary {
           <li>{{ word }}</li>
           {% endfor %} ;;
   }
+
 }

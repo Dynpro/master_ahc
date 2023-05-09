@@ -118,6 +118,7 @@ view: patient_yearly_total_avg_spend_comparison {
 
   dimension: chronic_total_patients_yearly {
     type: string
+    label: "Chronic Total Members Yearly"
     sql: ${TABLE}."CHRONIC_TOTAL_PATIENTS_YEARLY" ;;
   }
 
@@ -129,6 +130,7 @@ view: patient_yearly_total_avg_spend_comparison {
 
   dimension: patient_total_chronic_spend_vs_avg_chronic_spend_medical {
     type: string
+    label: "Member Total Chronic Spend vs Avg Chronic Spend Medical"
     sql: CASE WHEN ${chronic_total_amount} >= ${chronic_average_amount_yearly} THEN 'Greater than Year Average Spend'
       ELSE 'Less than Year Average Spend'
       END ;;
@@ -150,6 +152,7 @@ view: patient_yearly_total_avg_spend_comparison {
 
   dimension: patients_id {
     type: string
+    label: "Member ID"
     sql: ${TABLE}."UNIQUE_ID" ;;
   }
 
@@ -180,6 +183,7 @@ view: patient_yearly_total_avg_spend_comparison {
 
   dimension: total_patient_yearly_paid_amt_medical {
     type: string
+    label: "Total Member Yearly Paid Amt Medical"
     sql: ${TABLE}."TOTAL_PATIENT_YEARLY_PAID_AMT_M" ;;
     value_format: "$#,##0"
   }
@@ -191,6 +195,7 @@ view: patient_yearly_total_avg_spend_comparison {
 
   dimension: total_patients_yearly_medical {
     type: string
+    label: "Total Members Yearly Medical"
     sql: ${TABLE}."TOTAL_PATIENTS_YEARLY_M" ;;
   }
 
@@ -207,6 +212,7 @@ view: patient_yearly_total_avg_spend_comparison {
 
   dimension: total_patients_all_years_medical {
     type: string
+    label: "Total Members All Years Medical"
     sql: ${TABLE}."TOTAL_PATIENTS_ALL_YEARS_M" ;;
   }
 
@@ -217,6 +223,7 @@ view: patient_yearly_total_avg_spend_comparison {
 
   dimension: patient_total_spend_vs_yearly_avg_spend_medical {
     type: string
+    label: "Member Total Spend vs Yearly Avg Spend Medical"
     sql: CASE WHEN ${total_patient_yearly_paid_amt_medical} >= ${average_spend_yearly_medical} THEN 'Greater than Year Average Spend'
       ELSE 'Less than Year Average Spend'
       END ;;
@@ -224,6 +231,7 @@ view: patient_yearly_total_avg_spend_comparison {
 
   dimension: total_patient_yearly_paid_amt_pharmacy {
     type: string
+    label: "Total Member Yearly Paid Amt Pharmacy"
     sql: ${TABLE}."TOTAL_PATIENT_YEARLY_PAID_AMT_P" ;;
     value_format: "$#,##0"
   }
@@ -235,6 +243,7 @@ view: patient_yearly_total_avg_spend_comparison {
 
   dimension: total_patients_yearly_pharmacy {
     type: string
+    label: "Total Members Yearly Pharmacy"
     sql: ${TABLE}."TOTAL_PATIENTS_YEARLY_P" ;;
   }
 
@@ -251,6 +260,7 @@ view: patient_yearly_total_avg_spend_comparison {
 
   dimension: total_patients_all_years_pharmacy {
     type: string
+    label: "Total Members All Years Pharmacy"
     sql: ${TABLE}."TOTAL_PATIENTS_ALL_YEARS_P" ;;
   }
 
@@ -261,6 +271,7 @@ view: patient_yearly_total_avg_spend_comparison {
 
   dimension: patient_total_spend_vs_yearly_avg_spend_pharmacy {
     type: string
+    label: "Member Total Spend vs Yearly Avg Spend Pharmacy"
     sql: CASE WHEN ${total_patient_yearly_paid_amt_pharmacy} >= ${average_spend_yearly_pharmacy} THEN 'Greater than Year Average Spend'
       ELSE 'Less than Year Average Spend'
       END ;;
@@ -268,6 +279,7 @@ view: patient_yearly_total_avg_spend_comparison {
 
   dimension: patient_total_spend_vs_avg_spend_medical_pharmacy {
     type: string
+    label: "Member Total Spend vs Avg Spend Medical Pharmacy"
     hidden: yes
     sql: CASE WHEN ${patient_total_spend_vs_yearly_avg_spend_medical} = 'Greater than Year Average Spend' AND ${patient_total_spend_vs_yearly_avg_spend_pharmacy} = 'Greater than Year Average Spend' THEN 'Greater than Year Average Spend'
       ELSE 'Less than Year Average Spend'

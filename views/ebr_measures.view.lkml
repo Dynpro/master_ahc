@@ -2,7 +2,6 @@ view: ebr_measures {
   label: "EBR Measures"
   sql_table_name: "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_EBR_MEASURES" ;;
 
-
   dimension: individual_gets_diabetic_test_strips {
     type: string
     label: "Diabetes Test Strips"
@@ -74,7 +73,7 @@ view: ebr_measures {
 
   dimension: individual_is_in_disease_group {
     type: string
-    #hidden: yes
+    hidden: yes
     sql: ${TABLE}."INDIVIDUAL_IS_IN_DISEASE_GROUP" ;;
   }
 
@@ -575,9 +574,10 @@ view: ebr_measures {
     sql: ${unique_id} ;;
   }
 
+
   dimension: unique_id {
     type: string
-    label: "Patient ID"
+    label: "Member ID"
     sql: ${TABLE}."UNIQUE_ID" ;;
   }
 
@@ -599,8 +599,6 @@ view: ebr_measures {
     hidden: yes
     drill_fields: []
   }
-
-
 
   dimension: HOSPITALIZED_OR_NOT {
     type: string
@@ -632,8 +630,6 @@ view: ebr_measures {
     description: "Inpatient Hospitalization Eligible"
     sql: ${unique_id} ;;
   }
-
-
 #Care Management dashboard dimension & measures: Benchmark labelling, HEDIS list of defined measures, Rendering & $ based on previous months
   dimension: benchmark_year_filter_suggestion {
     type: string
@@ -707,7 +703,6 @@ view: ebr_measures {
     sql: ${individual_female_had_colon_cancer_screening_patients}/NULLIF(${individual_female_had_colon_cancer_screening_eligible_patients},0)*100 ;;
   }
 
-
   dimension: cancer_preventive_bcs_diagnosis {
     type: string
     sql: ${TABLE}."CANCER_PREVENTIVE_BCS_DIAGNOSIS" ;;
@@ -746,5 +741,6 @@ view: ebr_measures {
     description: "INDIVIDUAL FEMALE HAD PREVENTIVE SCREENING FOR COLON CANCER"
     sql: ${unique_id} ;;
   }
+
 
 }

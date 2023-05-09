@@ -1,3 +1,4 @@
+
 view: vw_participant_trigger {
   label: "Participant Trigger"
   sql_table_name:  "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_PARTICIPANT_TRIGGER";;

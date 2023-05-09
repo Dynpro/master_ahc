@@ -110,7 +110,6 @@ view: vw_medical {
       date,
       week,
       month,
-      month_name,
       quarter,
       year
     ]
@@ -119,6 +118,12 @@ view: vw_medical {
     label: "SERVICE"
     drill_fields: [diagnosis_year, diagnosis_quarter, diagnosis_month, diagnosis_raw]
     sql: ${TABLE}."DIAGNOSIS_DATE" ;;
+  }
+
+  dimension: Year {
+    type: number
+    sql: ${diagnosis_year} ;;
+    value_format: "0"
   }
 
   dimension_group: Paid {
@@ -259,13 +264,13 @@ view: vw_medical {
 
   dimension: patient_age {
     type: number
-    label: "PATIENT AGE"
+    label: "MEMBER AGE"
     sql: ${TABLE}."PATIENT_AGE" ;;
   }
 
   dimension: patient_gender {
     type: string
-    label: "PATIENT GENDER"
+    label: "MEMBER GENDER"
     drill_fields: [icd_disease_category, DIAGNOSIS_SUB_CATEGORY, icd_description, PROCEDURE_CATEGORY, PROCEDURE_SUBCATEGORY, procedure_description, icd_chronic_cat]
     sql: ${TABLE}."PATIENT_GENDER" ;;
   }
@@ -531,9 +536,7 @@ view: vw_medical {
   measure: Total_Patients {
     type: count_distinct
     label: "N"
-    #value_format: "0"
     sql:  ${unique_id} ;;
-    drill_fields: [icd_disease_category, DIAGNOSIS_SUB_CATEGORY, icd_description, PROCEDURE_CATEGORY, PROCEDURE_SUBCATEGORY, procedure_description, icd_chronic_cat]
   }
 
   measure: Patient_percentage {
@@ -564,7 +567,6 @@ view: vw_medical {
     sql: CASE WHEN ${Total_Patients} <> 0 THEN ${Total_Paid_Amt}/${Total_Patients}
         ELSE 0
         END;;
-    drill_fields: [icd_disease_category, DIAGNOSIS_SUB_CATEGORY, icd_description, PROCEDURE_CATEGORY, PROCEDURE_SUBCATEGORY, procedure_description, icd_chronic_cat]
     value_format: "$#,##0"
   }
 
@@ -608,7 +610,7 @@ view: vw_medical {
 
   measure: PATIENT_AVERAGE_AGE {
     type: average
-    label: "PATIENT AVERAGE AGE"
+    label: "MEMBER AVERAGE AGE"
     value_format: "#,##0.0"
     sql: ${patient_age} ;;
   }
@@ -949,13 +951,14 @@ view: vw_medical {
 
   measure: total_yearwise_patient_spend {
     type: sum
+    label: "Total Yearwise Member Spend"
     sql_distinct_key: ${year_and_patient_id} ;;
     sql: ${total_employer_paid_amt}  ;;
   }
 
   dimension: patient_gender1 {
     type: string
-    hidden: yes
+    label: "MEMBER GENDER1"
     sql: case when ${TABLE}."PATIENT_GENDER"= 'M' then 'Male'
               when ${TABLE}."PATIENT_GENDER"= 'F' then 'Female'
               else '0'
@@ -964,7 +967,6 @@ view: vw_medical {
 
   dimension: relationship_to_employee1 {
     type: string
-    hidden: yes
     label: "Relationship To Employee"
     sql: case when ${TABLE}."RELATIONSHIP_TO_EMPLOYEE" = 'EMPLOYEE' then 'Employee'
               when ${TABLE}."RELATIONSHIP_TO_EMPLOYEE" = 'SPOUSE' then 'Spouse'
@@ -972,10 +974,9 @@ view: vw_medical {
         end;;
   }
 
-
   dimension: PARTICIPANT_NONPARTICIPANT_Flag {
     type: string
-    hidden:  no
+    hidden:  yes
     sql: ${TABLE}."PARTICIPANT_FLAG" ;;
   }
 
@@ -1054,7 +1055,6 @@ view: vw_medical {
     sql: ${TABLE}."ON_BOARD_DATE" ;;
   }
 
-
 #Benchmark labelling, HEDIS list of defined measures, Rendering & $ based on previous months
   dimension: benchmark_year_filter_suggestion {
     type: string
@@ -1070,6 +1070,7 @@ view: vw_medical {
   dimension: reporting_benchmark_year {
     type: string
     label: "SERVICE Year"
+    drill_fields: [diagnosis_year, diagnosis_quarter, diagnosis_month, diagnosis_raw]
     sql: CASE WHEN ${diagnosis_year} = CAST({% parameter benchmark_year_filter %} as int) THEN CAST(concat(${diagnosis_year}, ' ', '(Benchmark)') as string)
       ELSE CAST(${diagnosis_year} as string)
       END;;
@@ -1149,6 +1150,20 @@ view: vw_medical {
       {% endfor %} ;;
   }
 
+  dimension: common_chronic_category_for_predictive{
+    label: "Chronic Category Predictive"
+    type: string
+    sql: case when ${CHRONIC_CAT_TYPE}='COMMON CHRONIC CONDITIONS' and ${diagnosis_year} <= 2021 then ${TABLE}."CCW_CHRONIC_CAT"
+          else 'NO'
+          end;;
+  }
+
+  dimension: EMPLOYER_NAME {
+    type: string
+    label: "Affiliation"
+    sql: ${TABLE}."EMPLOYER_NAME" ;;
+  }
+
 #Date Range for Executive summery
 
   filter: date_range_filter_1 {
@@ -1193,9 +1208,8 @@ view: vw_medical {
 
   measure: total_patients_risk_group_wise {
     type: count_distinct
-    label: "Total Patients (N)"
+    label: "Total Members (N)"
     sql:  ${unique_id} ;;
     drill_fields: [vw_patient_demographics.patient_name, RISK_GROUP, patient_gender, vw_patient_demographics.patient_current_age, Total_Visit, Total_Paid_Amt]
   }
-
 }

@@ -306,7 +306,7 @@ view: vw_med_and_pharma_summary_1 {
 
   dimension: PATIENT_GENDER {
     type: string
-    label: "PATIENT GENDER"
+    label: "MEMBER GENDER"
     can_filter: no
     sql: ${TABLE}.PATIENT_GENDER ;;
   }
@@ -397,7 +397,7 @@ view: vw_med_and_pharma_summary_1 {
     type: sum
     label: "MED_TOTAL PAID AMT"
     sql: ${TABLE}.Total_Paid_Amt_M ;;
-    value_format: "$#,##0.00"
+    value_format: "$#,##0"
   }
 
   measure: AVERAGE_PAID_AMT_M {
@@ -406,7 +406,7 @@ view: vw_med_and_pharma_summary_1 {
     sql: CASE WHEN ${TOTAL_PATIENTS} <> 0 THEN ${TOTAL_PAID_AMT_M}/${TOTAL_PATIENTS}
           ELSE 0
           END ;;
-    value_format: "$#,##0.00"
+    value_format: "$#,##0"
   }
 
   measure: TOTAL_PATIENTS {

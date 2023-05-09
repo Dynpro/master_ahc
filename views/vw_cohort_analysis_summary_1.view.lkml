@@ -314,7 +314,7 @@ view: vw_cohort_analysis_summary_1 {
 
   filter:PATIENT_GENDER_G1 {
     type: string
-    label: "G1 - PATIENT GENDER"
+    label: "G1 - MEMBER GENDER"
     suggest_explore: vw_medical
     suggest_dimension: vw_medical.patient_gender
   }
@@ -363,7 +363,7 @@ view: vw_cohort_analysis_summary_1 {
 
   filter: PATIENT_AGE_G1 {
     type: number
-    label: "G1 - PATIENT AGE"
+    label: "G1 - MEMBER AGE"
     suggest_explore: vw_medical
     suggest_dimension: vw_medical.patient_age
   }
@@ -505,7 +505,7 @@ view: vw_cohort_analysis_summary_1 {
   measure: Total_Patient_G1 {
     type: count_distinct
     sql: ${PATIENT_ID_G1} ;;
-    label: "G1 - Total Patients"
+    label: "G1 - Total Members"
   }
 
   dimension: PAID_YEAR_G1 {
@@ -704,7 +704,7 @@ view: vw_cohort_analysis_summary_1 {
 
   filter:PATIENT_GENDER_G2 {
     type: string
-    label: "G2 - PATIENT GENDER"
+    label: "G2 - MEMBER GENDER"
     suggest_explore: vw_medical
     suggest_dimension: vw_medical.patient_gender
   }
@@ -725,7 +725,7 @@ view: vw_cohort_analysis_summary_1 {
 
   filter: PATIENT_AGE_G2 {
     type: number
-    label: "G2 - PATIENT AGE"
+    label: "G2 - MEMBER AGE"
     suggest_explore: vw_medical
     suggest_dimension: vw_medical.patient_age
   }
@@ -930,7 +930,7 @@ view: vw_cohort_analysis_summary_1 {
 
   measure: Total_Patient_G2 {
     type: count_distinct
-    label: "G2 - Total Patient"
+    label: "G2 - Total Members"
     sql: ${PATIENT_ID_G2} ;;
   }
 

@@ -8,8 +8,22 @@ view: compliance_summary {
     sql: ${TABLE}."UNIQUE_ID" ;;
   }
 
+  dimension: dependent_f_name {
+    label: "Member First Name"
+    type: string
+    hidden: no
+    sql: ${TABLE}."DEPENDENT_F_NAME" ;;
+  }
+
+  dimension: dependent_l_name {
+    label: "Member Last Name"
+    type: string
+    hidden: no
+    sql: ${TABLE}."DEPENDENT_L_NAME" ;;
+  }
+
   dimension: patient_name {
-    label: "Patient Name"
+    label: "Member Name"
     type: string
     hidden: no
     sql: ${TABLE}."PATIENT_NAME" ;;
@@ -39,7 +53,7 @@ view: compliance_summary {
     ]
     convert_tz: no
     datatype: date
-    label: "Patient DOB"
+    label: "Member DOB"
     sql: ${TABLE}."PATIENT_DOB" ;;
   }
 

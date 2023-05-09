@@ -1,7 +1,6 @@
 view: hedis_measure {
   label: "HEDIS Measures"
-  sql_table_name: "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_HEDIS_MEASURES"
-    ;;
+  sql_table_name: "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_HEDIS_MEASURES" ;;
 
 
 ##ADULT'S ACCESS TO PREVENTIVE/AMBULATORY HEALTH SERVICES
@@ -455,7 +454,7 @@ view: hedis_measure {
 
   dimension: unique_id {
     type: string
-    label: "Patient ID"
+    label: "Member ID"
     sql: ${TABLE}."UNIQUE_ID" ;;
   }
 
@@ -550,7 +549,7 @@ view: hedis_measure {
       {% endfor %} ;;
   }
 
-  ##percent of measures
+##percent of measures
 
   measure: AAP_PERCENT {
     type: number
@@ -607,5 +606,4 @@ view: hedis_measure {
     value_format: "0.0\%"
     sql: ${spr_compliant_patients}/NULLIF(${spr_eligible_patients},0) *100;;
   }
-
 }
