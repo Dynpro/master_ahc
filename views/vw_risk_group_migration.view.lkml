@@ -29,6 +29,7 @@ view: vw_risk_group_migration {
 
   dimension: Unique_id {
     type: string
+    primary_key: yes
     sql: ${TABLE}."UNIQUE_ID" ;;
   }
 

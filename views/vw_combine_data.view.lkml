@@ -251,6 +251,7 @@ view: vw_combine_data {
 
   dimension: unique_id {
     type: string
+    primary_key: yes
     sql: ${TABLE}."UNIQUE_ID" ;;
   }
 
