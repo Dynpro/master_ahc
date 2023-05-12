@@ -294,7 +294,7 @@ view: vw_vital_alert {
 
   measure: systolic_Mean {
     type: number
-    label: "Average of Blood Pressure (Systolic)"
+    label: "Avg Systolic Blood Pressure"
     drill_fields: [unique_id,dependent_f_name,dependent_l_name,patient_gender,patient_dob_date,member_id,program,date_date,time,vital,issue,systolic,diastolic,zone,zone_number,status,affiliation,source,checked_cleared_by,checked_cleared_date,row_no]
     sql:  ${systolic_total}/NULLIF(${Total_systolic_Patients},0);;
     value_format: "0.00"
@@ -323,7 +323,7 @@ view: vw_vital_alert {
 
   measure: diastolic_Mean {
     type: number
-    label: "Average of Blood Pressure (Diastolic)"
+    label: "Avg Diastolic Blood Pressure"
     drill_fields: [unique_id,dependent_f_name,dependent_l_name,patient_gender,patient_dob_date,member_id,program,date_date,time,vital,issue,systolic,diastolic,zone,zone_number,status,affiliation,source,checked_cleared_by,checked_cleared_date,row_no]
     sql:  ${diastolic_total}/NULLIF(${Total_diastolic_Patients},0);;
     value_format: "0.00"
@@ -354,7 +354,7 @@ view: vw_vital_alert {
 
   measure: blood_sugar_Mean {
     type: number
-    label: "Average of Blood Sugar"
+    label: "Avg Blood Sugar"
     drill_fields: [unique_id,dependent_f_name,dependent_l_name,patient_gender,patient_dob_date,member_id,program,date_date,time,vital,issue,systolic,diastolic,zone,zone_number,status,affiliation,source,checked_cleared_by,checked_cleared_date,row_no]
     sql: ${blood_sugar_total}/NULLIF(${blood_sugar_Patients},0);;
     value_format: "0.00"
@@ -385,7 +385,7 @@ view: vw_vital_alert {
 
   measure: heart_rate_Mean {
     type: number
-    label: "Average of Heart Rate"
+    label: "Avg Heart Rate"
     drill_fields: [unique_id,dependent_f_name,dependent_l_name,patient_gender,patient_dob_date,member_id,program,date_date,time,vital,issue,systolic,diastolic,zone,zone_number,status,affiliation,source,checked_cleared_by,checked_cleared_date,row_no]
     sql:  ${heart_rate_total}/NULLIF(${heart_rate_Patients},0);;
     value_format: "0.00"
@@ -415,7 +415,7 @@ view: vw_vital_alert {
 
   measure: HGBA1C_Mean {
     type: number
-    label: "Average of HgbA1c"
+    label: "Avg HbA1c"
     drill_fields: [unique_id,dependent_f_name,dependent_l_name,patient_gender,patient_dob_date,member_id,program,date_date,time,vital,issue,systolic,diastolic,zone,zone_number,status,affiliation,source,checked_cleared_by,checked_cleared_date,row_no]
     sql:  ${HGBA1C_total}/NULLIF(${HGBA1C_Patients},0);;
     value_format: "0.00"
@@ -445,7 +445,7 @@ view: vw_vital_alert {
 
   measure: oxygen_saturation_Mean {
     type: number
-    label: "Average of Oxygen Saturation"
+    label: "Avg Oxygen Saturation"
     drill_fields: [unique_id,dependent_f_name,dependent_l_name,patient_gender,patient_dob_date,member_id,program,date_date,time,vital,issue,systolic,diastolic,zone,zone_number,status,affiliation,source,checked_cleared_by,checked_cleared_date,row_no]
     sql:  ${oxygen_saturation_total}/NULLIF(${oxygen_saturation_patients},0);;
     value_format: "0.00"
@@ -475,7 +475,7 @@ view: vw_vital_alert {
 
   measure: oxygen_use_Mean {
     type: number
-    label: "Average of Oxygen Use"
+    label: "Avg Oxygen Use"
     drill_fields: [unique_id,dependent_f_name,dependent_l_name,patient_gender,patient_dob_date,member_id,program,date_date,time,vital,issue,systolic,diastolic,zone,zone_number,status,affiliation,source,checked_cleared_by,checked_cleared_date,row_no]
     sql:  ${oxygen_use_total}/NULLIF(${oxygen_use_patients},0);;
     value_format: "0.00"
@@ -505,7 +505,7 @@ view: vw_vital_alert {
 
   measure: Pain_Mean {
     type: number
-    label: "Average of Pain"
+    label: "Avg Pain Rating"
     drill_fields: [unique_id,dependent_f_name,dependent_l_name,patient_gender,patient_dob_date,member_id,program,date_date,time,vital,issue,systolic,diastolic,zone,zone_number,status,affiliation,source,checked_cleared_by,checked_cleared_date,row_no]
     sql:  ${Pain_total}/NULLIF(${Pain_Patients},0);;
     value_format: "0.00"
@@ -535,7 +535,7 @@ view: vw_vital_alert {
 
   measure: respiratory_rate_Mean {
     type: number
-    label: "Average of Respiratory Rate"
+    label: "Avg Respiratory Rate"
     drill_fields: [unique_id,dependent_f_name,dependent_l_name,patient_gender,patient_dob_date,member_id,program,date_date,time,vital,issue,systolic,diastolic,zone,zone_number,status,affiliation,source,checked_cleared_by,checked_cleared_date,row_no]
     sql:  ${respiratory_rate_total}/NULLIF(${respiratory_rate_Patients},0);;
     value_format: "0.00"
@@ -565,7 +565,7 @@ view: vw_vital_alert {
 
   measure:Steps_Mean {
     type: number
-    label: "Average of Steps"
+    label: "Avg Steps"
     drill_fields: [unique_id,dependent_f_name,dependent_l_name,patient_gender,patient_dob_date,member_id,program,date_date,time,vital,issue,systolic,diastolic,zone,zone_number,status,affiliation,source,checked_cleared_by,checked_cleared_date,row_no]
     sql:  ${Steps_total}/NULLIF(${Steps_Patients},0);;
     value_format: "0.00"
@@ -595,7 +595,7 @@ view: vw_vital_alert {
 
   measure:Temperature_Mean {
     type: number
-    label: "Average of Temperature"
+    label: "Avg Temperature"
     drill_fields: [unique_id,dependent_f_name,dependent_l_name,patient_gender,patient_dob_date,member_id,program,date_date,time,vital,issue,systolic,diastolic,zone,zone_number,status,affiliation,source,checked_cleared_by,checked_cleared_date,row_no]
     sql:  ${Temperature_total}/NULLIF(${Temperature_Patients},0);;
     value_format: "0.00"
@@ -625,7 +625,7 @@ view: vw_vital_alert {
 
   measure:Weight_Mean {
     type: number
-    label: "Average of Weight"
+    label: "Avg Weight"
     drill_fields: [unique_id,dependent_f_name,dependent_l_name,patient_gender,patient_dob_date,member_id,program,date_date,time,vital,issue,systolic,diastolic,zone,zone_number,status,affiliation,source,checked_cleared_by,checked_cleared_date,row_no]
     sql:  ${Weight_total}/NULLIF(${Weight_Patients},0);;
     value_format: "0.00"
@@ -655,7 +655,7 @@ view: vw_vital_alert {
 
   measure:pt_inr_Mean {
     type: number
-    label: "Average of PT/INR"
+    label: "Avg PT/INR"
     drill_fields: [unique_id,dependent_f_name,dependent_l_name,patient_gender,patient_dob_date,member_id,program,date_date,time,vital,issue,systolic,diastolic,zone,zone_number,status,affiliation,source,checked_cleared_by,checked_cleared_date,row_no]
     sql:  ${pt_inr_total}/NULLIF(${pt_inr_Patients},0);;
     value_format: "0.00"
@@ -749,7 +749,7 @@ view: vw_vital_alert {
 
   measure: Bmi_Mean {
     type: number
-    label: "Average of BMI"
+    label: "Avg BMI"
     drill_fields: [unique_id,dependent_f_name,dependent_l_name,patient_gender,patient_dob_date,member_id,program,date_date,time,vital,issue,systolic,diastolic,zone,zone_number,status,affiliation,source,checked_cleared_by,checked_cleared_date,row_no]
     sql:  ${bmi_total}/NULLIF(${Bmi_Total_Patients_value_avalible},0);;
     value_format: "0.00"
