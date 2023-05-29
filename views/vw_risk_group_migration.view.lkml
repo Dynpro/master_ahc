@@ -62,7 +62,12 @@ view: vw_risk_group_migration {
   dimension: Risk_group {
     type: string
     sql: ${TABLE}."RISK_GROUP" ;;
+  }
 
+  measure: RISK_GROUP_list {
+    type: string
+    label: "RISK Group"
+    sql: LISTAGG(DISTINCT ${Risk_group}, ' || ') within group (order by ${Risk_group} ASC) ;;
   }
 
   measure: Total_paid_amt {

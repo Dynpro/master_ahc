@@ -505,6 +505,13 @@ explore : vw_vital_alert{
     relationship: many_to_one
     sql_on: ${vw_vital_alert.unique_id} = ${vw_patient_demographics.unique_id} ;;
   }
+  join: vw_medical{
+    view_label: "Medical records"
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${vw_vital_alert.unique_id} = ${vw_medical.unique_id} AND
+      ${vw_vital_alert.date_year} = ${vw_medical.diagnosis_year};;
+  }
 }
 
 explore: patient_migration_across_years_summary {
