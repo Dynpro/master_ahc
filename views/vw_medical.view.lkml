@@ -4,9 +4,9 @@ view: vw_medical {
     sql: select * from "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_MEDICAL"
       WHERE "UNIQUE_ID" IN (select DISTINCT "UNIQUE_ID" from "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_MEDICAL"
         WHERE {% condition PARTICIPANT_YEAR %} LEFT("ON_BOARD_DATE", 4) {% endcondition %} AND
-        {% condition PARTICIPANT_Flag %} "PARTICIPANT_FLAG" {% endcondition %})
-      ;;
+        {% condition PARTICIPANT_Flag %} "PARTICIPANT_FLAG" {% endcondition %}) ;;
   }
+
   dimension: 2012_chronic {
     type: string
     label: "CHRONIC ?"
@@ -1211,5 +1211,11 @@ view: vw_medical {
     label: "Total Members (N)"
     sql:  ${unique_id} ;;
     drill_fields: [vw_patient_demographics.patient_name, RISK_GROUP, patient_gender, vw_patient_demographics.patient_current_age, Total_Visit, Total_Paid_Amt]
+  }
+
+  dimension: STAGING_DATE {
+    type: date
+    label: "Medical File Import Date"
+    sql: ${TABLE}."STAGING_DATE" ;;
   }
 }

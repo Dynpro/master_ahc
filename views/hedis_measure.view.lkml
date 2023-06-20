@@ -31,61 +31,61 @@ view: hedis_measure {
   }
 
 ##ADULT BMI ASSESSMENT
-  dimension: aba_compliant {
-    type: string
-    label: "ABA Compliant"
-    sql: ${TABLE}."ABA_COMPLIANT" ;;
-  }
+  # dimension: aba_compliant {
+  #   type: string
+  #   label: "ABA Compliant"
+  #   sql: ${TABLE}."ABA_COMPLIANT" ;;
+  # }
 
-  dimension: aba_compliant_categories {
-    type: string
-    label: "ABA Compliant Categories"
-    sql: ${TABLE}."ABA_COMPLIANT_CATEGORIES" ;;
-  }
+  # dimension: aba_compliant_categories {
+  #   type: string
+  #   label: "ABA Compliant Categories"
+  #   sql: ${TABLE}."ABA_COMPLIANT_CATEGORIES" ;;
+  # }
 
-  dimension: aba_eligible {
-    type: string
-    label: "ABA Eligible"
-    sql: ${TABLE}."ABA_ELIGIBLE" ;;
-  }
+  # dimension: aba_eligible {
+  #   type: string
+  #   label: "ABA Eligible"
+  #   sql: ${TABLE}."ABA_ELIGIBLE" ;;
+  # }
 
-  measure: aba_compliant_patients {
-    type: count_distinct
-    label: "ABA Compliant - N"
-    filters: [aba_compliant: "1"]
-    sql: ${unique_id} ;;
-  }
+  # measure: aba_compliant_patients {
+  #   type: count_distinct
+  #   label: "ABA Compliant - N"
+  #   filters: [aba_compliant: "1"]
+  #   sql: ${unique_id} ;;
+  # }
 
-  measure: aba_eligible_patients {
-    type: count_distinct
-    label: "ABA Eligible - N"
-    filters: [aba_eligible: "1"]
-    sql: ${unique_id} ;;
-  }
+  # measure: aba_eligible_patients {
+  #   type: count_distinct
+  #   label: "ABA Eligible - N"
+  #   filters: [aba_eligible: "1"]
+  #   sql: ${unique_id} ;;
+  # }
 
   ##Need to discuss whether to include or not
-  dimension: aba_compliant_age_less_than_20 {
-    type: string
-    hidden: yes
-    label: "ABA Compliant (Age < 20) - N"
-    sql: CASE WHEN ${aba_compliant_categories} = 'ABA_Compliant_Age_less_than_20' THEN '1'
-      ELSE '0'
-      END ;;
-  }
+  # dimension: aba_compliant_age_less_than_20 {
+  #   type: string
+  #   hidden: yes
+  #   label: "ABA Compliant (Age < 20) - N"
+  #   sql: CASE WHEN ${aba_compliant_categories} = 'ABA_Compliant_Age_less_than_20' THEN '1'
+  #     ELSE '0'
+  #     END ;;
+  # }
 
-  measure: patients_aba_compliant_age_less_than_20 {
-    type: count_distinct
-    filters: [aba_compliant_categories: "ABA_Compliant_Age_less_than_20"]
-    label: "ABA Compliant (Age < 20) - N"
-    sql: ${unique_id} ;;
-  }
+  # measure: patients_aba_compliant_age_less_than_20 {
+  #   type: count_distinct
+  #   filters: [aba_compliant_categories: "ABA_Compliant_Age_less_than_20"]
+  #   label: "ABA Compliant (Age < 20) - N"
+  #   sql: ${unique_id} ;;
+  # }
 
-  measure: patients_aba_compliant_age_more_than_20 {
-    type: count_distinct
-    filters: [aba_compliant_categories: "ABA_Compliant_Age_more_than_20"]
-    label: "ABA Compliant (Age >= 20) - N"
-    sql: ${unique_id} ;;
-  }
+  # measure: patients_aba_compliant_age_more_than_20 {
+  #   type: count_distinct
+  #   filters: [aba_compliant_categories: "ABA_Compliant_Age_more_than_20"]
+  #   label: "ABA Compliant (Age >= 20) - N"
+  #   sql: ${unique_id} ;;
+  # }
 
 ##ANTIDEPRESSANT MEDICATION MANAGEMENT
   dimension: amm_effective_antidepressant_acute_phase_treatment {
@@ -226,122 +226,122 @@ view: hedis_measure {
   }
 
 ##COMPREHENSIVE DIABETES CARE
-  dimension: cdc_bp_control_14090_mm_hg {
-    type: string
-    label: "CDC: BP control (<140/90 mm Hg)"
-    sql: ${TABLE}."CDC_BP_CONTROL_LESS_THAN_140MM_OR_90HG" ;;
-  }
+  # dimension: cdc_bp_control_14090_mm_hg {
+  #   type: string
+  #   label: "CDC: BP control (<140/90 mm Hg)"
+  #   sql: ${TABLE}."CDC_BP_CONTROL_LESS_THAN_140MM_OR_90HG" ;;
+  # }
 
-  measure: cdc_bp_control_14090_mm_hg_patients {
-    type: count_distinct
-    filters: [cdc_bp_control_14090_mm_hg: "1"]
-    label: "CDC: BP Control (140/90 mm/hg) - N"
-    sql: ${unique_id} ;;
-  }
+  # measure: cdc_bp_control_14090_mm_hg_patients {
+  #   type: count_distinct
+  #   filters: [cdc_bp_control_14090_mm_hg: "1"]
+  #   label: "CDC: BP Control (140/90 mm/hg) - N"
+  #   sql: ${unique_id} ;;
+  # }
 
-  dimension: cdc_hb_a1c_control_7_0 {
-    type: string
-    label: "CDC: HbA1c control (<7.0%)"
-    sql: ${TABLE}."CDC_HBA1C_CONTROL_LESS_THAN_7_PERCENTAGE" ;;
-  }
+  # dimension: cdc_hb_a1c_control_7_0 {
+  #   type: string
+  #   label: "CDC: HbA1c control (<7.0%)"
+  #   sql: ${TABLE}."CDC_HBA1C_CONTROL_LESS_THAN_7_PERCENTAGE" ;;
+  # }
 
-  measure: cdc_hb_a1c_control_7_0_patients {
-    type: count_distinct
-    filters: [cdc_hb_a1c_control_7_0: "1"]
-    label: "CDC: HbA1c control (<7.0%) - N"
-    sql: ${unique_id} ;;
-  }
+  # measure: cdc_hb_a1c_control_7_0_patients {
+  #   type: count_distinct
+  #   filters: [cdc_hb_a1c_control_7_0: "1"]
+  #   label: "CDC: HbA1c control (<7.0%) - N"
+  #   sql: ${unique_id} ;;
+  # }
 
-  dimension: cdc_hemoglobin_a1c_hb_a1c_testing {
-    type: string
-    label: "CDC: Hemoglobin A1c (HbA1c) testing"
-    sql: ${TABLE}."CDC_HEMOGLOBIN_HBA1C_TESTING" ;;
-  }
+  # dimension: cdc_hemoglobin_a1c_hb_a1c_testing {
+  #   type: string
+  #   label: "CDC: Hemoglobin A1c (HbA1c) testing"
+  #   sql: ${TABLE}."CDC_HEMOGLOBIN_HBA1C_TESTING" ;;
+  # }
 
-  measure: cdc_hemoglobin_a1c_hb_a1c_testing_patients {
-    type: count_distinct
-    filters: [cdc_hemoglobin_a1c_hb_a1c_testing: "1"]
-    label: "CDC: Hemoglobin A1c (HbA1c) testing - N"
-    sql: ${unique_id} ;;
-  }
+  # measure: cdc_hemoglobin_a1c_hb_a1c_testing_patients {
+  #   type: count_distinct
+  #   filters: [cdc_hemoglobin_a1c_hb_a1c_testing: "1"]
+  #   label: "CDC: Hemoglobin A1c (HbA1c) testing - N"
+  #   sql: ${unique_id} ;;
+  # }
 
-  dimension: cdc_hg_a1c_poor_control_9_0 {
-    type: string
-    label: "CDC: HgA1c poor control (>9.0%)"
-    sql: ${TABLE}."CDC_HGA1C_POOR_CONTROL_GREATER_THAN_9_PERCENTAGE" ;;
-  }
+  # dimension: cdc_hg_a1c_poor_control_9_0 {
+  #   type: string
+  #   label: "CDC: HgA1c poor control (>9.0%)"
+  #   sql: ${TABLE}."CDC_HGA1C_POOR_CONTROL_GREATER_THAN_9_PERCENTAGE" ;;
+  # }
 
-  measure: cdc_hg_a1c_poor_control_9_0_patients {
-    type: count_distinct
-    label: "CDC: HgA1c poor control (>9.0%) - N"
-    filters: [cdc_hg_a1c_poor_control_9_0: "1"]
-    sql: ${unique_id} ;;
-  }
+  # measure: cdc_hg_a1c_poor_control_9_0_patients {
+  #   type: count_distinct
+  #   label: "CDC: HgA1c poor control (>9.0%) - N"
+  #   filters: [cdc_hg_a1c_poor_control_9_0: "1"]
+  #   sql: ${unique_id} ;;
+  # }
 
-  dimension: cdc_hgb_a1c_control_8_0 {
-    type: string
-    label: "CDC: HgbA1c control (<8.0%)"
-    sql: ${TABLE}."CDC_HGBA1C_CONTROL_LESS_THAN_8_PERCENTAGE" ;;
-  }
+  # dimension: cdc_hgb_a1c_control_8_0 {
+  #   type: string
+  #   label: "CDC: HgbA1c control (<8.0%)"
+  #   sql: ${TABLE}."CDC_HGBA1C_CONTROL_LESS_THAN_8_PERCENTAGE" ;;
+  # }
 
-  measure: cdc_hgb_a1c_control_8_0_patients {
-    type: count_distinct
-    filters: [cdc_hgb_a1c_control_8_0: "1"]
-    label: "CDC: HgbA1c control (<8.0%) - N"
-    sql: ${unique_id} ;;
-  }
+  # measure: cdc_hgb_a1c_control_8_0_patients {
+  #   type: count_distinct
+  #   filters: [cdc_hgb_a1c_control_8_0: "1"]
+  #   label: "CDC: HgbA1c control (<8.0%) - N"
+  #   sql: ${unique_id} ;;
+  # }
 
-  dimension: cdc_medical_attention_for_nephropathy {
-    type: string
-    label: "CDC: Medical attention for nephropathy"
-    sql: ${TABLE}."CDC_MEDICAL_ATTENTION_FOR_NEPHROPATHY" ;;
-  }
+  # dimension: cdc_medical_attention_for_nephropathy {
+  #   type: string
+  #   label: "CDC: Medical attention for nephropathy"
+  #   sql: ${TABLE}."CDC_MEDICAL_ATTENTION_FOR_NEPHROPATHY" ;;
+  # }
 
-  measure: cdc_medical_attention_for_nephropathy_patients {
-    type: count_distinct
-    filters: [cdc_medical_attention_for_nephropathy: "1"]
-    label: "CDC: Medical attention for nephropathy - N"
-    sql: ${unique_id} ;;
-  }
+  # measure: cdc_medical_attention_for_nephropathy_patients {
+  #   type: count_distinct
+  #   filters: [cdc_medical_attention_for_nephropathy: "1"]
+  #   label: "CDC: Medical attention for nephropathy - N"
+  #   sql: ${unique_id} ;;
+  # }
 
-  dimension: cdc_testing_eye_exam_retinal_performed {
-    type: string
-    label: "CDC: testing Eye exam (retinal) performed"
-    sql: ${TABLE}."CDC_TESTING_EYE_EXAM_PERFORMED" ;;
-  }
+  # dimension: cdc_testing_eye_exam_retinal_performed {
+  #   type: string
+  #   label: "CDC: testing Eye exam (retinal) performed"
+  #   sql: ${TABLE}."CDC_TESTING_EYE_EXAM_PERFORMED" ;;
+  # }
 
-  measure: cdc_testing_eye_exam_retinal_performed_patients {
-    type: count_distinct
-    label: "CDC: testing Eye exam (retinal) performed - N"
-    filters: [cdc_testing_eye_exam_retinal_performed: "1"]
-    sql: ${unique_id} ;;
-  }
+  # measure: cdc_testing_eye_exam_retinal_performed_patients {
+  #   type: count_distinct
+  #   label: "CDC: testing Eye exam (retinal) performed - N"
+  #   filters: [cdc_testing_eye_exam_retinal_performed: "1"]
+  #   sql: ${unique_id} ;;
+  # }
 
-  dimension: cdc_compliant {
-    type: string
-    label: "CDC Compliant"
-    sql: ${TABLE}."CDC_COMPLIANT" ;;
-  }
+  # dimension: cdc_compliant {
+  #   type: string
+  #   label: "CDC Compliant"
+  #   sql: ${TABLE}."CDC_COMPLIANT" ;;
+  # }
 
-  measure: cdc_compliant_patients {
-    type: count_distinct
-    label: "CDC Compliant - N"
-    filters: [cdc_compliant: "1"]
-    sql: ${unique_id} ;;
-  }
+  # measure: cdc_compliant_patients {
+  #   type: count_distinct
+  #   label: "CDC Compliant - N"
+  #   filters: [cdc_compliant: "1"]
+  #   sql: ${unique_id} ;;
+  # }
 
-  dimension: cdc_eligible {
-    type: string
-    label: "CDC Eligible"
-    sql: ${TABLE}."CDC_ELIGIBLE" ;;
-  }
+  # dimension: cdc_eligible {
+  #   type: string
+  #   label: "CDC Eligible"
+  #   sql: ${TABLE}."CDC_ELIGIBLE" ;;
+  # }
 
-  measure: cdc_eligible_patients {
-    type: count_distinct
-    label: "CDC Eligible - N"
-    filters: [cdc_eligible: "1"]
-    sql: ${unique_id} ;;
-  }
+  # measure: cdc_eligible_patients {
+  #   type: count_distinct
+  #   label: "CDC Eligible - N"
+  #   filters: [cdc_eligible: "1"]
+  #   sql: ${unique_id} ;;
+  # }
 
 ##COLORECTAL CANCER SCREENING
   dimension: col_compliant {
@@ -497,12 +497,12 @@ view: hedis_measure {
     type: string
     hidden: yes
     sql: CONCAT((CASE WHEN ${aap_compliant} = '1' THEN 'Adult access to Preventive/Ambulatory health services  20 years and above' ELSE '' END), ' || ',
-      (CASE WHEN ${aba_compliant} = '1' THEN 'Adult BMI assessment 18 to 74 years  ' ELSE '' END), ' || ',
-      /*(CASE WHEN ${amm_compliant} = '1' THEN 'Antidepressant medication management 18 years and above' ELSE '' END), ' || ',*/
+      /*(CASE WHEN {aba_compliant} = '1' THEN 'Adult BMI assessment 18 to 74 years  ' ELSE '' END), ' || ',*/
+      /*(CASE WHEN {amm_compliant} = '1' THEN 'Antidepressant medication management 18 years and above' ELSE '' END), ' || ',*/
       (CASE WHEN ${bcs_compliant} = '1' THEN 'Breast Cancer screening 50 to 74 years' ELSE '' END), ' || ',
       (CASE WHEN ${ccs_compliant} = '1' THEN 'Cervical Cancer screening  21 to 64 years' ELSE '' END), ' || ',
       (CASE WHEN ${col_compliant} = '1' THEN 'Colorectal Cancer screening  50 to 75 years' ELSE '' END), ' || ',
-      (CASE WHEN ${cdc_compliant} = '1' THEN 'Comprehensive Diabetes care  18 to 75 years' ELSE '' END), ' || ',
+      /*(CASE WHEN {cdc_compliant} = '1' THEN 'Comprehensive Diabetes care  18 to 75 years' ELSE '' END), ' || ',*/
       (CASE WHEN ${cbp_compliant} = '1' THEN 'Controlling high blood pressure  18 to 85 years' ELSE '' END), ' || ',
       (CASE WHEN ${smd_compliant} = '1' THEN 'Diabetes monitoring for people with Diabetes & Schizophrenia 18 to 64 years' ELSE '' END), ' || ',
       (CASE WHEN ${omw_compliant} = '1' THEN 'Osteoporosis management in Women who had a Fracture  67 to 85 years' ELSE '' END), ' || ',
@@ -513,12 +513,12 @@ view: hedis_measure {
     type: string
     hidden: yes
     sql: CONCAT((CASE WHEN ${aap_compliant} = '0' THEN 'Adults’ access to Preventive/Ambulatory health services  20 years and above' ELSE '' END), ' || ',
-      (CASE WHEN ${aba_compliant} = '0' THEN 'Adult BMI assessment 18 to 74 years  ' ELSE '' END), ' || ',
-      /*(CASE WHEN ${amm_eligible} = '1' THEN 'Antidepressant medication management 18 years and above' ELSE '' END), ' || ',*/
+      /*(CASE WHEN {aba_compliant} = '0' THEN 'Adult BMI assessment 18 to 74 years  ' ELSE '' END), ' || ',*/
+      /*(CASE WHEN {amm_eligible} = '1' THEN 'Antidepressant medication management 18 years and above' ELSE '' END), ' || ',*/
       (CASE WHEN ${bcs_compliant} = '0' THEN 'Breast Cancer screening 50 to 74 years' ELSE '' END), ' || ',
       (CASE WHEN ${ccs_compliant} = '0' THEN 'Cervical Cancer screening  21 to 64 years' ELSE '' END), ' || ',
       (CASE WHEN ${col_compliant} = '0' THEN 'Colorectal Cancer screening  50 to 75 years' ELSE '' END), ' || ',
-      (CASE WHEN ${cdc_compliant} = '0' THEN 'Comprehensive Diabetes care  18 to 75 years' ELSE '' END), ' || ',
+      /*(CASE WHEN {cdc_compliant} = '0' THEN 'Comprehensive Diabetes care  18 to 75 years' ELSE '' END), ' || ',*/
       (CASE WHEN ${cbp_compliant} = '0' THEN 'Controlling high blood pressure  18 to 85 years' ELSE '' END), ' || ',
       (CASE WHEN ${smd_compliant} = '0' THEN 'Diabetes monitoring for people with Diabetes & Schizophrenia 18 to 64 years' ELSE '' END), ' || ',
       (CASE WHEN ${omw_compliant} = '0' THEN 'Osteoporosis management in Women who had a Fracture  67 to 85 years' ELSE '' END), ' || ',
@@ -549,18 +549,18 @@ view: hedis_measure {
       {% endfor %} ;;
   }
 
-##percent of measures
+  ##percent of measures
 
   measure: AAP_PERCENT {
     type: number
     value_format: "0.0\%"
     sql: ${aap_compliant_patients}/NULLIF(${aap_eligible_patients},0) *100;;
   }
-  measure: ABA_PERCENT {
-    type: number
-    value_format: "0.0\%"
-    sql: ${aba_compliant_patients}/NULLIF(${aba_eligible_patients},0) *100;;
-  }
+  # measure: ABA_PERCENT {
+  #   type: number
+  #   value_format: "0.0\%"
+  #   sql: ${aba_compliant_patients}/NULLIF(${aba_eligible_patients},0) *100;;
+  # }
   measure: AMM_PERCENT {
     type: number
     value_format: "0.0\%"
@@ -581,11 +581,11 @@ view: hedis_measure {
     value_format: "0.0\%"
     sql: ${ccs_compliant_patients}/NULLIF(${ccs_eligible_patients},0) *100;;
   }
-  measure: CDC_PERCENT {
-    type: number
-    value_format: "0.0\%"
-    sql: ${cdc_compliant_patients}/NULLIF(${cdc_eligible_patients},0) *100;;
-  }
+  # measure: CDC_PERCENT {
+  #   type: number
+  #   value_format: "0.0\%"
+  #   sql: ${cdc_compliant_patients}/NULLIF(${cdc_eligible_patients},0) *100;;
+  # }
   measure: COL_PERCENT {
     type: number
     value_format: "0.0\%"
@@ -606,4 +606,5 @@ view: hedis_measure {
     value_format: "0.0\%"
     sql: ${spr_compliant_patients}/NULLIF(${spr_eligible_patients},0) *100;;
   }
+
 }

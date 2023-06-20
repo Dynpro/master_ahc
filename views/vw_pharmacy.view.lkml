@@ -74,6 +74,23 @@ view: vw_pharmacy {
     value_format: "0"
   }
 
+  dimension_group: paid_date_1 {
+    type: time
+    label: "PAID"
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    convert_tz: no
+    datatype: date
+    drill_fields: [paid_date_1_year,paid_date_1_quarter,paid_date_1_month,paid_date_1_raw]
+    sql: ${TABLE}."PAID_DATE" ;;
+  }
+
   dimension: days_supply {
     type: number
     label: "TOTAL DAYS SUPPLY"
@@ -419,7 +436,7 @@ view: vw_pharmacy {
   dimension: unique_id {
     type: string
     primary_key: yes
-    hidden: yes
+    hidden: no
     sql: ${TABLE}."UNIQUE_ID" ;;
   }
 
@@ -669,4 +686,36 @@ view: vw_pharmacy {
         /*CONCAT('before  ', {% date_end date_range_filter_1 %}) */
         END ;;
   }
+
+  dimension: co_pay_ammount {
+    type: number
+    label: "Copay Amount"
+    sql: ${TABLE}."CO_PAYMENT_AMT" ;;
+  }
+
+  measure: copay_ammount {
+    type: sum
+    label: "Copay Amount"
+    sql: ${co_pay_ammount} ;;
+    value_format: "$#,##0"
+  }
+
+  dimension: proprietary_name1 {
+    type: string
+    label: "Drug Brand Name"
+    sql: ${TABLE}."PROPRIETARY_NAME" ;;
+  }
+
+  dimension: non_proprietary_name1 {
+    type: string
+    label: "Drug Generic Name"
+    sql: ${TABLE}."NON_PROPRIETARY_NAME" ;;
+  }
+
+  dimension: STAGING_DATE {
+    type: date
+    label: "Pharmacy File Import Date"
+    sql: ${TABLE}."STAGING_DATE" ;;
+  }
+
 }

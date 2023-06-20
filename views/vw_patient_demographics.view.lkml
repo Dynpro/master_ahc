@@ -261,6 +261,11 @@ view: vw_patient_demographics {
     sql: null ;;
   }
 
+  dimension: eligibility_file_date {
+    type: date
+    sql: ${TABLE}."ELIGIBILITY_FILE_DATE" ;;
+  }
+
   dimension: Medical {
     type: string
     label: "Medical"
