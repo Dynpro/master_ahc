@@ -424,7 +424,7 @@ view: vw_vital_alert {
 # OXYGEN SATURATION
   dimension: oxygen_saturation{
     type: string
-    sql: case when ${vital} = 'OXYGEN SATURATION' then 1
+    sql: case when ${vital} IN('OXYGEN SATURATION','PULSE OXIMETRY') then 1
           else 0
           end;;
   }
@@ -432,14 +432,14 @@ view: vw_vital_alert {
   measure: oxygen_saturation_patients{
     label: "OXYGEN SATURATION - N"
     type: sum
-    filters: [vital: "OXYGEN SATURATION"]
+    filters: [vital: "OXYGEN SATURATION, PULSE OXIMETRY"]
     sql: ${oxygen_saturation} ;;
   }
 
   measure: oxygen_saturation_total {
     label: "OXYGEN SATURATION TOTAL"
     type: sum
-    filters: [vital: "OXYGEN SATURATION"]
+    filters: [vital: "OXYGEN SATURATION, PULSE OXIMETRY"]
     sql: ${issue} ;;
   }
 
