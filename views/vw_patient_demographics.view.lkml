@@ -338,4 +338,15 @@ view: vw_patient_demographics {
     sql: ${TABLE}."ON_BOARD_DATE" ;;
 
   }
+
+  dimension: Status{
+    type: string
+    label: "Elig - Status"
+    sql: ${TABLE}."ELIG_STATUS" ;;
+  }
+
+  dimension: care_manager {
+    type: string
+    sql: ${TABLE}."CARE_MANAGER" ;;
+  }
 }
