@@ -28,7 +28,8 @@ view: vw_med_and_pharma_summary_1 {
       PHARMA.ACE_INHIBITOR_List as ACE_INHIBITOR_List,
       PHARMA.ARB_DRUGS_List as ARB_DRUGS_List,
       PHARMA.DRI_DRUGS_List as DRI_DRUGS_List,
-      PHARMA.STATIN_DRUGS_List as STATIN_DRUGS_List
+      PHARMA.STATIN_DRUGS_List as STATIN_DRUGS_List,
+      PHARMA.DATE_FILLED_YEAR as DATE_FILLED_YEAR
 
       FROM (Select                        /* Medical Summary*/
       "UNIQUE_ID" as PATIENT_ID_M,
@@ -136,7 +137,7 @@ view: vw_med_and_pharma_summary_1 {
       GROUP BY Unique_Id_M, PAID_YEAR, PATIENT_GENDER, RELATIONSHIP_TO_EMPLOYEE, Diagnosis_Description_List,
       Diagnosis_Category_List, Chronic_Category_List, AGE_GROUP_List, PROCEDURE_DESCRIPTION_List, PROCEDURE_CODE_List,
       PLACE_OF_SERVICE_DESCRIPTION, SPECIALITY_CODE_DESCRIPTION, DIAGNOSIS_CODE_List, Diabetes_Flag,
-      Unique_Id_P, TEA_Cat_List, Drug_List, ACE_INHIBITOR_List, ARB_DRUGS_List, DRI_DRUGS_List, STATIN_DRUGS_List
+      Unique_Id_P, TEA_Cat_List, Drug_List, ACE_INHIBITOR_List, ARB_DRUGS_List, DRI_DRUGS_List, STATIN_DRUGS_List,DATE_FILLED_YEAR
       ;;
   }
 
@@ -557,6 +558,11 @@ view: vw_med_and_pharma_summary_1 {
     hidden: yes
     label: "STATIN DRUGS LIST"
     sql: ${TABLE}.STATIN_DRUGS_List ;;
+  }
+
+  dimension: date_filled_year {
+    type: string
+    sql: ${TABLE}.DATE_FILLED_YEAR ;;
   }
 
   measure: Total_Patients_P {

@@ -48,6 +48,7 @@ view: ad_hoc_query_tool_medical {
             {% condition AVOIDABLE_ER_OR_NOT %} "ICD_AVOIDABLE_ER" {% endcondition %} AND
             {% condition DIGESTIVE_DISEASE_OR_NOT %} "ICD_DIGESTIVE_DISEASE" {% endcondition %} AND
 
+
       "UNIQUE_ID" IN (select DISTINCT "UNIQUE_ID" from  "SCH_AHC_CRISP_REGIONAL"."LKR_TAB_MEDICAL"
       WHERE {% condition PARTICIPANT_YEAR %} LEFT("ON_BOARD_DATE", 4) {% endcondition %} AND
       {% condition PARTICIPANT_Flag %} "PARTICIPANT_FLAG" {% endcondition %}) AND
@@ -647,4 +648,6 @@ view: ad_hoc_query_tool_medical {
     sql: MAX(${DIAGNOSIS_DATE_raw}) ;;
     html: {{ rendered_value | date: "%m / %d / %Y" }} ;;
   }
+
+
 }
