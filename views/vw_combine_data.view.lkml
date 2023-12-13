@@ -381,4 +381,26 @@ view: vw_combine_data {
     sql: ${TABLE}."PARTICIPANT_PROGRAM_NAME";;
   }
 
+  measure: Total_Paid_Amt_Med_Pharma {
+    type: sum
+    label: "Medical + Pharmacy Total $"
+    sql:  ${total_employer_paid_amt} ;;
+    value_format: "$#,##0"
+  }
+
+  measure: Total_Patients {
+    type: count_distinct
+    label: "Medical + Pharmacy N"
+    sql:  ${unique_id} ;;
+  }
+
+  measure: Mean_Paid_Amt_Med_Pharma {
+    type: number
+    label: "Medical + Pharmacy Mean $"
+    sql:  CASE WHEN ${Total_Patients} <> 0 THEN ${Total_Paid_Amt_Med_Pharma}/${Total_Patients}
+        ELSE 0
+        END;;
+    value_format: "$#,##0"
+  }
+
 }

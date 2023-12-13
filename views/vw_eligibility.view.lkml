@@ -452,45 +452,10 @@ ELSE 'OTHER'
 END;;
   }
 
-###for File Import Summary
   dimension: STAGING_DATE {
     type: date
     label: "Eligibility File Import Date"
     sql: ${TABLE}."STAGING_DATE" ;;
-  }
-
-  dimension: Current_date {
-    type: date
-    label: "Current date"
-    sql: CURRENT_DATE() ;;
-  }
-
-  dimension: termination_date_filter {
-    type: string
-    sql: CASE WHEN ${termination_date} > ${Current_date} OR ${termination_date} IS NULL THEN 'After Current date'
-      ELSE 'On/Before Current date'
-      END;;
-  }
-
-  measure: termination_after_current_date {
-    type: count_distinct
-    label: "Eligibility N"
-    filters: [termination_date_filter: "After Current date"]
-    sql: ${unique_id} ;;
-  }
-
-  measure: termination_onbefore_current_date {
-    type: count_distinct
-    label: "Terminated N"
-    filters: [termination_date_filter: "On/Before Current date"]
-    sql: ${unique_id} ;;
-  }
-
-  dimension: data_type {
-    type: string
-    sql: case when ${active} = 'true'  then 'Eligibility'
-          else 'na'
-          end;;
   }
 
   measure: Total_Patients {

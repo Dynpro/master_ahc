@@ -718,4 +718,50 @@ view: vw_pharmacy {
     sql: ${TABLE}."STAGING_DATE" ;;
   }
 
+##for File Import summary
+
+  measure: Total_Billed_amt {
+    type: sum
+    label: "Total Billed $"
+    sql: ${total_billed_amt} ;;
+    value_format: "$#,##0"
+  }
+
+  dimension: Total_Paid_Amt_1{
+    type: number
+    label: "Total Paid $"
+    sql:  ${TABLE}."TOTAL_EMPLOYER_PAID_AMT" ;;
+  }
+
+  dimension: Total_Billed_Amt_1 {
+    type: number
+    label: "Total Billed $"
+    sql: ${TABLE}."TOTAL_BILLED_AMT" ;;
+  }
+
+
+  measure: Paid_date_min_max {
+    label: "Paid Date Min Max"
+    type: string
+    sql: CONCAT(MIN(${paid_date_1_raw}), '  |  ', MAX(${paid_date_1_raw}))   ;;
+  }
+
+  measure: Service_date_min_max {
+    label: "Service Date Min Max"
+    type: string
+    sql: CONCAT(MIN(${date_filled_raw}), '  |  ', MAX(${date_filled_raw}))   ;;
+  }
+
+  measure: count_1 {
+    type: count
+    drill_fields: [unique_id]
+  }
+
+
+  measure: Total_Pharma_Patients_2023 {
+    type: count_distinct
+    label: "Members With Pharmacy Claims (Member Count)"
+    filters: [reporting_year: "2023"]
+    sql:  ${unique_id} ;;
+  }
 }

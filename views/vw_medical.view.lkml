@@ -1218,4 +1218,141 @@ view: vw_medical {
     label: "Medical File Import Date"
     sql: ${TABLE}."STAGING_DATE" ;;
   }
+
+
+##############################################################################################
+#Following Measures and Dimensions are created for "Hospital Visit Statistics" Dashboard
+  dimension: Hospital_Inpatient_Admissions {
+    type: string
+    sql: case when ${TABLE}."ADMIT_DATE" is not null then '1'
+         else '0'
+         end;;
+  }
+
+  measure: Hospital_Inpatient_Admissions1 {
+    type: count_distinct
+    filters: [Hospital_Inpatient_Admissions: "1"]
+    label: "Number of Hospital Inpatient Admissions"
+    sql: ${unique_id} ;;
+  }
+
+  measure: Hospital_Inpatient_Admissions_per_Thousand {
+    type: number
+    label: "Hospital Inpatient Admissions per Thousand"
+    value_format: "0.00"
+    sql: (${Hospital_Inpatient_Admissions1}/${Total_Patients})*1000 ;;
+  }
+
+  dimension: Hospital_Inpatient_Discharges {
+    type: string
+    sql: case when ${TABLE}."DISCHARGE_DATE" is not null then '1'
+         else '0'
+         end;;
+  }
+
+  measure: Hospital_Inpatient_Discharges1 {
+    type: count_distinct
+    filters: [Hospital_Inpatient_Discharges: "1"]
+    label: "Number of Hospital Inpatient Discharges"
+    sql: ${unique_id} ;;
+  }
+
+  measure: Hospital_Inpatient_Discharges_per_Thousand {
+    type: number
+    label: "Hospital Inpatient Discharges per Thousand"
+    value_format: "0.00"
+    sql: (${Hospital_Inpatient_Discharges1}/${Total_Patients})*1000 ;;
+  }
+
+  dimension: Primary_Care_Physician_office_visits  {
+    type: string
+    sql: case when ${Primarycare_Physician_and_Speciality} = 'PRIMARY CARE PHYSICIAN SERVICES' then '1'
+         else '0'
+         end;;
+  }
+
+  measure: Primary_Care_Physician_office_visits1 {
+    type: count_distinct
+    filters: [Primary_Care_Physician_office_visits: "1"]
+    label: "Primary Care Physician office visits"
+    sql: ${unique_id} ;;
+  }
+
+  measure: Office_Visits_per_Thousand {
+    type: number
+    label: "Primary Care Physician Office Visits"
+    value_format: "0.00"
+    sql: (${Primary_Care_Physician_office_visits1}/${Total_Patients})*1000 ;;
+  }
+
+  dimension: Emergency_Room_Visits  {
+    type: string
+    sql: case when ${Inpatient_Outpatient_ER_Visits} = 'ER Visits' then '1'
+         else '0'
+         end;;
+  }
+
+  measure: Emergency_Room_Visits1 {
+    type: count_distinct
+    filters: [Emergency_Room_Visits: "1"]
+    label: "Emergency Room Visits"
+    sql: ${unique_id} ;;
+  }
+
+  measure: Emergency_Room_Visits_per_Thousand {
+    type: number
+    label: "Emergency Room Visits per Thousand"
+    value_format: "0.00"
+    sql: (${Emergency_Room_Visits1}/${Total_Patients})*1000 ;;
+  }
+
+  dimension: Avoidable_Emergency_Room_Visits  {
+    type: string
+    sql: case when ${icd_avoidable_er} = 'TRUE' then '1'
+         else '0'
+         end;;
+  }
+
+  measure: Avoidable_Emergency_Room_Visits1 {
+    type: count_distinct
+    filters: [Avoidable_Emergency_Room_Visits: "1"]
+    label: "Avoidable Emergency Room Visits"
+    sql: ${unique_id} ;;
+  }
+
+  measure: Avoidable_Emergency_Room_Visits_per_Thousand {
+    type: number
+    label: "Avoidable Emergency Room Visits per Thousand"
+    value_format: "0.00"
+    sql: (${Avoidable_Emergency_Room_Visits1}/${Total_Patients})*1000 ;;
+  }
+
+  dimension: diagnosis_month1 {
+    type: string
+    label: "Reporting Month"
+    sql: TO_CHAR(DATE_TRUNC('MONTH', DIAGNOSIS_DATE), 'YYYY-MM') ;;
+  }
+
+  dimension: urgent_care_visits {
+    type: string
+    label: "Urgent Care Visits"
+    sql: CASE WHEN ${place_of_service} = '20' THEN 'TRUE'
+         ELSE 'FALSE'
+         END ;;
+  }
+
+  measure: urgent_care_visits1 {
+    type: count_distinct
+    filters: [urgent_care_visits: "TRUE"]
+    label: "Urgent Care Visits"
+    sql: ${unique_id} ;;
+  }
+
+  measure: urgent_care_visits_per_Thousand {
+    type: number
+    label: "Urgent Care Visits Per Thousand"
+    value_format: "0.00"
+    sql: (${urgent_care_visits1}/${Total_Patients})*1000 ;;
+  }
+
 }
